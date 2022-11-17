@@ -1,2 +1,2 @@
 # Chesstacular
-#### hehehehehe
+#### Jonathan, Julius, Khojiakbar, Sartaz
