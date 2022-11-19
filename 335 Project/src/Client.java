@@ -4,6 +4,6 @@ public class Client {
 	
 	public static void main(String[] args) {
 		System.out.println("let's test");
-		Display test = new Display(); //testing merge
+		Display test = new Display();
 	}
 }
