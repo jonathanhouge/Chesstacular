@@ -22,15 +22,10 @@ public class Client
 	private BufferedReader in;
 	private static String username;
 
-
-
-//	XTankUI ui;
+//	Chess ui
 	
-	public static void main(String[] args) throws Exception 
-    {
-		System.out.println("Pick your username: ");
-		Scanner s = new Scanner(System.in);
-		username = s.nextLine();
+	public static void main(String[] args) throws Exception {
+		username = "temporary";
 		
 		Socket socket = new Socket("localhost", 600);
 		Client client = new Client(socket);
