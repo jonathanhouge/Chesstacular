@@ -20,12 +20,12 @@ public class Client
 	private Socket socket;
 	private BufferedWriter out;
 	private BufferedReader in;
-	private static String username;
+	private static Player player;
 
 //	Chess ui
 	
 	public static void main(String[] args) throws Exception {
-		username = "temporary";
+		player = (new PlayerCreateDisplay()).start();
 		
 		Socket socket = new Socket("localhost", 600);
 		Client client = new Client(socket);
@@ -45,7 +45,7 @@ public class Client
 			close();
 		}
 
-		out.write(username); // sends username to client manager
+		out.write(player.getName()); // sends username to client manager
 		out.newLine();
 		out.flush();
         UI ui = new UI(this, in, out, socket);
@@ -71,7 +71,7 @@ public class Client
 	 * Returns username
 	 */
 	 public String getName() {
-		 return username;
+		 return player.getName();
 	 }
 	 
 	 

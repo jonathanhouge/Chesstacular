@@ -25,8 +25,8 @@ public class Player implements Serializable {
 //	int y;
 	
 	// constructor. if the player didn't type in a new name, we give them a random 
-	public Player(String name, int id) {
-		if (name.equals("Default")) { // randomly assign a name if none chosen
+	public Player(String name) {
+		if (name.equals("Enter name here!")) { // randomly assign a name if none chosen
 			Random ran = new Random();
 			this.name = names[ran.nextInt(6)]; 
 			System.out.println("You didn't specify a name, so we're giving you a random one! It's " + this.name); }
@@ -49,6 +49,7 @@ public class Player implements Serializable {
 		return name; }
 	
 	// setters (maybe keeping)
+	public void setID(int id) { this.id = id; }
 //	public void setDisplayWidth(int newX) { this.x = newX; }
 //	public void setDisplayHeight(int newY) { this.y = newY; }
 	
