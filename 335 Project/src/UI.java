@@ -97,7 +97,7 @@ public class UI
 	void setup() {
 		display = new Display();
 		shell = new Shell(display);
-		shell.setText("xtank");
+		shell.setText("Chess");
 		shell.setLayout(new FillLayout());
 		shell.setSize(640+SHELL_WIDTH_OFFSET, 640+SHELL_HEIGHT_OFFSET);
 		canvas = new Canvas(shell, SWT.BACKGROUND);

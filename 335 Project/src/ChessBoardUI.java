@@ -18,9 +18,6 @@ class ChessBoardUIOne implements ChessBoardUI{
 	ArrayList<String>imgData = new ArrayList<>();
 	String [][]boardData;
 	
-	//you need to change this path depending on your project location!!!
-	String localImgPath = "D:\\CSC335_projects\\Chess\\images\\";
-	
 	
 	public ChessBoardUIOne(Canvas canvas, Shell shell) {
 		this.canvas = canvas;
@@ -45,7 +42,7 @@ class ChessBoardUIOne implements ChessBoardUI{
 				
 				e.gc.fillRectangle(x*SQUARE_WIDTH, y*SQUARE_WIDTH, SQUARE_WIDTH, SQUARE_WIDTH);
 				if(boardData[y][x] != null) {
-					Image img = new Image(shell.getDisplay(), localImgPath+ boardData[y][x]);
+					Image img = new Image(shell.getDisplay(), "images/" + boardData[y][x]);
 					e.gc.drawImage(img, x*SQUARE_WIDTH+10, y*SQUARE_WIDTH+10);
 				}
 				
