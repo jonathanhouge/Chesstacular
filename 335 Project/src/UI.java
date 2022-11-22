@@ -37,6 +37,9 @@ public class UI
 	Socket socket;
 
 	Client client;
+	ChessBoardUIOne boardUI;
+	int SHELL_WIDTH_OFFSET = 20;
+	int SHELL_HEIGHT_OFFSET = 50;
 	/*
 	 * Constructor that assigns values
 	 * client: client object
@@ -57,13 +60,17 @@ public class UI
 	public void start()
 	{	setup();
 		canvas.addPaintListener(e -> {
+			boardUI.draw(e);
 			
 		}
 		);	
 
 		canvas.addMouseListener(new MouseListener() {
 			public void mouseDown(MouseEvent e) {
-//				System.out.println("mouseDown in canvas");
+				System.out.println(e.x + ":" + e.y);
+				boardUI.mouseClickUpdate(e.x, e.y);
+				canvas.redraw();
+				
 			} 
 			public void mouseUp(MouseEvent e) {} 
 			public void mouseDoubleClick(MouseEvent e) {} 
@@ -92,10 +99,12 @@ public class UI
 		shell = new Shell(display);
 		shell.setText("xtank");
 		shell.setLayout(new FillLayout());
-		shell.setSize(800, 800);
+		shell.setSize(640+SHELL_WIDTH_OFFSET, 640+SHELL_HEIGHT_OFFSET);
 		canvas = new Canvas(shell, SWT.BACKGROUND);
-		canvas.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_GRAY));
-		canvas.setSize(800, 800);
+		canvas.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_WHITE));
+		canvas.setSize(640, 640+SHELL_HEIGHT_OFFSET);
+//		canvas.setBounds(0, 0, 640, 640);
+		boardUI = new ChessBoardUIOne(canvas, shell);
 		
 	}
 	
@@ -144,3 +153,12 @@ public class UI
 	
 	
 }
+
+
+
+
+
+
+
+
+
