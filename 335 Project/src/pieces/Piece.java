@@ -23,5 +23,9 @@ public abstract class Piece {
 	public int getY(){
 		return this.y;
 	}
+	public void updateLocation(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
 	//private abstract boolean isMoveValid(int x, int y);
 }

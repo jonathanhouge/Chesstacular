@@ -11,7 +11,11 @@ public class Bishop extends Piece {
 	public boolean move(int x, int y) {
 		int xDistance = Math.abs(x-this.getX());
 		int yDistance = Math.abs(y-this.getY());
-		return xDistance == yDistance;
+		if(xDistance == yDistance) {
+			this.updateLocation(x, y);
+			return true;
+		}
+		return false;
 	}
 
 }
