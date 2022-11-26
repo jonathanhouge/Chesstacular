@@ -62,11 +62,11 @@ public class PlayerCreateDisplay {
 		Text name = new Text(colors, SWT.BORDER); name.setLayoutData(widgetData);
 		name.setText("Enter name here!"); name.setTextLimit(16);
 		
-		// pick preferred color - default is white
+		// pick preferred color; default: White
 		ArrayList<String> decision2 = new ArrayList<String>(); decision2.add("White");
 		colorButtons(shell, decision2, widgetLayout, labelFont, buttonFont, color);
 
-		// pick rules to use; default: standard rules
+		// pick opponent to face; default: Human
 		ArrayList<String> decision3 = new ArrayList<String>(); decision3.add("Human");
 		typeButtons(shell, decision3, widgetLayout, labelFont, buttonFont, color);
 		
@@ -85,7 +85,7 @@ public class PlayerCreateDisplay {
 		String preferredColor = decision2.get(decision2.size() - 1);
 		String opponent = decision3.get(decision3.size() - 1);
 
-		Player player = new Player(playerName);
+		Player player = new Player(playerName, preferredColor, opponent);
 		return player; } // player successfully created!
 
 	// radio button for color picking
@@ -114,13 +114,17 @@ public class PlayerCreateDisplay {
 				label.setText("Who are you facing?"); label.setFont(title); label.setForeground(color);
 
 				//-- buttons themselves - default select the first option
-				Button white = new Button(colors, SWT.RADIO); white.setText("Human");
-				white.setSelection(true); white.setFont(button); white.setForeground(color);
-				selectListenCreation(white, decision);
+				Button human = new Button(colors, SWT.RADIO); human.setText("Human");
+				human.setSelection(true); human.setFont(button); human.setForeground(color);
+				selectListenCreation(human, decision);
 						
-				Button black = new Button(colors, SWT.RADIO); black.setText("Robot");
-				black.setFont(button); black.setForeground(color);
-				selectListenCreation(black, decision); }
+				Button random = new Button(colors, SWT.RADIO); random.setText("Robot (Easy)");
+				random.setFont(button); random.setForeground(color);
+				selectListenCreation(random, decision);
+				
+				Button algorithm = new Button(colors, SWT.RADIO); algorithm.setText("Robot (Hard)");
+				algorithm.setFont(button); algorithm.setForeground(color);
+				selectListenCreation(algorithm, decision); }
 	
 	// selection listener - for the radio buttons & submit button
 	protected static void selectListenCreation(Button button, ArrayList<String> decision) {

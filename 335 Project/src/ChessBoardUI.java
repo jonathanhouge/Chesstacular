@@ -1,6 +1,6 @@
 /* Chess Board UI.
  * 
- * Author: Khojiakbar Yokubjonov & Jonathan Houge
+ * Authors: Khojiakbar Yokubjonov & Jonathan Houge
  */
 
 import java.util.ArrayList;
@@ -38,10 +38,11 @@ class ChessBoardUIOne implements ChessBoardUI{
 				board[x][y].draw(gc); } }
 	}
 	
-	// make this function simpleton
-	protected void createBoardData(GC gc) {
+	/* 'simpleton' function, only ran once for initialization.
+	 * color boolean parameter determines what pieces should be in front of the player. */
+	protected void createBoardData(GC gc, boolean color) {
 		board = new Tile[8][8];
-		
+
 		boolean white = true;
 		Color w = new Color(255, 221, 153); Color b = new Color(204, 136, 0);
 		for(int x = 0; x < 8; x++) {

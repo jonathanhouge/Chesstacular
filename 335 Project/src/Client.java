@@ -1,12 +1,11 @@
 /*
- * Name: Ali Sartaz Khan
+ * Name: Ali Sartaz Khan & Jonathan Houge
  * Course: CSc 335
  * Description: Creates the Client object for the client handler
  */
 
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
@@ -27,8 +26,17 @@ public class Client
 	public static void main(String[] args) throws Exception {
 		player = (new PlayerCreateDisplay()).start();
 		
-		Socket socket = new Socket("localhost", 600);
-		Client client = new Client(socket);
+		if (player.getOpponent() == "Human") {
+			Socket socket = new Socket("localhost", 600);
+			Client client = new Client(socket); }
+		else {
+			Robot opponent;
+			if (player.getOpponent() == "Robot (Easy)") {
+				opponent = new RandomAI(); }
+			else {
+				opponent = new AlgorithmAI(); }
+			// play against the robot!
+		}
     }
 	
 	/*
@@ -40,8 +48,8 @@ public class Client
 			this.socket = socket;
 			this.out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 			this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-		} catch (IOException e) {
+		} 
+		catch (IOException e) {
 			close();
 		}
 
@@ -59,20 +67,12 @@ public class Client
 	 * Closes server when user leaves the game
 	 */
 	public void close() {
-     	try {socket.close();
-     	in.close(); out.close();} 
+     	try {
+     		socket.close(); in.close(); out.close(); } 
         catch (IOException e1) {}
      	System.exit(0);
      	System.out.println("Server is closed!");
  	}
 	 
-	
-	/*
-	 * Returns username
-	 */
-	 public String getName() {
-		 return player.getName();
-	 }
-	 
-	 
+	 public Player getPlayer() { return player; }
 }

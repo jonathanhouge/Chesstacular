@@ -57,7 +57,11 @@ public class UI {
 		setup();
 		canvas.addPaintListener(e -> {
 			if (initialized == false) { // create the tiles and initial starting positions
-				boardUI.createBoardData(e.gc);
+				boolean white;
+				if (client.getPlayer().getColor() == "White") { white = true; }
+				else { white = false; }
+
+				boardUI.createBoardData(e.gc, white);
 				initialized = true; }
 			boardUI.draw(e.gc);
 		}
@@ -94,22 +98,24 @@ public class UI {
 	
 	void setup() {
 		display = new Display();
+		
 		shell = new Shell(display);
-		shell.setText("Chess");
+		shell.setText("Chess (" + client.getPlayer().getName() + ")");
 		shell.setLayout(new FillLayout());
 		shell.setSize(640 + SHELL_WIDTH_OFFSET, 640 + SHELL_HEIGHT_OFFSET);
+		
 		canvas = new Canvas(shell, SWT.BACKGROUND);
 		canvas.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_WHITE));
 		canvas.setSize(640, 640 + SHELL_HEIGHT_OFFSET);
 //		canvas.setBounds(0, 0, 640, 640);
-		boardUI = new ChessBoardUIOne(canvas, shell);
 		
+		boardUI = new ChessBoardUIOne(canvas, shell);	
 	}
 	
 	void notifyOtherUsers() {
 		
 		try {
-			out.write(" " + client.getName()+ ": I pressed a key hehe!");
+			out.write(" " + client.getPlayer().getName() + ": I pressed a key hehe!");
 			out.newLine();
 			out.flush();
 		} catch (IOException e) {

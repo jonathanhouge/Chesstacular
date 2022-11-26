@@ -36,7 +36,7 @@ public class ClientManager implements Runnable
 				username = newUserInput;
 				System.out.println(newUserInput);
 				users.add(this);
-	        	broadcastToOthers("Joined:" +username);
+	        	broadcastToOthers("Joined:" + username);
 	        	othersBroadcastToYou();
 			} catch (IOException e) {
 				e.printStackTrace();
