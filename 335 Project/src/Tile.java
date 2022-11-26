@@ -17,14 +17,16 @@ public class Tile {
 	private Color color;
 	private String location;
 	
-	public Tile(Color color, int x, int y) {
+	public Tile(Color color, int x, int y, int dimensions) {
 		this.piece = null;
 		this.color = color;
-		this.tile = new Rectangle(x, y, 0, 0); }
+		this.tile = new Rectangle(x, y, dimensions, dimensions); }
 	
 	public void draw(GC gc) {
 		gc.setBackground(color);
-		gc.fillRectangle(tile); }
+		gc.fillRectangle(tile);
+		if (piece != null) { /* draw the piece image */ }
+	}
 	
 	// setters
 	public void setPiece(Piece piece) { this.piece = piece; }

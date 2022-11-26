@@ -20,16 +20,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Set;
 
-public class UI
-{
-
-
+public class UI {
 
 	private Canvas canvas;
 	private Display display;
 	private Shell shell;
-
-
 	
 	private BufferedWriter out;
 	private BufferedReader in;
@@ -38,6 +33,7 @@ public class UI
 
 	Client client;
 	ChessBoardUIOne boardUI;
+	boolean initialized = false;
 	int SHELL_WIDTH_OFFSET = 20;
 	int SHELL_HEIGHT_OFFSET = 50;
 	/*
@@ -55,13 +51,15 @@ public class UI
 	}
 
 	/*
-	 * Starts running the UI using all the tanks and listeners
+	 * Starts running the UI
 	 */
-	public void start()
-	{	setup();
+	public void start() {
+		setup();
 		canvas.addPaintListener(e -> {
-			boardUI.draw(e);
-			
+			if (initialized == false) {
+				boardUI.createBoardData(e.gc);
+				initialized = true; }
+			boardUI.draw(e.gc);
 		}
 		);	
 

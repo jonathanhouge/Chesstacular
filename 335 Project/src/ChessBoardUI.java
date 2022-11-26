@@ -1,12 +1,19 @@
+/* Chess Board UI.
+ * 
+ * Author: Khojiakbar Yokubjonov & Jonathan Houge
+ */
+
 import java.util.ArrayList;
 
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Shell;
 
 interface ChessBoardUI{
+	public void draw(GC gc);
 	public void draw(PaintEvent e);
 	
 }
@@ -16,16 +23,28 @@ class ChessBoardUIOne implements ChessBoardUI{
 	Shell shell;
 	int SQUARE_WIDTH = 80;
 	ArrayList<String>imgData = new ArrayList<>();
-	String [][]boardData;
+	String [][]boardData; // old
+	Tile [][]board; // new
 	
 	
 	public ChessBoardUIOne(Canvas canvas, Shell shell) {
 		this.canvas = canvas;
 		this.shell = shell;
-		initializeBoardData("white");
+		//initializeBoardData("white");
+		//createBoardData();
 
 	}
 
+	@Override
+	public void draw(GC gc) {
+		for(int x = 0; x < 8; x++) {
+			for(int y = 0; y < 8; y++) {
+				board[x][y].draw(gc);
+			}
+		}
+	}
+	
+	// not used
 	@Override
 	public void draw(PaintEvent e) {
 		// TODO Auto-generated method stub
@@ -75,6 +94,24 @@ class ChessBoardUIOne implements ChessBoardUI{
 //		imgData.add("wq.png");
 //	}
 	
+	// make this function simpleton
+	protected void createBoardData(GC gc) {
+		board = new Tile[8][8];
+		
+		boolean white = true;
+		Color w = new Color(255, 221, 153); Color b = new Color(204, 136, 0);
+		for(int x = 0; x < 8; x++) {
+			for(int y = 0; y < 8; y++) {
+				
+				if(white) { board[x][y] = new Tile(w, x*SQUARE_WIDTH, y*SQUARE_WIDTH, SQUARE_WIDTH); }
+				else { board[x][y] = new Tile(b, x*SQUARE_WIDTH, y*SQUARE_WIDTH, SQUARE_WIDTH); }
+
+				white = !white; }
+			
+			white = !white; }
+	}
+	
+	// not used
 	private void initializeBoardData(String color) {
 		//black pieces
 		boardData = new String[8][8];
