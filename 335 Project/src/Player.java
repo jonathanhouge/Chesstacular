@@ -23,6 +23,8 @@ public class Player implements Serializable {
 	private String color;
 	private String opponent;
 	
+	private int score;
+	
 	// maybe alter later
 //	int x; 
 //	int y;
@@ -51,6 +53,7 @@ public class Player implements Serializable {
 	
 	// setters (maybe keeping)
 	public void setID(int id) { this.ID = id; }
+	public void addPoints(int points) { score += points; }
 //	public void setDisplayWidth(int newX) { this.x = newX; }
 //	public void setDisplayHeight(int newY) { this.y = newY; }
 	
@@ -59,4 +62,5 @@ public class Player implements Serializable {
 	public int getID() { return ID; }
 	public String getColor() { return color; }
 	public String getOpponent() { return opponent; }
+	public int getScore() { return score; }
 }

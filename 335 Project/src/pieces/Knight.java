@@ -4,6 +4,7 @@ public class Knight extends Piece {
 	
 	String whitePiece = "wkn.png";
 	String blackPiece = "bkn.png";
+	int points = 3;
 
 	public Knight(boolean white) {
 		super(white);

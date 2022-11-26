@@ -4,6 +4,7 @@ public class Rook extends Piece {
 	
 	String whitePiece = "wr.png";
 	String blackPiece = "br.png";
+	int points = 5;
 
 	public Rook(boolean white) {
 		super(white);

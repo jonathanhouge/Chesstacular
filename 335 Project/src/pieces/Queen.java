@@ -6,6 +6,7 @@ public class Queen extends Piece {
 	
 	String whitePiece = "wq.png";
 	String blackPiece = "bq.png";
+	int points = 9;
 
 	public Queen(boolean white) {
 		super(white);

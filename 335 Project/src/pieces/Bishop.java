@@ -8,6 +8,7 @@ public class Bishop extends Piece {
 	String whitePiece = "wb.png";
 	String blackPiece = "bb.png";
 	Image visual;
+	int points = 3;
 
 	public Bishop(boolean white, Shell shell) {
 		super(white);

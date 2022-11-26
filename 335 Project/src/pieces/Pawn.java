@@ -4,6 +4,8 @@ public class Pawn extends Piece {
 	
 	String whitePiece = "wp.png";
 	String blackPiece = "bp.png";
+	int points = 1;
+	
 
 	boolean firstMove;
 	boolean enPassant = false; // if this is true, en passant may be done on this pawn
