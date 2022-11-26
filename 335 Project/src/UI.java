@@ -56,7 +56,7 @@ public class UI {
 	public void start() {
 		setup();
 		canvas.addPaintListener(e -> {
-			if (initialized == false) {
+			if (initialized == false) { // create the tiles and initial starting positions
 				boardUI.createBoardData(e.gc);
 				initialized = true; }
 			boardUI.draw(e.gc);
@@ -97,10 +97,10 @@ public class UI {
 		shell = new Shell(display);
 		shell.setText("Chess");
 		shell.setLayout(new FillLayout());
-		shell.setSize(640+SHELL_WIDTH_OFFSET, 640+SHELL_HEIGHT_OFFSET);
+		shell.setSize(640 + SHELL_WIDTH_OFFSET, 640 + SHELL_HEIGHT_OFFSET);
 		canvas = new Canvas(shell, SWT.BACKGROUND);
 		canvas.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_WHITE));
-		canvas.setSize(640, 640+SHELL_HEIGHT_OFFSET);
+		canvas.setSize(640, 640 + SHELL_HEIGHT_OFFSET);
 //		canvas.setBounds(0, 0, 640, 640);
 		boardUI = new ChessBoardUIOne(canvas, shell);
 		

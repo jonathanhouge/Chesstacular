@@ -14,7 +14,6 @@ import org.eclipse.swt.widgets.Shell;
 
 interface ChessBoardUI{
 	public void draw(GC gc);
-	public void draw(PaintEvent e);
 	
 }
 
@@ -22,77 +21,22 @@ class ChessBoardUIOne implements ChessBoardUI{
 	Canvas canvas;
 	Shell shell;
 	int SQUARE_WIDTH = 80;
-	ArrayList<String>imgData = new ArrayList<>();
-	String [][]boardData; // old
-	Tile [][]board; // new
+	//ArrayList<String>imgData = new ArrayList<>();
+	Tile [][]board;
 	
 	
 	public ChessBoardUIOne(Canvas canvas, Shell shell) {
 		this.canvas = canvas;
 		this.shell = shell;
 		//initializeBoardData("white");
-		//createBoardData();
-
 	}
 
 	@Override
 	public void draw(GC gc) {
 		for(int x = 0; x < 8; x++) {
 			for(int y = 0; y < 8; y++) {
-				board[x][y].draw(gc);
-			}
-		}
+				board[x][y].draw(gc); } }
 	}
-	
-	// not used
-	@Override
-	public void draw(PaintEvent e) {
-		// TODO Auto-generated method stub
-		boolean white = true;
-		for(int y=0; y<8; y++) {
-			for(int x=0; x<8; x++) {
-				if(white) {
-					e.gc.setBackground(new Color(255, 221, 153));
-					
-				}else {
-					e.gc.setBackground(new Color(204, 136, 0));
-				}
-				
-				
-				e.gc.fillRectangle(x*SQUARE_WIDTH, y*SQUARE_WIDTH, SQUARE_WIDTH, SQUARE_WIDTH);
-				if(boardData[y][x] != null) {
-					Image img = new Image(shell.getDisplay(), "images/" + boardData[y][x]);
-					e.gc.drawImage(img, x*SQUARE_WIDTH+10, y*SQUARE_WIDTH+10);
-				}
-				
-				white = !white;
-			}
-			white = !white;
-			
-		}
-		
-	}
-	
-	
-//	private void setUpImgData() {
-//		imgData.add("bb.png");
-//		imgData.add("wb.png");
-//		
-//		imgData.add("bk.png");
-//		imgData.add("wk.png");
-//		
-//		imgData.add("bkn.png");
-//		imgData.add("wkn.png");
-//		
-//		imgData.add("bp.png");
-//		imgData.add("wp.png");
-//		
-//		imgData.add("br.png");
-//		imgData.add("wr.png");
-//		
-//		imgData.add("bq.png");
-//		imgData.add("wq.png");
-//	}
 	
 	// make this function simpleton
 	protected void createBoardData(GC gc) {
@@ -111,8 +55,57 @@ class ChessBoardUIOne implements ChessBoardUI{
 			white = !white; }
 	}
 	
-	// not used
-	private void initializeBoardData(String color) {
+	public void mouseClickUpdate(int x, int y) {
+		getBoardIndex(x,y);
+		
+	}
+	
+	private int[] getBoardIndex(float x, float y) {
+		float indexX = x/SQUARE_WIDTH;
+		float indexY = y/SQUARE_WIDTH;
+		
+		int indX = Math.round(indexX);
+		int indY = Math.round(indexY);
+//		System.out.println(indexY+":"+indexY);
+		System.out.println(indY + ":"+indX );
+		
+		
+		
+		return new int[] {indX,indY};
+		
+	}
+	
+	/* The original functions utilized by ChessBoardUI. These are currently kept for reference!
+
+		@Override
+		public void draw(PaintEvent e) {
+			// TODO Auto-generated method stub
+			boolean white = true;
+			for(int y=0; y<8; y++) {
+				for(int x=0; x<8; x++) {
+					if(white) {
+						e.gc.setBackground(new Color(255, 221, 153));
+						
+					}else {
+						e.gc.setBackground(new Color(204, 136, 0));
+					}
+					
+					
+					e.gc.fillRectangle(x*SQUARE_WIDTH, y*SQUARE_WIDTH, SQUARE_WIDTH, SQUARE_WIDTH);
+					if(boardData[y][x] != null) {
+						Image img = new Image(shell.getDisplay(), "images/" + boardData[y][x]);
+						e.gc.drawImage(img, x*SQUARE_WIDTH+10, y*SQUARE_WIDTH+10);
+					}
+					
+					white = !white;
+				}
+				white = !white;
+				
+			}
+			
+		}
+		
+		private void initializeBoardData(String color) {
 		//black pieces
 		boardData = new String[8][8];
 		boardData[0][0] = "br.png";
@@ -145,37 +138,25 @@ class ChessBoardUIOne implements ChessBoardUI{
 		
 	}
 	
-	public void mouseClickUpdate(int x, int y) {
-		getBoardIndex(x,y);
+		private void setUpImgData() {
+		imgData.add("bb.png");
+		imgData.add("wb.png");
 		
+		imgData.add("bk.png");
+		imgData.add("wk.png");
+		
+		imgData.add("bkn.png");
+		imgData.add("wkn.png");
+		
+		imgData.add("bp.png");
+		imgData.add("wp.png");
+		
+		imgData.add("br.png");
+		imgData.add("wr.png");
+		
+		imgData.add("bq.png");
+		imgData.add("wq.png");
 	}
 	
-	private int[] getBoardIndex(float x, float y) {
-		float indexX = x/SQUARE_WIDTH;
-		float indexY = y/SQUARE_WIDTH;
-		
-		int indX = Math.round(indexX);
-		int indY = Math.round(indexY);
-//		System.out.println(indexY+":"+indexY);
-		System.out.println(indY + ":"+indX );
-		
-		
-		
-		return new int[] {indX,indY};
-		
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	*/
 }
