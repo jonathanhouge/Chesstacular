@@ -1,6 +1,9 @@
 package pieces;
 
 public class Rook extends Piece {
+	
+	String whitePiece = "wr.png";
+	String blackPiece = "br.png";
 
 	public Rook(boolean white) {
 		super(white);

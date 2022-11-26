@@ -1,6 +1,9 @@
 package pieces;
 
 public class Knight extends Piece {
+	
+	String whitePiece = "wkn.png";
+	String blackPiece = "bkn.png";
 
 	public Knight(boolean white) {
 		super(white);

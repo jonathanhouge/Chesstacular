@@ -1,10 +1,19 @@
 package pieces;
 
-public class Bishop extends Piece {
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Shell;
 
-	public Bishop(boolean white) {
+public class Bishop extends Piece {
+	
+	String whitePiece = "wb.png";
+	String blackPiece = "bb.png";
+	Image visual;
+
+	public Bishop(boolean white, Shell shell) {
 		super(white);
-		// TODO Auto-generated constructor stub
+		
+		if (white) { visual = new Image(shell.getDisplay(), "images/" + whitePiece); }
+		else { visual = new Image(shell.getDisplay(), "images/" + blackPiece); }
 	}
 
 	@Override
