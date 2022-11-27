@@ -20,7 +20,8 @@ public class Tile {
 	public Tile(Color color, int x, int y, int dimensions) {
 		this.piece = null;
 		this.color = color;
-		this.tile = new Rectangle(x, y, dimensions, dimensions); }
+		this.tile = new Rectangle(x, y, dimensions, dimensions); 
+		Piece.setWidth(dimensions);}
 	
 	public void draw(GC gc) {
 		gc.setBackground(color);

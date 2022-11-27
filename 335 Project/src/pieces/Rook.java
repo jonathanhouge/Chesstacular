@@ -1,13 +1,21 @@
 package pieces;
 
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Shell;
+
 public class Rook extends Piece {
 	
 	String whitePiece = "wr.png";
 	String blackPiece = "br.png";
 	int points = 5;
 
-	public Rook(boolean white) {
+	public Rook(boolean white, Shell shell) {
 		super(white);
+		if (white) {
+			setImage(new Image(shell.getDisplay(), "images/" + whitePiece));
+		} else {
+			setImage(new Image(shell.getDisplay(), "images/" + blackPiece));
+		}
 	}
 
 	@Override

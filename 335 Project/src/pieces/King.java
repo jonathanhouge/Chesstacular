@@ -1,13 +1,20 @@
 package pieces;
 
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Shell;
+
 public class King extends Piece {
 	
 	String whitePiece = "wk.png";
 	String blackPiece = "bk.png";
 
-	public King(boolean white) {
+	public King(boolean white, Shell shell) {
 		super(white);
-		// TODO Auto-generated constructor stub
+		if (white) {
+			setImage(new Image(shell.getDisplay(), "images/" + whitePiece));
+		} else {
+			setImage(new Image(shell.getDisplay(), "images/" + blackPiece));
+		}
 	}
 
 	@Override

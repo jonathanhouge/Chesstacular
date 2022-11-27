@@ -1,5 +1,8 @@
 package pieces;
 
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Shell;
+
 public class Queen extends Piece {
 	private Rook rook;
 	private Bishop bishop;
@@ -8,8 +11,13 @@ public class Queen extends Piece {
 	String blackPiece = "bq.png";
 	int points = 9;
 
-	public Queen(boolean white) {
+	public Queen(boolean white, Shell shell) {
 		super(white);
+		if (white) {
+			setImage(new Image(shell.getDisplay(), "images/" + whitePiece));
+		} else {
+			setImage(new Image(shell.getDisplay(), "images/" + blackPiece));
+		}
 	}
 
 	@Override

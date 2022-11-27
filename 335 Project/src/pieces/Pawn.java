@@ -1,5 +1,8 @@
 package pieces;
 
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Shell;
+
 public class Pawn extends Piece {
 	
 	String whitePiece = "wp.png";
@@ -9,9 +12,14 @@ public class Pawn extends Piece {
 
 	boolean firstMove;
 	boolean enPassant = false; // if this is true, en passant may be done on this pawn
-	public Pawn(boolean white) {
+	public Pawn(boolean white, Shell shell) {
 		super(white);
 		this.firstMove = true;
+		if (white) {
+			setImage(new Image(shell.getDisplay(), "images/" + whitePiece));
+		} else {
+			setImage(new Image(shell.getDisplay(), "images/" + blackPiece));
+		}
 	}
 
 	@Override
