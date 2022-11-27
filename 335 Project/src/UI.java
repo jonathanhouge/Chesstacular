@@ -18,6 +18,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 public class UI {
@@ -139,11 +140,24 @@ public class UI {
 				{
 					try {
 						msgFromOthers = in.readLine();
-						System.out.println(msgFromOthers);
+						
+						if (msgFromOthers.contains("ID")) { // your own ID
+							System.out.println("My INFO: " + msgFromOthers);
+							String[] list = msgFromOthers.split("[:-]");
+							int ID = Integer.parseInt(list[1]);
+							String color = list[2];
+							client.getPlayer().setID(ID);
+							client.getPlayer().setColor(color);	
 						}
+						
+						else 
+							System.out.println("OPPOSITION: " + msgFromOthers);
+						}
+							
 					 catch(IOException e) {
 						client.close();
 					}
+					
 				}
 			}
 			catch(IOException ex) {

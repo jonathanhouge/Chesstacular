@@ -53,7 +53,7 @@ public class Client
 			close();
 		}
 
-		out.write(player.getName()); // sends username to client manager
+		out.write(player.getName()+"-"+ player.getColor()); // sends username to client manager
 		out.newLine();
 		out.flush();
         UI ui = new UI(this, in, out, socket);

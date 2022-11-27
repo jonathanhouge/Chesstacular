@@ -20,9 +20,9 @@ public class ClientManager implements Runnable
         BufferedWriter out;
         BufferedReader in;
         String username;
+        String color;
         String newUserInput;
-        int count = 0;
-        
+        int ID;
         /*
          * Constructor takes in socket and creates new input and output streams
          * socket: socket
@@ -33,10 +33,16 @@ public class ClientManager implements Runnable
 				this.out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 				this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				this.newUserInput = in.readLine();
-				username = newUserInput;
+				String[] list = newUserInput.split("[:-]");
+				this.username = list[0];
+				this.color = list[1];
 				System.out.println(newUserInput);
 				users.add(this);
-	        	broadcastToOthers("Joined:" + username);
+				ID = users.size();
+				if (ID == 2)
+					setValidColor();
+	        	broadcastIdToYourself();
+	        	broadcastToOthers("PLAYER:" + ID + "-" +color);
 	        	othersBroadcastToYou();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -64,6 +70,46 @@ public class ClientManager implements Runnable
         } 
         
         
+        public void setValidColor() {
+        	for (ClientManager user: users) {
+				try {
+					if (user.username != this.username) { // getting user with ID 1
+						if (user.getColor().equals(this.getColor())) {
+							System.out.println("Users picked the same color! Updating User 2 color...");
+							System.out.println("Before: User1-" + user.getColor() + " User-"+this.getColor());
+							
+							if (user.getColor().equals("White"))
+								this.setColor("Black");
+							else
+								this.setColor("White");
+							System.out.println("After: User1-" + user.getColor() + " User2-"+this.getColor());
+
+							
+						}
+					}
+						
+				}catch (Exception e) {
+					close();
+				}
+        	}
+        }
+        
+        /*
+         * Method to broadcast string from others to yourself 
+         */
+        public void broadcastIdToYourself() {
+				try {
+					this.out.write("ID:" + this.ID +"-"+this.color);
+					this.out.newLine();
+					this.out.flush();
+				}catch (Exception e) {
+					close();
+				}
+				
+    	}
+        
+        
+        
         /*
          * Method to broadcast string from others to yourself 
          */
@@ -71,7 +117,7 @@ public class ClientManager implements Runnable
         	for (ClientManager user: users) {
 				try {
 					if (user.username != this.username) {
-						this.out.write("Joined:" +user.username);
+						this.out.write("PLAYER:" + user.ID + "-" + user.color);
 						this.out.newLine();
 						this.out.flush();}
 				}catch (Exception e) {
@@ -120,5 +166,16 @@ public class ClientManager implements Runnable
         	return username;
         }
     	 
+        public String getColor() {
+        	return this.color;
+        }
+        
+        public int getID() {
+        	return this.ID;
+        }
+        
+        public void setColor(String color) {
+        	this.color = color;
+        }
             
     }
