@@ -18,7 +18,7 @@ public abstract class Piece {
 	private int x;
 	private int y;
 	private Image visual;
-	private static int SQUARE_WIDTH = 80; // should it be all caps?
+	private static int SQUARE_WIDTH = 80;
 	
 	public static void setWidth(int width) {
 		SQUARE_WIDTH = width;
@@ -41,8 +41,8 @@ public abstract class Piece {
 		return this.y;
 	}
 	public void updateLocation(int x, int y) {
-		this.x = x;
-		this.y = y;
+		this.x = x / SQUARE_WIDTH;
+		this.y = y / SQUARE_WIDTH;
 	}
 	public void setImage(Image image) {
 		this.visual = image;

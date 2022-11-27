@@ -15,22 +15,29 @@ public class Tile {
 	private Rectangle tile;
 	private Piece piece;
 	private Color color;
+	
+	private int x;
+	private int y;
 	private String location;
 	
 	public Tile(Color color, int x, int y, int dimensions) {
 		this.piece = null;
 		this.color = color;
-		this.tile = new Rectangle(x, y, dimensions, dimensions); 
-		Piece.setWidth(dimensions);}
+		this.x = x; this.y = y;
+		this.tile = new Rectangle(this.x, this.y, dimensions, dimensions); 
+		Piece.setWidth(dimensions); }
 	
 	public void draw(GC gc) {
 		gc.setBackground(color);
 		gc.fillRectangle(tile);
-		if (piece != null) { /* draw the piece image */ }
+		if (piece != null) { piece.draw(gc); }
 	}
 	
 	// setters
-	public void setPiece(Piece piece) { this.piece = piece; }
+	public void setPiece(Piece piece) { 
+		this.piece = piece;
+		this.piece.updateLocation(x, y); }
+	
 	public void setColor(Color color) { this.color = color; }
 
 	// getters

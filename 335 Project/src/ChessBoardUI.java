@@ -12,6 +12,9 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Shell;
 
+import pieces.Pawn;
+import pieces.Piece;
+
 interface ChessBoardUI{
 	public void draw(GC gc);
 	
@@ -43,17 +46,19 @@ class ChessBoardUIOne implements ChessBoardUI{
 	protected void createBoardData(GC gc, boolean color) {
 		board = new Tile[8][8];
 
-		boolean white = true;
+		boolean boardColor = true;
 		Color w = new Color(255, 221, 153); Color b = new Color(204, 136, 0);
-		for(int x = 0; x < 8; x++) {
-			for(int y = 0; y < 8; y++) {
+		for(int y = 0; y < 8; y++) {
+			for(int x = 0; x < 8; x++) {
 				
-				if(white) { board[x][y] = new Tile(w, x*SQUARE_WIDTH, y*SQUARE_WIDTH, SQUARE_WIDTH); }
+				if(boardColor) { board[x][y] = new Tile(w, x*SQUARE_WIDTH, y*SQUARE_WIDTH, SQUARE_WIDTH); }
 				else { board[x][y] = new Tile(b, x*SQUARE_WIDTH, y*SQUARE_WIDTH, SQUARE_WIDTH); }
+				
+				board[x][y].setPiece(new Pawn(color, shell));
 
-				white = !white; }
+				boardColor = !boardColor; }
 			
-			white = !white; }
+			boardColor = !boardColor; }
 	}
 	
 	public void mouseClickUpdate(int x, int y) {
@@ -68,7 +73,7 @@ class ChessBoardUIOne implements ChessBoardUI{
 		int indX = Math.round(indexX);
 		int indY = Math.round(indexY);
 //		System.out.println(indexY+":"+indexY);
-		System.out.println(indY + ":"+indX );
+		System.out.println(indY + ":" + indX );
 		
 		
 		

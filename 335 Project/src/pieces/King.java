@@ -7,6 +7,8 @@ public class King extends Piece {
 	
 	String whitePiece = "wk.png";
 	String blackPiece = "bk.png";
+	
+	boolean checked = false;
 
 	public King(boolean white, Shell shell) {
 		super(white);

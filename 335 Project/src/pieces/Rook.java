@@ -8,6 +8,8 @@ public class Rook extends Piece {
 	String whitePiece = "wr.png";
 	String blackPiece = "br.png";
 	int points = 5;
+	
+	boolean moved = false;
 
 	public Rook(boolean white, Shell shell) {
 		super(white);
