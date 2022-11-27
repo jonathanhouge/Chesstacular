@@ -43,7 +43,7 @@ public abstract class Piece {
 	}
 
 	public void draw(GC gc) {
-		gc.drawImage(visual, x * SQUARE_WIDTH + 10, y * SQUARE_WIDTH + 10);
+		gc.drawImage(this.visual, this.x * SQUARE_WIDTH + 10, this.y * SQUARE_WIDTH + 10);
 	}
 	
 	/**
@@ -54,25 +54,54 @@ public abstract class Piece {
 	public boolean isWhite() {
 		return this.white;
 	}
-	
+	/**
+	 * This getter method returns the x value of the piece
+	 * 
+	 * 	@return an int that represents the y value of the piece
+	 */
 	public int getX() {
 		return this.x;
 	}
-
+	/**
+	 * This getter method returns the y value of the piece.
+	 * 
+	 * @return an int that represents the y value of the piece
+	 */
 	public int getY() {
 		return this.y;
 	}
 
+	/**
+	 * This method updates the location of a given piece.
+	 */
 	public void updateLocation(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
 
+	/**
+	 * This method sets the image of the piece so that it is correctly
+	 * represented on the chess board.
+	 */
 	public void setImage(Image image) {
 		this.visual = image;
 	}
 
+	/**
+	 * This abstract method returns a boolean depending on if the piece is moved
+	 * in a way that the specific subclass of piece is intended to move. 
+	 * 
+	 * @return true if the piece is moved in a typical way, false if not
+	 */
 	public abstract boolean standardMove(int x, int y);
 
+	/**
+	 * This abstract method returns a boolean depending on if the piece collides
+	 * with its own piece at the x/y coordinate and if it collides with another 
+	 * piece while attempting to move to the x/y coordinate.
+	 * 
+	 * @return true if no pieces are in the way, false if a piece would be blocking
+	 * the move
+	 */
 	public abstract boolean hasNoCollisions(int x, int y, Tile[][] tiles);
 }
