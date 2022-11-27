@@ -17,7 +17,7 @@ public class Player implements Serializable {
 	private static final long serialVersionUID = 1L; // to appease the java gods
 	
 	private String name;
-	private String[] names = {":^)", ":(", ":)", ";~;", "o~o", "uwu"}; // default names
+	private String[] names = {"[uwu]", "[;~;]", "[*u*]", "[#0#]", "[o~o]", "[oWo]"}; // default names
 	private int ID;
 	
 	private String color;
@@ -54,6 +54,7 @@ public class Player implements Serializable {
 	// setters (maybe keeping)
 	public void setID(int id) { this.ID = id; }
 	public void addPoints(int points) { score += points; }
+	public void setColor(String color) {this.color = color;}
 //	public void setDisplayWidth(int newX) { this.x = newX; }
 //	public void setDisplayHeight(int newY) { this.y = newY; }
 	
