@@ -1,5 +1,7 @@
 package pieces;
 
+import java.util.ArrayList;
+
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
@@ -19,7 +21,7 @@ public class Rook extends Piece {
 	}
 
 	@Override
-	public boolean move(int x, int y) {
+	public boolean standardMove(int x, int y) {
 		if(this.getX() == x) { // possible horizontal movement
 			if(0 < y && y < 8) {
 				this.updateLocation(x, y);
@@ -31,6 +33,12 @@ public class Rook extends Piece {
 				return true;
 			}
 		}
+		return false;
+	}
+
+	@Override
+	public boolean hasNoCollisions(int x, int y, Tile[][] tiles) {
+		// TODO Auto-generated method stub
 		return false;
 	}
 

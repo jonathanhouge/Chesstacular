@@ -1,5 +1,7 @@
 package pieces;
 
+import java.util.ArrayList;
+
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
@@ -21,15 +23,16 @@ public class Queen extends Piece {
 	}
 
 	@Override
-	public boolean move(int x, int y) {
-		if (rook.move(x, y) || bishop.move(x, y)) {
-			rook.updateLocation(x, y);
-			bishop.updateLocation(x, y);
-			this.updateLocation(x,y);
-
+	public boolean standardMove(int x, int y) {
+		if (rook.standardMove(x, y) || bishop.standardMove(x, y)) {
 			return true;
 		}
 		return false; // must move the rook and bishop with the queen however
+	}
+
+	@Override
+	public boolean hasNoCollisions(int x, int y, Tile[][] tiles) {
+		return false;
 	}
 
 }

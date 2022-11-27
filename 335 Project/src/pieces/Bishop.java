@@ -1,5 +1,7 @@
 package pieces;
 
+import java.util.ArrayList;
+
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
@@ -20,7 +22,7 @@ public class Bishop extends Piece {
 	}
 
 	@Override
-	public boolean move(int x, int y) {
+	public boolean standardMove(int x, int y) {
 		int xDistance = Math.abs(x - this.getX());
 		int yDistance = Math.abs(y - this.getY());
 		if (xDistance == yDistance) {
@@ -29,5 +31,11 @@ public class Bishop extends Piece {
 		}
 		return false;
 	}
+
+	@Override
+	public boolean hasNoCollisions(int x, int y, Tile[][] tiles) {
+		return false;
+	}
+
 
 }

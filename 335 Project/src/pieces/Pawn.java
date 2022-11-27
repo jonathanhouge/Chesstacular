@@ -1,5 +1,7 @@
 package pieces;
 
+import java.util.ArrayList;
+
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
@@ -23,7 +25,8 @@ public class Pawn extends Piece {
 	}
 
 	@Override
-	public boolean move(int x, int y) {
+	public boolean standardMove(int x, int y) {
+		
 		if (this.getX() == x) { // ensures only vertical movement
 			if (this.isWhite()) {
 				if (y > this.getY()) {
@@ -36,20 +39,17 @@ public class Pawn extends Piece {
 			}
 
 			int yDistance = Math.abs(this.getY() - y);
-			if (!firstMove&& yDistance == 1) {
+			if (!firstMove && yDistance == 1) {
 				updateLocation(x,y);
 				enPassant = false;
 				return true;
 			} else {
-				
 				if(yDistance == 2) {
 					firstMove = false;
-					updateLocation(x,y);
 					enPassant = true;
 					return true;
 				}else if (yDistance == 1) {
 					firstMove = false;
-					updateLocation(x,y);
 					return true;
 				}
 				
@@ -64,5 +64,11 @@ public class Pawn extends Piece {
 			return this.getY() == 0;
 		}
 		return this.getY() == 7;
+	}
+
+	@Override
+	public boolean hasNoCollisions(int x, int y, Tile[][] tiles) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
