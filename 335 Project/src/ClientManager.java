@@ -76,7 +76,7 @@ public class ClientManager implements Runnable
 					if (user.username != this.username) { // getting user with ID 1
 						if (user.getColor().equals(this.getColor())) {
 							System.out.println("Users picked the same color! Updating User 2 color...");
-							System.out.println("Before: User1-" + user.getColor() + " User-"+this.getColor());
+							System.out.println("Before: User1-" + user.getColor() + " User2-"+this.getColor());
 							
 							if (user.getColor().equals("White"))
 								this.setColor("Black");
