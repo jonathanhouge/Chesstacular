@@ -12,8 +12,13 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Shell;
 
+import pieces.Bishop;
+import pieces.King;
+import pieces.Knight;
 import pieces.Pawn;
 import pieces.Piece;
+import pieces.Queen;
+import pieces.Rook;
 
 interface ChessBoardUI{
 	public void draw(GC gc);
@@ -43,22 +48,49 @@ class ChessBoardUIOne implements ChessBoardUI{
 	
 	/* 'simpleton' function, only ran once for initialization.
 	 * color boolean parameter determines what pieces should be in front of the player. */
-	protected void createBoardData(GC gc, boolean color) {
+	protected void createBoardData(GC gc, boolean white) {
 		board = new Tile[8][8];
 
 		boolean boardColor = true;
 		Color w = new Color(255, 221, 153); Color b = new Color(204, 136, 0);
-		for(int y = 0; y < 8; y++) {
-			for(int x = 0; x < 8; x++) {
+		for(int x = 0; x < 8; x++) {
+			for(int y = 0; y < 8; y++) {
 				
 				if(boardColor) { board[x][y] = new Tile(w, x*SQUARE_WIDTH, y*SQUARE_WIDTH, SQUARE_WIDTH); }
 				else { board[x][y] = new Tile(b, x*SQUARE_WIDTH, y*SQUARE_WIDTH, SQUARE_WIDTH); }
 				
-				board[x][y].setPiece(new Pawn(color, shell));
+				board[x][y].setPiece(makePiece(x, y, white));
 
 				boardColor = !boardColor; }
 			
 			boardColor = !boardColor; }
+	}
+	
+	private Piece makePiece(int x, int y, boolean playerColor) {
+		
+		playerColor = !playerColor;
+
+		if (y == 0) {
+			if (x == 0 || x == 7) { return (new Rook(playerColor, shell)); }
+			else if (x == 0 || x == 7) { return (new Rook(playerColor, shell)); }
+			else if (x == 1 || x == 6) { return (new Knight(playerColor, shell)); }
+			else if (x == 2 || x == 5) { return (new Bishop(playerColor, shell)); }
+			else if (x == 3) { return (new King(playerColor, shell)); }
+			else if (x == 4) { return (new Queen(playerColor, shell)); } }
+		if (y == 1) { return (new Pawn(playerColor, shell)); }
+		
+		playerColor = !playerColor;
+		
+		if (y == 6) { return (new Pawn(playerColor, shell)); }
+		if (y == 7) {
+			if (x == 0 || x == 7) { return (new Rook(playerColor, shell)); }
+			else if (x == 0 || x == 7) { return (new Rook(playerColor, shell)); }
+			else if (x == 1 || x == 6) { return (new Knight(playerColor, shell)); }
+			else if (x == 2 || x == 5) { return (new Bishop(playerColor, shell)); }
+			else if (x == 3) { return (new King(playerColor, shell)); }
+			else if (x == 4) { return (new Queen(playerColor, shell)); } }
+		
+		return null;
 	}
 	
 	public void mouseClickUpdate(int x, int y) {

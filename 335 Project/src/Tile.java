@@ -36,7 +36,8 @@ public class Tile {
 	// setters
 	public void setPiece(Piece piece) { 
 		this.piece = piece;
-		this.piece.updateLocation(x, y); }
+		if (piece != null) {
+		this.piece.updateLocation(x, y); } }
 	
 	public void setColor(Color color) { this.color = color; }
 
