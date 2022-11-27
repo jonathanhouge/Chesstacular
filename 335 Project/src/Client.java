@@ -14,22 +14,21 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-public class Client 
-{
+public class Client {
 	private Socket socket;
 	private BufferedWriter out;
 	private BufferedReader in;
 	private static Player player;
-
-//	Chess ui
 	
+	//	Chess ui
 	public static void main(String[] args) throws Exception {
 		player = (new PlayerCreateDisplay()).start();
 		
 		if (player.getOpponent() == "Human") {
 			Socket socket = new Socket("localhost", 600);
 			Client client = new Client(socket); }
-		else {
+		
+		else { // if we're going against a robot, no need for a server
 			Robot opponent;
 			if (player.getOpponent() == "Robot (Easy)") {
 				opponent = new RandomAI(); }
@@ -53,7 +52,7 @@ public class Client
 			close();
 		}
 
-		out.write(player.getName()+"-"+ player.getColor()); // sends username to client manager
+		out.write(player.getName() + "-" + player.getColor()); // sends username to client manager
 		out.newLine();
 		out.flush();
         UI ui = new UI(this, in, out, socket);

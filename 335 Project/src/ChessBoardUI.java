@@ -1,42 +1,37 @@
 /* Chess Board UI.
  * 
- * Authors: Khojiakbar Yokubjonov & Jonathan Houge
+ * Authors: Jonathan Houge & Khojiakbar Yokubjonov
  */
 
-import java.util.ArrayList;
-
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.Canvas;
 
-import pieces.Bishop;
-import pieces.King;
-import pieces.Knight;
-import pieces.Pawn;
 import pieces.Piece;
-import pieces.Queen;
+import pieces.Pawn;
+import pieces.King;
 import pieces.Rook;
+import pieces.Queen;
+import pieces.Bishop;
+import pieces.Knight;
 
-interface ChessBoardUI{
+// could perhaps make another instance of ChessBoardUI that's for testing - only white pieces, no turns, etc.
+interface ChessBoardUI {
 	public void draw(GC gc);
-	
+	public void createBoardData(GC gc, boolean white);
 }
 
-class ChessBoardUIOne implements ChessBoardUI{
+class ChessBoard implements ChessBoardUI{
 	Canvas canvas;
 	Shell shell;
 	int SQUARE_WIDTH = 80;
-	//ArrayList<String>imgData = new ArrayList<>();
 	Tile [][]board;
 	
 	
-	public ChessBoardUIOne(Canvas canvas, Shell shell) {
+	public ChessBoard(Canvas canvas, Shell shell) {
 		this.canvas = canvas;
 		this.shell = shell;
-		//initializeBoardData("white");
 	}
 
 	@Override
@@ -48,41 +43,48 @@ class ChessBoardUIOne implements ChessBoardUI{
 	
 	/* 'simpleton' function, only ran once for initialization.
 	 * color boolean parameter determines what pieces should be in front of the player. */
-	protected void createBoardData(GC gc, boolean white) {
-		board = new Tile[8][8];
-
-		boolean boardColor = true;
-		Color w = new Color(255, 221, 153); Color b = new Color(204, 136, 0);
+	public void createBoardData(GC gc, boolean white) {
+		board = new Tile[8][8]; // list of tiles
+		boolean boardColor = true; // if true, tile is white and vice versa
+		Color w = new Color(255, 221, 153); Color b = new Color(204, 136, 0); // tile colors, white and black respectively
+		
 		for(int x = 0; x < 8; x++) {
 			for(int y = 0; y < 8; y++) {
 				
+				// create the tiles with the proper color
 				if(boardColor) { board[x][y] = new Tile(w, x*SQUARE_WIDTH, y*SQUARE_WIDTH, SQUARE_WIDTH); }
 				else { board[x][y] = new Tile(b, x*SQUARE_WIDTH, y*SQUARE_WIDTH, SQUARE_WIDTH); }
 				
+				// set the piece using a helper function
 				board[x][y].setPiece(makePiece(x, y, white));
 
+				// alternating tile colors
 				boardColor = !boardColor; }
-			
-			boardColor = !boardColor; }
+			boardColor = !boardColor; 
+		}
 	}
 	
+	/* helper function responsible for making the pieces and putting
+	 * them in their starting positions. */
 	private Piece makePiece(int x, int y, boolean playerColor) {
 		
+		// want the pieces farthest from the player to be the opposite color (opponent's color)
 		playerColor = !playerColor;
 
-		if (y == 0) {
+		if (y == 0) { // enemy specialty pieces
 			if (x == 0 || x == 7) { return (new Rook(playerColor, shell)); }
 			else if (x == 0 || x == 7) { return (new Rook(playerColor, shell)); }
 			else if (x == 1 || x == 6) { return (new Knight(playerColor, shell)); }
 			else if (x == 2 || x == 5) { return (new Bishop(playerColor, shell)); }
 			else if (x == 3) { return (new King(playerColor, shell)); }
 			else if (x == 4) { return (new Queen(playerColor, shell)); } }
-		if (y == 1) { return (new Pawn(playerColor, shell)); }
+		if (y == 1) { return (new Pawn(playerColor, shell)); } // enemy pawns
 		
+		// want the pieces closest to the player to be their color (player's color)
 		playerColor = !playerColor;
 		
-		if (y == 6) { return (new Pawn(playerColor, shell)); }
-		if (y == 7) {
+		if (y == 6) { return (new Pawn(playerColor, shell)); } // your pawns
+		if (y == 7) { // your specialty pieces
 			if (x == 0 || x == 7) { return (new Rook(playerColor, shell)); }
 			else if (x == 0 || x == 7) { return (new Rook(playerColor, shell)); }
 			else if (x == 1 || x == 6) { return (new Knight(playerColor, shell)); }
@@ -90,12 +92,11 @@ class ChessBoardUIOne implements ChessBoardUI{
 			else if (x == 3) { return (new King(playerColor, shell)); }
 			else if (x == 4) { return (new Queen(playerColor, shell)); } }
 		
-		return null;
+		return null; // tile is given no piece
 	}
 	
 	public void mouseClickUpdate(int x, int y) {
 		getBoardIndex(x,y);
-		
 	}
 	
 	private int[] getBoardIndex(float x, float y) {
@@ -107,94 +108,6 @@ class ChessBoardUIOne implements ChessBoardUI{
 //		System.out.println(indexY+":"+indexY);
 		System.out.println(indY + ":" + indX );
 		
-		
-		
 		return new int[] {indX,indY};
-		
 	}
-	
-	/* The original functions utilized by ChessBoardUI. These are currently kept for reference!
-
-		@Override
-		public void draw(PaintEvent e) {
-			// TODO Auto-generated method stub
-			boolean white = true;
-			for(int y=0; y<8; y++) {
-				for(int x=0; x<8; x++) {
-					if(white) {
-						e.gc.setBackground(new Color(255, 221, 153));
-						
-					}else {
-						e.gc.setBackground(new Color(204, 136, 0));
-					}
-					
-					
-					e.gc.fillRectangle(x*SQUARE_WIDTH, y*SQUARE_WIDTH, SQUARE_WIDTH, SQUARE_WIDTH);
-					if(boardData[y][x] != null) {
-						Image img = new Image(shell.getDisplay(), "images/" + boardData[y][x]);
-						e.gc.drawImage(img, x*SQUARE_WIDTH+10, y*SQUARE_WIDTH+10);
-					}
-					
-					white = !white;
-				}
-				white = !white;
-				
-			}
-			
-		}
-		
-		private void initializeBoardData(String color) {
-		//black pieces
-		boardData = new String[8][8];
-		boardData[0][0] = "br.png";
-		boardData[0][1] = "bkn.png";
-		boardData[0][2] = "bb.png";
-		boardData[0][3] = "bq.png";
-		boardData[0][4] = "bk.png";
-		boardData[0][5] = "bb.png";
-		boardData[0][6] = "bkn.png";
-		boardData[0][7] = "br.png";
-		
-		for(int i=0; i<8; i++) {
-			boardData[1][i] = "bp.png";
-		}
-		
-		
-		for(int i=0; i<8; i++) {
-			boardData[6][i] = "wp.png";
-		}
-		
-		boardData[7][0] = "wr.png";
-		boardData[7][1] = "wkn.png";
-		boardData[7][2] = "wb.png";
-		boardData[7][3] = "wq.png";
-		boardData[7][4] = "wk.png";
-		boardData[7][5] = "wb.png";
-		boardData[7][6] = "wkn.png";
-		boardData[7][7] = "wr.png";
-		
-		
-	}
-	
-		private void setUpImgData() {
-		imgData.add("bb.png");
-		imgData.add("wb.png");
-		
-		imgData.add("bk.png");
-		imgData.add("wk.png");
-		
-		imgData.add("bkn.png");
-		imgData.add("wkn.png");
-		
-		imgData.add("bp.png");
-		imgData.add("wp.png");
-		
-		imgData.add("br.png");
-		imgData.add("wr.png");
-		
-		imgData.add("bq.png");
-		imgData.add("wq.png");
-	}
-	
-	*/
 }

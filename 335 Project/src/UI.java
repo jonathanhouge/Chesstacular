@@ -33,7 +33,7 @@ public class UI {
 	Socket socket;
 
 	Client client;
-	ChessBoardUIOne boardUI;
+	ChessBoard boardUI;
 	boolean initialized = false;
 	int SHELL_WIDTH_OFFSET = 20;
 	int SHELL_HEIGHT_OFFSET = 50;
@@ -59,13 +59,14 @@ public class UI {
 		canvas.addPaintListener(e -> {
 			if (initialized == false) { // create the tiles and initial starting positions
 				boolean white;
-				System.out.println(client.getPlayer().getColor());
+				//System.out.println(client.getPlayer().getColor());
 				if (client.getPlayer().getColor() == "White") { white = true; }
 				else { white = false; }
 
 				boardUI.createBoardData(e.gc, white);
 				initialized = true; }
-			boardUI.draw(e.gc);
+			
+			if (initialized) { boardUI.draw(e.gc); }
 		}
 		);	
 
@@ -111,7 +112,7 @@ public class UI {
 		canvas.setSize(640, 640 + SHELL_HEIGHT_OFFSET);
 //		canvas.setBounds(0, 0, 640, 640);
 		
-		boardUI = new ChessBoardUIOne(canvas, shell);	
+		boardUI = new ChessBoard(canvas, shell);	
 	}
 	
 	void notifyOtherUsers() {
@@ -121,7 +122,6 @@ public class UI {
 			out.newLine();
 			out.flush();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -172,12 +172,3 @@ public class UI {
 	
 	
 }
-
-
-
-
-
-
-
-
-

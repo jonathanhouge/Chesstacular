@@ -1,20 +1,12 @@
 /* The Player class. Created by client by filling out the options from 
- * PlayerCreateDisplay. Holds onto the player's tank as well as information
- * relative to it, plus finding the player's local bounds (resolution).
+ * PlayerCreateDisplay.
  * 
  * AUTHOR: Jonathan Houge
  */
 
 import java.util.Random;
-import java.io.Serializable;
 
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.graphics.Rectangle;
-
-public class Player implements Serializable {
-	
-	private static final long serialVersionUID = 1L; // to appease the java gods
+public class Player {
 	
 	private String name;
 	private String[] names = {"[uwu]", "[;~;]", "[*u*]", "[#0#]", "[o~o]", "[oWo]"}; // default names
@@ -25,11 +17,7 @@ public class Player implements Serializable {
 	
 	private int score;
 	
-	// maybe alter later
-//	int x; 
-//	int y;
-	
-	// constructor. if the player didn't type in a new name, we give them a random 
+	// constructor. if the player didn't type in a new name, we give them a random one.
 	public Player(String name, String color, String opponent) {
 		if (name.equals("Enter name here!")) { // randomly assign a name if none chosen
 			Random ran = new Random();
@@ -39,26 +27,13 @@ public class Player implements Serializable {
 		
 		this.color = color; this.opponent = opponent; }
 	
-	// find the player/client's bounds, could be helpful
-//	public void bounds() {
-//		Display display = new Display();
-//		Shell shell = new Shell(display);
-//		
-//		Rectangle bounds = shell.getMonitor().getBounds();
-//		this.x = bounds.width; this.y = bounds.height;
-//		display.dispose(); }
-	
-	// string method - returns name
-	public String toString() { return name; }
-	
-	// setters (maybe keeping)
+	//-- setters
 	public void setID(int id) { this.ID = id; }
-	public void addPoints(int points) { score += points; }
 	public void setColor(String color) {this.color = color;}
-//	public void setDisplayWidth(int newX) { this.x = newX; }
-//	public void setDisplayHeight(int newY) { this.y = newY; }
+	public void addPoints(int points) { score += points; }
 	
-	// getters
+	//-- getters
+	public String toString() { return name; }
 	public String getName() { return name; }
 	public int getID() { return ID; }
 	public String getColor() { return color; }

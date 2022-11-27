@@ -3,30 +3,28 @@
  * This is accomplished using SWT widgets and Arraylists. After submitting the information, 
  * a new Player object is created and the server is told of the successful player creation.
  * 
- * Uses XTankHostDisplay's selectListenCreation to save code.
- * 
  * AUTHOR: Jonathan Houge
  */
 
 import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionAdapter;
 
 public class PlayerCreateDisplay {
 
-	// start - takes in id for player creation, returns the player made
+	// start returns the player made by the client
 	public Player start() {
 		
 		//-- create and set up the display & create variables for the display's widgets 
@@ -54,7 +52,7 @@ public class PlayerCreateDisplay {
 		
 		//-- the widgets
 		
-		// enter your name; default will pick a random name from the Player class
+		// enter your name; default will pick a random emoticon from the Player class
 		Group colors = new Group(shell, SWT.NONE);
 		colors.setLayout(widgetLayout);
 		Label label = new Label(colors, SWT.NONE);
@@ -70,13 +68,13 @@ public class PlayerCreateDisplay {
 		ArrayList<String> decision3 = new ArrayList<String>(); decision3.add("Human");
 		typeButtons(shell, decision3, widgetLayout, labelFont, buttonFont, color);
 		
-		// join button - will use the current selections to create a new Player
+		// play button - will use the current selections to create a new Player
 		ArrayList<String> decision = new ArrayList<String>();
 		Button start = new Button(shell, SWT.PUSH); start.setText("Let's play!");
 		selectListenCreation(start, decision);
 		
 		shell.pack(); shell.open();
-		while (decision.size() == 0) { // while the join button hasn't been clicked
+		while (decision.size() == 0) { // while the play button hasn't been clicked
 			if (!display.readAndDispatch ())
 				display.sleep (); }
 		
@@ -88,9 +86,9 @@ public class PlayerCreateDisplay {
 		Player player = new Player(playerName, preferredColor, opponent);
 		return player; } // player successfully created!
 
-	// radio button for color picking
+	// radio button for picking piece color
 	private static void colorButtons(Shell shell, ArrayList<String> decision, GridLayout layout, Font title, Font button, Color color) {
-		// set up general button layout
+		//-- set up general button layout
 		Group colors = new Group(shell, SWT.NONE);
 		colors.setLayout(layout);
 		Label label = new Label(colors, SWT.NONE);
@@ -105,9 +103,9 @@ public class PlayerCreateDisplay {
 		black.setFont(button); black.setForeground(color);
 		selectListenCreation(black, decision); }
 		
-	// radio button for color picking
+	// radio button for picking the type of game
 	private static void typeButtons(Shell shell, ArrayList<String> decision, GridLayout layout, Font title, Font button, Color color) {
-		// set up general button layout
+		//-- set up general button layout
 				Group colors = new Group(shell, SWT.NONE);
 				colors.setLayout(layout);
 				Label label = new Label(colors, SWT.NONE);
