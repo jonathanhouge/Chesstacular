@@ -39,6 +39,7 @@ public class UI {
 	boolean initialized = false;
 	int SHELL_WIDTH_OFFSET = 20;
 	int SHELL_HEIGHT_OFFSET = 50;
+	public static int BOARD_COORD_OFFSET = 100;
 	/*
 	 * Constructor that assigns values
 	 * client: client object
@@ -107,11 +108,11 @@ public class UI {
 		shell = new Shell(display);
 		shell.setText("Chess (" + client.getPlayer().getName() + ")");
 		shell.setLayout(new FillLayout());
-		shell.setSize(640 + SHELL_WIDTH_OFFSET, 640 + SHELL_HEIGHT_OFFSET);
+		shell.setSize(640+BOARD_COORD_OFFSET + SHELL_WIDTH_OFFSET, 640+BOARD_COORD_OFFSET/2 + SHELL_HEIGHT_OFFSET);
 		
 		canvas = new Canvas(shell, SWT.BACKGROUND);
 		canvas.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_WHITE));
-		canvas.setSize(640, 640 + SHELL_HEIGHT_OFFSET);
+		canvas.setSize(640+BOARD_COORD_OFFSET, 640+BOARD_COORD_OFFSET/2 + SHELL_HEIGHT_OFFSET);
 //		canvas.setBounds(0, 0, 640, 640);
 		
 		boardUI = new Chessboard(canvas, shell);	

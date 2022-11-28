@@ -21,6 +21,7 @@ public abstract class Piece {
 	private int y;
 	private Image visual;
 	private static int SQUARE_WIDTH = 80;
+	int BOARD_COORD_OFFSET = 100;
 
 	/**
 	 * This method is used to set the SQUARE_WIDTH variable, a variable representing how
@@ -58,7 +59,7 @@ public static void setWidth(int width) {
 	 * @param gc the graphical context where the image is to be drawn onto
 	 */
 	public void draw(GC gc) {
-		gc.drawImage(this.visual, this.x * SQUARE_WIDTH + 10, this.y * SQUARE_WIDTH + 10);
+		gc.drawImage(this.visual, this.x * SQUARE_WIDTH + 10+BOARD_COORD_OFFSET/2, this.y * SQUARE_WIDTH + 10);
 	}
 	
 	/**

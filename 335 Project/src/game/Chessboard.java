@@ -1,6 +1,8 @@
 package game;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Shell;
@@ -18,6 +20,9 @@ public class Chessboard implements ChessBoardUI{
 	Shell shell;
 	int SQUARE_WIDTH = 80;
 	Tile [][]board;
+	String verticalCoords[] = new String[]{"8","7","6","5","4","3","2","1"};
+	String horizontalCoords[] = new String[] {"A","B","C","D","E","F","G","H"};
+	int BOARD_COORD_OFFSET = 100;
 	
 	
 	public Chessboard(Canvas canvas, Shell shell) {
@@ -29,7 +34,10 @@ public class Chessboard implements ChessBoardUI{
 	public void draw(GC gc) {
 		for(int x = 0; x < 8; x++) {
 			for(int y = 0; y < 8; y++) {
-				board[x][y].draw(gc); } }
+				board[x][y].draw(gc); 
+				addBoardCoords(gc, x,y);
+				} 
+			}
 	}
 	
 	/* 'simpleton' function, only ran once for initialization.
@@ -43,8 +51,8 @@ public class Chessboard implements ChessBoardUI{
 			for(int y = 0; y < 8; y++) {
 				
 				// create the tiles with the proper color
-				if(boardColor) { board[x][y] = new Tile(w, x*SQUARE_WIDTH, y*SQUARE_WIDTH, SQUARE_WIDTH); }
-				else { board[x][y] = new Tile(b, x*SQUARE_WIDTH, y*SQUARE_WIDTH, SQUARE_WIDTH); }
+				if(boardColor) { board[x][y] = new Tile(w, x*SQUARE_WIDTH+50, y*SQUARE_WIDTH, SQUARE_WIDTH); }
+				else { board[x][y] = new Tile(b, x*SQUARE_WIDTH+50, y*SQUARE_WIDTH, SQUARE_WIDTH); }
 				
 				// set the piece using a helper function
 				board[x][y].setPiece(makePiece(x, y, white));
@@ -86,19 +94,43 @@ public class Chessboard implements ChessBoardUI{
 		return null; // tile is given no piece
 	}
 	
-	public void mouseClickUpdate(int x, int y) {
+	public void mouseClickUpdate(float x, float y) {
 		getBoardIndex(x,y);
 	}
 	
 	private int[] getBoardIndex(float x, float y) {
-		float indexX = x/SQUARE_WIDTH;
-		float indexY = y/SQUARE_WIDTH;
+		
+		x-=BOARD_COORD_OFFSET/2;
+//		System.out.println(x + ":" + y);
+		float indexX =  x/SQUARE_WIDTH;
+		float indexY =  y/SQUARE_WIDTH;
+//		System.out.println(indexX + ":" + indexY);
 		
 		int indX = (int) indexX;
 		int indY = (int) indexY;
 //		System.out.println(indexY+":"+indexY);
-		System.out.println(indY + ":" + indX );
-		
+		if(indX < 0 || indX > 7 || indY < 0 || indY > 7 || indexX < 0) {
+			System.out.println("Clicking outside the board!");
+			return null;}
+		System.out.println(horizontalCoords[indX] + verticalCoords[indY] );
 		return new int[] {indX,indY};
+	}
+	
+	private void addBoardCoords(GC gc, int x, int y) {
+		
+		
+		Font font = new Font(canvas.getDisplay(), "Tahoma", 15, SWT.BOLD);
+		gc.setFont(font);
+		gc.setBackground(new Color(255,255,255));
+		if(x == 0) {
+			String vCoord = verticalCoords[y];
+			gc.drawText(vCoord, x*SQUARE_WIDTH+20, y*SQUARE_WIDTH+25);
+			
+		}if (y == 7) {
+			String xCoord = horizontalCoords[x];
+			gc.drawText(xCoord, x*SQUARE_WIDTH+60+20, (y+1)*SQUARE_WIDTH+15);
+		}
+		
+		
 	}
 }
