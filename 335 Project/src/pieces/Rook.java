@@ -22,6 +22,8 @@ public class Rook extends Piece {
 		} else {
 			setImage(new Image(shell.getDisplay(), "images/" + blackPiece));
 		}
+		this.name = "ROOK";
+
 	}
 
 	@Override

@@ -20,6 +20,8 @@ public class Knight extends Piece {
 		} else {
 			setImage(new Image(shell.getDisplay(), "images/" + blackPiece));
 		}
+		this.name = "KNIGHT";
+
 	}
 
 	@Override
