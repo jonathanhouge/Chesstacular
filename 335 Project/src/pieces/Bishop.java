@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
+import game.Tile;
+
 public class Bishop extends Piece {
 
 	String whitePiece = "wb.png";

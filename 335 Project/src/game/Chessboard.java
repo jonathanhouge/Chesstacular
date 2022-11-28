@@ -1,35 +1,26 @@
-/* Chess Board UI.
- * 
- * Authors: Jonathan Houge & Khojiakbar Yokubjonov
- */
+package game;
 
-import org.eclipse.swt.graphics.GC;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.Shell;
 
-import pieces.Piece;
-import pieces.Pawn;
-import pieces.King;
-import pieces.Rook;
-import pieces.Queen;
 import pieces.Bishop;
+import pieces.King;
 import pieces.Knight;
+import pieces.Pawn;
+import pieces.Piece;
+import pieces.Queen;
+import pieces.Rook;
 
-// could perhaps make another instance of ChessBoardUI that's for testing - only white pieces, no turns, etc.
-interface ChessBoardUI {
-	public void draw(GC gc);
-	public void createBoardData(GC gc, boolean white);
-}
-
-class ChessBoard implements ChessBoardUI{
+public class Chessboard implements ChessBoardUI{
 	Canvas canvas;
 	Shell shell;
 	int SQUARE_WIDTH = 80;
 	Tile [][]board;
 	
 	
-	public ChessBoard(Canvas canvas, Shell shell) {
+	public Chessboard(Canvas canvas, Shell shell) {
 		this.canvas = canvas;
 		this.shell = shell;
 	}
@@ -78,13 +69,13 @@ class ChessBoard implements ChessBoardUI{
 			else if (x == 2 || x == 5) { return (new Bishop(playerColor, shell)); }
 			else if (x == 3) { return (new King(playerColor, shell)); }
 			else if (x == 4) { return (new Queen(playerColor, shell)); } }
-		if (y == 1) { return (new Pawn(playerColor, shell)); } // enemy pawns
+		else if (y == 1) { return (new Pawn(playerColor, shell)); } // enemy pawns
 		
 		// want the pieces closest to the player to be their color (player's color)
 		playerColor = !playerColor;
 		
 		if (y == 6) { return (new Pawn(playerColor, shell)); } // your pawns
-		if (y == 7) { // your specialty pieces
+		else if (y == 7) { // your specialty pieces
 			if (x == 0 || x == 7) { return (new Rook(playerColor, shell)); }
 			else if (x == 0 || x == 7) { return (new Rook(playerColor, shell)); }
 			else if (x == 1 || x == 6) { return (new Knight(playerColor, shell)); }
@@ -103,8 +94,8 @@ class ChessBoard implements ChessBoardUI{
 		float indexX = x/SQUARE_WIDTH;
 		float indexY = y/SQUARE_WIDTH;
 		
-		int indX = Math.round(indexX);
-		int indY = Math.round(indexY);
+		int indX = (int) indexX;
+		int indY = (int) indexY;
 //		System.out.println(indexY+":"+indexY);
 		System.out.println(indY + ":" + indX );
 		

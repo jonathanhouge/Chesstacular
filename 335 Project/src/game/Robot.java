@@ -5,14 +5,8 @@
  * Authors: Jonathan Houge &
  */
 
+package game;
+
 public abstract class Robot {
-	
-}
-
-class RandomAI extends Robot {
-	
-}
-
-class AlgorithmAI extends Robot {
 	
 }

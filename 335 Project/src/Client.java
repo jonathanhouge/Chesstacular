@@ -6,6 +6,11 @@
 
 import java.net.Socket;
 import java.util.ArrayList;
+
+import game.AlgorithmAI;
+import game.RandomAI;
+import game.Robot;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;

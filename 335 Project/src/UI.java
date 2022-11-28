@@ -9,6 +9,8 @@ import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
+import game.Chessboard;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
@@ -33,7 +35,7 @@ public class UI {
 	Socket socket;
 
 	Client client;
-	ChessBoard boardUI;
+	Chessboard boardUI;
 	boolean initialized = false;
 	int SHELL_WIDTH_OFFSET = 20;
 	int SHELL_HEIGHT_OFFSET = 50;
@@ -112,7 +114,7 @@ public class UI {
 		canvas.setSize(640, 640 + SHELL_HEIGHT_OFFSET);
 //		canvas.setBounds(0, 0, 640, 640);
 		
-		boardUI = new ChessBoard(canvas, shell);	
+		boardUI = new Chessboard(canvas, shell);	
 	}
 	
 	void notifyOtherUsers() {

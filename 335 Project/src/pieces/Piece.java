@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 
+import game.Tile;
+
 //import Tile;
 
 /**

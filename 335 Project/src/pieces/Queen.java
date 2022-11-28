@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
+import game.Tile;
+
 public class Queen extends Piece {
 	private Rook rook;
 	private Bishop bishop;
@@ -20,6 +22,9 @@ public class Queen extends Piece {
 		} else {
 			setImage(new Image(shell.getDisplay(), "images/" + blackPiece));
 		}
+		
+		this.rook = new Rook(white, shell);
+		this.bishop = new Bishop(white, shell);
 	}
 
 	/**

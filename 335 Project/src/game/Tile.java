@@ -1,3 +1,4 @@
+package game;
 /* Tile class. Each tile represents a square on the chess board.
  * 
  * Author: Jonathan Houge
@@ -48,6 +49,8 @@ public class Tile {
 	public void setColor(Color color) { this.color = color; }
 
 	//-- getters
+	public boolean hasPiece() { 
+		return this.piece != null; }
 	public Piece getPiece() { return this.piece; }
 	public Color getColor() { return this.color; }
 }
