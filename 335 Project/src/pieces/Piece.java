@@ -21,6 +21,7 @@ public abstract class Piece {
 	private int y;
 	private Image visual;
 	private static int SQUARE_WIDTH = 80;
+	public String name;
 
 	/**
 	 * This method is used to set the SQUARE_WIDTH variable, a variable representing how
@@ -35,6 +36,18 @@ public static void setWidth(int width) {
 
 	public Piece(boolean white) {
 		this.white = white;
+	}
+	
+	@Override 
+	public String toString() {
+		String color;
+		if (white) {
+			color = "WHITE ";
+		}else {
+			color = "BLACK ";
+		}
+		String builder = "PIECE X Y: " + color + name + " " + this.x + " " + this.y;
+		return builder;
 	}
 
 	/**

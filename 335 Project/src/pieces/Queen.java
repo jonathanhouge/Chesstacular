@@ -22,7 +22,7 @@ public class Queen extends Piece {
 		} else {
 			setImage(new Image(shell.getDisplay(), "images/" + blackPiece));
 		}
-		
+		this.name = "QUEEN";
 		this.rook = new Rook(white, shell);
 		this.bishop = new Bishop(white, shell);
 	}

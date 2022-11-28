@@ -24,6 +24,8 @@ public class Pawn extends Piece {
 		} else {
 			setImage(new Image(shell.getDisplay(), "images/" + blackPiece));
 		}
+		this.name = "PAWN";
+
 	}
 
 	@Override
