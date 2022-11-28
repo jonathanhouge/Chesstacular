@@ -1,5 +1,7 @@
 package game;
 
+import java.util.Arrays;
+
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Canvas;
@@ -43,11 +45,11 @@ public class Chessboard implements ChessBoardUI{
 			for(int y = 0; y < 8; y++) {
 				
 				// create the tiles with the proper color
-				if(boardColor) { board[x][y] = new Tile(w, x*SQUARE_WIDTH, y*SQUARE_WIDTH, SQUARE_WIDTH); }
-				else { board[x][y] = new Tile(b, x*SQUARE_WIDTH, y*SQUARE_WIDTH, SQUARE_WIDTH); }
+				if(boardColor) { board[y][x] = new Tile(w, x*SQUARE_WIDTH, y*SQUARE_WIDTH, SQUARE_WIDTH); }
+				else { board[y][x] = new Tile(b, x*SQUARE_WIDTH, y*SQUARE_WIDTH, SQUARE_WIDTH); }
 				
 				// set the piece using a helper function
-				board[x][y].setPiece(makePiece(x, y, white));
+				board[y][x].setPiece(makePiece(x, y, white));
 
 				// alternating tile colors
 				boardColor = !boardColor; }
@@ -96,7 +98,13 @@ public class Chessboard implements ChessBoardUI{
 		int[] coordinates = getBoardIndex(x,y);
 		int xCoord = coordinates[0];
 		int yCoord = coordinates[1];
-		piece.updateLocation(xCoord, yCoord);
+		System.out.println("PIECE BEFORE UPDATE LOCATION: " + piece);
+		System.out.println(Arrays.toString(coordinates));
+		board[piece.getY()][piece.getX()].setPiece(null);
+		piece.updateLocation(x, y);
+		board[yCoord][xCoord].setPiece(piece);
+		System.out.println("PIECE AFTER UPDATE LOCATION: " + piece);
+
 	}
 	private int[] getBoardIndex(float x, float y) {
 		float indexX = x/SQUARE_WIDTH;
@@ -105,7 +113,7 @@ public class Chessboard implements ChessBoardUI{
 		int indX = (int) indexX;
 		int indY = (int) indexY;
 //		System.out.println(indexY+":"+indexY);
-		System.out.println(indY + ":" + indX );
+		System.out.println("CHESSBOARD: " + indX + ":" + indY );
 		
 		return new int[] {indX,indY};
 	}
@@ -116,7 +124,7 @@ public class Chessboard implements ChessBoardUI{
 		int xCoord = coordinates[0];
 		int yCoord = coordinates[1];
 		//this if ensures that the player chooses their own color
-		if(this.board[yCoord][xCoord].getPiece()!=null && this.board[yCoord][xCoord].getPiece().isWhite() != playerIsWhite) {
+		if(this.board[yCoord][xCoord].getPiece()!=null && this.board[yCoord][xCoord].getPiece().isWhite() == playerIsWhite) {
 			return this.board[yCoord][xCoord].getPiece();
 		}
 		return null;

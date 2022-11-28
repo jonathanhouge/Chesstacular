@@ -76,18 +76,28 @@ public class UI {
 
 		canvas.addMouseListener(new MouseListener() {
 			public void mouseDown(MouseEvent e) {
-				System.out.println(e.x + ":" + e.y);
+				//System.out.println("UI: " + e.x + ":" + e.y);
 				if(selectedPiece == null) {
 					selectedPiece = boardUI.selectPiece(e.x, e.y,client.getPlayer().getColor());
-					System.out.println(); //TODO add debug print
+					System.out.println("SELECTED PIECE " + selectedPiece); //TODO add debug print
 				}else {
 					// if player chooses new piece, update selectedPiece
 					Piece possibleSelection = boardUI.selectPiece(e.x, e.y,client.getPlayer().getColor());
 					if (possibleSelection !=null) {
 						selectedPiece = possibleSelection;
-					}else if(boardUI.validMoveMade(e.x, e.y,selectedPiece)) {
-						boardUI.movePiece(e.x, e.y,selectedPiece);
+						System.out.println("SELECTED NEW PIECE" + selectedPiece);
+
+					}else {
+						boolean testValid = boardUI.validMoveMade(e.x, e.y,selectedPiece);
+								if(testValid) {
+									System.out.println("VALID MOVE MADE! MOVING PIECE");
+									boardUI.movePiece(e.x, e.y,selectedPiece);
+									System.out.println("PIECE UPDATED!");
+								}else {
+									System.out.println("INVALID MOVE MADE!");
+								}
 					}
+					
 				}
 				canvas.redraw();
 				

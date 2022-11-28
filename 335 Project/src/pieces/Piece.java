@@ -108,6 +108,7 @@ public static void setWidth(int width) {
 		this.x = x / SQUARE_WIDTH;
 		this.y = y / SQUARE_WIDTH;
 	}
+	
 
 	/**
 	 * This method sets the image of the piece so that it is properly
