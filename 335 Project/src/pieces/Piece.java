@@ -22,11 +22,8 @@ public abstract class Piece {
 	private int y;
 	private Image visual;
 	private static int SQUARE_WIDTH = 80;
-<<<<<<< HEAD
 	public String name;
-=======
 	int BOARD_COORD_OFFSET = 100;
->>>>>>> khojiakbar/board-numbers-letters
 
 	/**
 	 * This method is used to set the SQUARE_WIDTH variable, a variable representing
@@ -81,11 +78,9 @@ public abstract class Piece {
 	 * @param gc the graphical context where the image is to be drawn onto.
 	 */
 	public void draw(GC gc) {
-<<<<<<< HEAD
-		gc.drawImage(this.visual, this.x * getSQUARE_WIDTH() + 10, this.y * getSQUARE_WIDTH() + 10);
-=======
+
 		gc.drawImage(this.visual, this.x * SQUARE_WIDTH + 10+BOARD_COORD_OFFSET/2, this.y * SQUARE_WIDTH + 10);
->>>>>>> khojiakbar/board-numbers-letters
+
 	}
 
 	/**
