@@ -10,6 +10,7 @@ import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
 import game.Chessboard;
+import pieces.Piece;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -39,6 +40,7 @@ public class UI {
 	boolean initialized = false;
 	int SHELL_WIDTH_OFFSET = 20;
 	int SHELL_HEIGHT_OFFSET = 50;
+	Piece selectedPiece;
 	/*
 	 * Constructor that assigns values
 	 * client: client object
@@ -75,7 +77,18 @@ public class UI {
 		canvas.addMouseListener(new MouseListener() {
 			public void mouseDown(MouseEvent e) {
 				System.out.println(e.x + ":" + e.y);
-				boardUI.mouseClickUpdate(e.x, e.y);
+				if(selectedPiece == null) {
+					selectedPiece = boardUI.selectPiece(e.x, e.y,client.getPlayer().getColor());
+					System.out.println(); //TODO add debug print
+				}else {
+					// if player chooses new piece, update selectedPiece
+					Piece possibleSelection = boardUI.selectPiece(e.x, e.y,client.getPlayer().getColor());
+					if (possibleSelection !=null) {
+						selectedPiece = possibleSelection;
+					}else if(boardUI.validMoveMade(e.x, e.y,selectedPiece)) {
+						boardUI.movePiece(e.x, e.y,selectedPiece);
+					}
+				}
 				canvas.redraw();
 				
 			} 

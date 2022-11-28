@@ -86,11 +86,18 @@ public class Chessboard implements ChessBoardUI{
 		return null; // tile is given no piece
 	}
 	
-	public void mouseClickUpdate(int x, int y) {
-		getBoardIndex(x,y);
+	public boolean validMoveMade(int x, int y,Piece piece) {
+		int[] coordinates = getBoardIndex(x,y);
+		int xCoord = coordinates[0];
+		int yCoord = coordinates[1];
+		return piece.validMove(xCoord, yCoord, board);
+	}	
+	public void movePiece(int x, int y, Piece piece) {
+		int[] coordinates = getBoardIndex(x,y);
+		int xCoord = coordinates[0];
+		int yCoord = coordinates[1];
+		piece.updateLocation(xCoord, yCoord);
 	}
-	//test
-	
 	private int[] getBoardIndex(float x, float y) {
 		float indexX = x/SQUARE_WIDTH;
 		float indexY = y/SQUARE_WIDTH;
@@ -101,5 +108,17 @@ public class Chessboard implements ChessBoardUI{
 		System.out.println(indY + ":" + indX );
 		
 		return new int[] {indX,indY};
+	}
+
+	public Piece selectPiece(int x, int y,String playerColor) {
+		boolean playerIsWhite = playerColor.equals("White");
+		int[] coordinates = getBoardIndex(x,y);
+		int xCoord = coordinates[0];
+		int yCoord = coordinates[1];
+		//this if ensures that the player chooses their own color
+		if(this.board[yCoord][xCoord].getPiece()!=null && this.board[yCoord][xCoord].getPiece().isWhite() != playerIsWhite) {
+			return this.board[yCoord][xCoord].getPiece();
+		}
+		return null;
 	}
 }
