@@ -62,8 +62,12 @@ public class UI {
 			if (initialized == false) { // create the tiles and initial starting positions
 				boolean white;
 				//System.out.println(client.getPlayer().getColor());
-				if (client.getPlayer().getColor() == "White") { white = true; }
-				else { white = false; }
+				if (client.getPlayer().getColor().equals("White")) { 
+					System.out.println("Is White!");
+					white = true; }
+				else { 
+					System.out.println("Is not White!");
+					white = false; }
 
 				boardUI.createBoardData(e.gc, white);
 				initialized = true; }
@@ -144,18 +148,18 @@ public class UI {
 					try {
 						msgFromOthers = in.readLine();
 						
-						if (msgFromOthers.contains("ID")) { // your own ID
-							System.out.println("My INFO: " + msgFromOthers);
-							String[] list = msgFromOthers.split("[:-]");
-							int ID = Integer.parseInt(list[1]);
-							String color = list[2];
-							client.getPlayer().setID(ID);
-							client.getPlayer().setColor(color);	
-						}
-						
-						else 
+//						if (msgFromOthers.contains("ID")) { // your own ID
+//							System.out.println("My INFO: " + msgFromOthers);
+//							String[] list = msgFromOthers.split("[:-]");
+//							int ID = Integer.parseInt(list[1]);
+//							String color = list[2];
+//							client.getPlayer().setID(ID);
+//							client.getPlayer().setColor(color);	
+//						}
+//						
+//						else 
 							System.out.println("OPPOSITION: " + msgFromOthers);
-						}
+					}
 							
 					 catch(IOException e) {
 						client.close();
