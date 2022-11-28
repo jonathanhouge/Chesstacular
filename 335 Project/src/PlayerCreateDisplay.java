@@ -82,7 +82,7 @@ public class PlayerCreateDisplay {
 		String playerName = name.getText(); display.dispose();
 		String preferredColor = decision2.get(decision2.size() - 1);
 		String opponent = decision3.get(decision3.size() - 1);
-		System.out.println("In Player: "+ preferredColor);
+
 		Player player = new Player(playerName, preferredColor, opponent);
 		return player; } // player successfully created!
 

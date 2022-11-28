@@ -22,6 +22,7 @@ public abstract class Piece {
 	private int y;
 	private Image visual;
 	private static int SQUARE_WIDTH = 80;
+
 	public String name;
 	int BOARD_COORD_OFFSET = 100;
 
@@ -80,7 +81,6 @@ public abstract class Piece {
 	public void draw(GC gc) {
 
 		gc.drawImage(this.visual, this.x * SQUARE_WIDTH + 10+BOARD_COORD_OFFSET/2, this.y * SQUARE_WIDTH + 10);
-
 	}
 
 	/**
@@ -117,7 +117,7 @@ public abstract class Piece {
 	 * @param y the x coordinate where the user clicked
 	 */
 	public void updateLocation(int x, int y) {
-		this.x = x / SQUARE_WIDTH;
+		this.x = (x-BOARD_COORD_OFFSET/2) / SQUARE_WIDTH;
 		this.y = y / SQUARE_WIDTH;
 	}
 
@@ -161,7 +161,8 @@ public abstract class Piece {
 	 * @param y the x coordinate where the user clicked
 	 */
 	public void setLocation(int x, int y) {
-		this.x = x / getSQUARE_WIDTH();
+	
+		this.x = (x-BOARD_COORD_OFFSET/2) / getSQUARE_WIDTH();
 		this.y = y / getSQUARE_WIDTH();
 	}
 

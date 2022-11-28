@@ -152,6 +152,7 @@ if(x == 0) {
 	 */
 	public boolean validMoveMade(int x, int y,Piece piece) {
 		int[] coordinates = getBoardIndex(x,y);
+		if(coordinates == null) {return false;}
 		int xCoord = coordinates[0];
 		int yCoord = coordinates[1];
 		return piece.validMove(xCoord, yCoord, board);
@@ -167,6 +168,7 @@ if(x == 0) {
 	 */
 	public void movePiece(int x, int y, Piece piece) {
 		int[] coordinates = getBoardIndex(x,y);
+		if(coordinates == null) {return;}
 		int xCoord = coordinates[0];
 		int yCoord = coordinates[1];
 		board[piece.getY()][piece.getX()].setPiece(null); 
@@ -205,6 +207,7 @@ if(x == 0) {
 	 */
 	public Piece selectPiece(int x, int y) {
 		int[] coordinates = getBoardIndex(x,y);
+		if(coordinates == null) {return null;}
 		int xCoord = coordinates[0];
 		int yCoord = coordinates[1];
 		if(this.board[yCoord][xCoord].getPiece()!=null) {
