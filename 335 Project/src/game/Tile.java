@@ -33,7 +33,12 @@ public class Tile {
 	/* drawing. make the background the correct color, draw the tile.
 	 * if there's a piece, draw the piece after the tile. */
 	public void draw(GC gc) {
-		gc.setBackground(color);
+		gc.setBackground(this.color);
+		gc.fillRectangle(this.tile);
+		if (piece != null) { piece.draw(gc); } }
+	
+	public void draw(GC gc, Color newColor) {
+		gc.setBackground(newColor);
 		gc.fillRectangle(tile);
 		if (piece != null) { piece.draw(gc); } }
 	

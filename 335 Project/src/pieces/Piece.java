@@ -25,6 +25,7 @@ public abstract class Piece {
 
 	public String name;
 	int BOARD_COORD_OFFSET = 100;
+	public boolean selected;
 
 	/**
 	 * This method is used to set the SQUARE_WIDTH variable, a variable representing
@@ -39,6 +40,7 @@ public abstract class Piece {
 
 	public Piece(boolean white) {
 		this.white = white;
+		this.selected = false;
 	}
 
 	/**
@@ -56,6 +58,23 @@ public abstract class Piece {
 		}
 		String builder = "PIECE X Y: " + color + name + " " + this.x + " " + this.y;
 		return builder;
+	}
+	
+	
+	/**
+	 * these functions are used to highlight the user selected piece
+	 *  on the chess board;
+	 */
+	
+	public void setSelected() {
+		this.selected = true;
+	}
+	public boolean isSelected() {
+		return this.selected;
+	}
+	
+	public void SetNotSelected() {
+		this.selected = false;
 	}
 
 	/**
