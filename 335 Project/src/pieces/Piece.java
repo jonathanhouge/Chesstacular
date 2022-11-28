@@ -18,8 +18,15 @@ public abstract class Piece {
 	private int x;
 	private int y;
 	private Image visual;
-	private static int SQUARE_WIDTH = 80; // should it be all caps?
+	private static int SQUARE_WIDTH = 80;
 
+	/**
+	 * This method is used to set the SQUARE_WIDTH variable, a variable representing how
+	 * wide each tile on the board is which is necessary for when a piece must draw itself 
+	 * onto the UI.
+	 * 
+	 * @param width, an integer representing how wide a square is on the board.
+	 */
 	public static void setWidth(int width) {
 		SQUARE_WIDTH = width;
 	}
@@ -31,24 +38,28 @@ public abstract class Piece {
 	/**
 	 * This method returns a boolean indicating if the move is valid.
 	 * A move is valid if it is a standard move of that piece, and if 
-	 * it does not collide with pieces already on the board.
+	 * it the movement does not collide with pieces already on the board.
 	 * 
-	 * @param x,y: any int between 0-7 inclusive.
-	 * @param tiles: a 2D array containing 
+	 * @param x any integer between 0-7 inclusive.
+	 * @param y	any integer between 0-7 inclusive.
+	 * @param tiles a 2D array containing Tile objects that contain a Piece field
 	 * @return a boolean, true if move can be made, false if not
 	 */
 	public boolean validMove(int x, int y, Tile[][] tiles) {
-		return true; // for testing purposes, this is set to true
-		//return this.standardMove(x, y) && this.hasNoCollisions(x, y, tiles);
+		return this.standardMove(x, y) && this.hasNoCollisions(x, y, tiles);
 	}
 
+	/**
+	 * This method is responsible for drawing a piece onto the UI.
+	 * 
+	 * @param gc the graphical context where the image is to be drawn onto
+	 */
 	public void draw(GC gc) {
 		gc.drawImage(this.visual, this.x * SQUARE_WIDTH + 10, this.y * SQUARE_WIDTH + 10);
 	}
 	
 	/**
-	 * This method acts as a getter, it returns true if the piece is white,
-	 * false if black.
+	 * This method is used to determine the color of the piece.
 	 * @return true if piece is white, false if black.
 	 */
 	public boolean isWhite() {
@@ -57,7 +68,7 @@ public abstract class Piece {
 	/**
 	 * This getter method returns the x value of the piece
 	 * 
-	 * 	@return an int that represents the y value of the piece
+	 * 	@return an integer representing the x value of the piece
 	 */
 	public int getX() {
 		return this.x;
@@ -65,7 +76,7 @@ public abstract class Piece {
 	/**
 	 * This getter method returns the y value of the piece.
 	 * 
-	 * @return an int that represents the y value of the piece
+	 * @return an integer representing the y value of the piece
 	 */
 	public int getY() {
 		return this.y;
@@ -73,6 +84,9 @@ public abstract class Piece {
 
 	/**
 	 * This method updates the location of a given piece.
+	 * 
+	 * @param x any integer between 0-7 inclusive
+	 * @param y any integer between 0-7 inclusive
 	 */
 	public void updateLocation(int x, int y) {
 		this.x = x;
@@ -80,26 +94,32 @@ public abstract class Piece {
 	}
 
 	/**
-	 * This method sets the image of the piece so that it is correctly
+	 * This method sets the image of the piece so that it is properly
 	 * represented on the chess board.
+	 * 
+	 * @param image an image representing the Piece object
 	 */
 	public void setImage(Image image) {
 		this.visual = image;
 	}
 
 	/**
-	 * This abstract method returns a boolean depending on if the piece is moved
-	 * in a way that the specific subclass of piece is intended to move. 
+	 * This method returns a boolean depending on if the piece is moved
+	 * in a way that it is intended to move. 
 	 * 
+	 * @param x any integer between 0-7 inclusive
+	 * @param y any integer between 0-7 inclusive
 	 * @return true if the piece is moved in a typical way, false if not
 	 */
 	public abstract boolean standardMove(int x, int y);
 
 	/**
-	 * This abstract method returns a boolean depending on if the piece collides
-	 * with its own piece at the x/y coordinate and if it collides with another 
-	 * piece while attempting to move to the x/y coordinate.
+	 * This method returns a boolean indicating if the piece collides
+	 * with a friendly piece at the x/y coordinate.
 	 * 
+	 * @param x any integer between 0-7 inclusive
+	 * @param y any integer between 0-7 inclusive
+	 * @param tiles a 2D list containing Tile objects which contain an accessible Piece field.
 	 * @return true if no pieces are in the way, false if a piece would be blocking
 	 * the move
 	 */

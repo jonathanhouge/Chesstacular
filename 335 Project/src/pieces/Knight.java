@@ -31,11 +31,13 @@ public class Knight extends Piece {
 		}
 		return false;
 	}
-
+	
 	@Override
 	public boolean hasNoCollisions(int x, int y, Tile[][] tiles) {
-		// TODO Auto-generated method stub
-		return false;
+		if (tiles[y][x].getPiece() != null && tiles[y][x].getPiece().isWhite() == this.isWhite()) {
+			return false;
+		}
+		return true;
 	}
 
 }

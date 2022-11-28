@@ -6,7 +6,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
 public class Rook extends Piece {
-	
+
 	String whitePiece = "wr.png";
 	String blackPiece = "br.png";
 	int points = 5;
@@ -22,13 +22,13 @@ public class Rook extends Piece {
 
 	@Override
 	public boolean standardMove(int x, int y) {
-		if(this.getX() == x) { // possible horizontal movement
-			if(0 < y && y < 8) {
+		if (this.getX() == x) { // possible horizontal movement
+			if (0 < y && y < 8) {
 				this.updateLocation(x, y);
 				return true;
 			}
-		}else if(this.getY() == y){ // possible vertical movement
-			if(0 < x && x < 8) {
+		} else if (this.getY() == y) { // possible vertical movement
+			if (0 < x && x < 8) {
 				this.updateLocation(x, y);
 				return true;
 			}
@@ -36,10 +36,44 @@ public class Rook extends Piece {
 		return false;
 	}
 
+	/**
+	 * {@inheritDoc} Additionally, it also checks to see if the piece collides with
+	 * another piece while attempting to move to the new x/y coordinate.
+	 */
 	@Override
 	public boolean hasNoCollisions(int x, int y, Tile[][] tiles) {
-		// TODO Auto-generated method stub
-		return false;
+		// first, check to see if the desired spot will collide with players own piece
+		if (tiles[y][x].getPiece() != null && tiles[y][x].getPiece().isWhite() == this.isWhite()) {
+			return false;
+		}
+
+		// finally, check to see nothing is in the path of the movement
+		if (x < this.getX()) { // left
+			for (int i = x + 1; i < this.getX(); i++) {
+				if (tiles[y][i].hasPiece()) {
+					return false;
+				}
+			}
+		} else if (x > this.getX()) {// right
+			for (int i = x - 1; i > this.getX(); i--) {
+				if (tiles[y][i].hasPiece()) {
+					return false;
+				}
+			}
+		} else if (y < this.getY()) { // down
+			for (int i = y + 1; i < this.getY(); i++) {
+				if (tiles[i][x].hasPiece()) {
+					return false;
+				}
+			}
+		} else { // up
+			for (int i = y - 1; i > this.getY(); i--) {
+				if (tiles[i][x].hasPiece()) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 }
