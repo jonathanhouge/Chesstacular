@@ -88,24 +88,7 @@ public class Chessboard implements ChessBoardUI{
 		return null; // tile is given no piece
 	}
 	
-	public boolean validMoveMade(int x, int y,Piece piece) {
-		int[] coordinates = getBoardIndex(x,y);
-		int xCoord = coordinates[0];
-		int yCoord = coordinates[1];
-		return piece.validMove(xCoord, yCoord, board);
-	}	
-	public void movePiece(int x, int y, Piece piece) {
-		int[] coordinates = getBoardIndex(x,y);
-		int xCoord = coordinates[0];
-		int yCoord = coordinates[1];
-		System.out.println("PIECE BEFORE UPDATE LOCATION: " + piece);
-		System.out.println(Arrays.toString(coordinates));
-		board[piece.getY()][piece.getX()].setPiece(null);
-		piece.updateLocation(x, y);
-		board[yCoord][xCoord].setPiece(piece);
-		System.out.println("PIECE AFTER UPDATE LOCATION: " + piece);
-
-	}
+	
 	private int[] getBoardIndex(float x, float y) {
 		float indexX = x/SQUARE_WIDTH;
 		float indexY = y/SQUARE_WIDTH;
@@ -113,29 +96,79 @@ public class Chessboard implements ChessBoardUI{
 		int indX = (int) indexX;
 		int indY = (int) indexY;
 //		System.out.println(indexY+":"+indexY);
-		System.out.println("CHESSBOARD: " + indX + ":" + indY );
+		System.out.println("CHESSBOARD - " + indX + ":" + indY );
 		
 		return new int[] {indX,indY};
 	}
 	
 	
+	/**
+	 * This method returns a boolean which indicates if the move to the 
+	 * desired x/y coordinate is a legal move that the piece can make.
+	 * 
+	 * @param x the x coordinate where the user clicked
+	 * @param y the x coordinate where the user clicked
+	 * @param piece the Piece object that is to be moved
+	 * @return true if the move is legal, false if not.
+	 * @author Julius Ramirez
+	 */
+	public boolean validMoveMade(int x, int y,Piece piece) {
+		int[] coordinates = getBoardIndex(x,y);
+		int xCoord = coordinates[0];
+		int yCoord = coordinates[1];
+		return piece.validMove(xCoord, yCoord, board);
+	}	
+	/**
+	 * This method updates the piece's coordinates to the new x/y coordinate and 
+	 * ensures that the old tilies piece field is set to null.
+	 * 
+	 * @param x the x coordinate where the user clicked
+	 * @param y the x coordinate where the user clicked
+	 * @param piece the Piece object that is to be moved
+	 * @author Julius Ramirez
+	 */
+	public void movePiece(int x, int y, Piece piece) {
+		int[] coordinates = getBoardIndex(x,y);
+		int xCoord = coordinates[0];
+		int yCoord = coordinates[1];
+		board[piece.getY()][piece.getX()].setPiece(null); 
+		piece.updateLocation(x, y);
+		board[yCoord][xCoord].setPiece(piece);
+
+	}
+	/**
+	 * This method is responsible for returning a piece (or null) that the player wants to move.
+	 * 
+	 * @param x the x coordinate where the user clicked.
+	 * @param y the x coordinate where the user clicked.
+	 * @param playerColor the color (White or Black) of the player.
+	 * @return a piece object if the piece can be selected by the player, null if empty/opponents piece.
+	 * @author Julius Ramirez
+	 */
 	public Piece selectPiece(int x, int y,String playerColor) {
 		boolean playerIsWhite = playerColor.equals("White");
 		int[] coordinates = getBoardIndex(x,y);
 		int xCoord = coordinates[0];
 		int yCoord = coordinates[1];
-		//this if ensures that the player chooses their own color
+		//this if also ensures the player selects one of their own pieces to move
 		if(this.board[yCoord][xCoord].getPiece()!=null && this.board[yCoord][xCoord].getPiece().isWhite() == playerIsWhite) {
 			return this.board[yCoord][xCoord].getPiece();
 		}
 		return null;
 	}
-
+	/**
+	 * This is a debug version of selectPiece(). It acts the same however the user can also move the opponents pieces.
+	 * 
+	 * @param x the x coordinate where the user clicked.
+	 * @param y the x coordinate where the user clicked.
+	 * @param playerColor the color (White or Black) of the player.
+	 * @return a piece object if the piece can be selected by the player, null if empty/opponents piece.
+	 * @author Julius Ramirez
+	 */
 	public Piece selectPiece(int x, int y) {
 		int[] coordinates = getBoardIndex(x,y);
 		int xCoord = coordinates[0];
 		int yCoord = coordinates[1];
-		//this if ensures that the player chooses their own color
 		if(this.board[yCoord][xCoord].getPiece()!=null) {
 			return this.board[yCoord][xCoord].getPiece();
 		}

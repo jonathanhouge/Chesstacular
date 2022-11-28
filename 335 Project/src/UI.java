@@ -40,7 +40,7 @@ public class UI {
 	boolean initialized = false;
 	int SHELL_WIDTH_OFFSET = 20;
 	int SHELL_HEIGHT_OFFSET = 50;
-	Piece selectedPiece;
+	Piece selectedPiece; //Newly added field
 	/*
 	 * Constructor that assigns values
 	 * client: client object
@@ -63,7 +63,6 @@ public class UI {
 		canvas.addPaintListener(e -> {
 			if (initialized == false) { // create the tiles and initial starting positions
 				boolean white;
-				//System.out.println(client.getPlayer().getColor());
 				if (client.getPlayer().getColor() == "White") { white = true; }
 				else { white = false; }
 
@@ -76,32 +75,43 @@ public class UI {
 
 		canvas.addMouseListener(new MouseListener() {
 			public void mouseDown(MouseEvent e) {
-				//System.out.println("UI: " + e.x + ":" + e.y);
+				//NOTE: For selectedPiece and possibleSelection, the else block is the actual code. For 
+				// testing, the debug version of selectPiece() is implemented which allows you to make valid
+				// opponent moves, however this debug version does not allow the player to take pieces.
+				// If you want to take a piece, set debugMode = false;
+				boolean debugMode = true;
 				if(selectedPiece == null) {
-					////selectedPiece = boardUI.selectPiece(e.x, e.y,client.getPlayer().getColor());
-					selectedPiece = boardUI.selectPiece(e.x,e.y);
-					System.out.println("SELECTED PIECE " + selectedPiece); //TODO add debug print
-				}else {
-					// if player chooses new piece, update selectedPiece
-					//////Piece possibleSelection = boardUI.selectPiece(e.x, e.y,client.getPlayer().getColor());
-					Piece possibleSelection = boardUI.selectPiece(e.x,e.y);
-					if (possibleSelection !=null) {
-						selectedPiece = possibleSelection;
-						System.out.println("SELECTED NEW PIECE" + selectedPiece);
-
+					if(debugMode) {
+						selectedPiece = boardUI.selectPiece(e.x,e.y);
 					}else {
+						selectedPiece = boardUI.selectPiece(e.x, e.y,client.getPlayer().getColor());
+					}
+					System.out.println("UI - SELECTED PIECE: " + selectedPiece);
+				}else {	
+					Piece possibleSelection;
+					if(debugMode) {
+						possibleSelection = boardUI.selectPiece(e.x,e.y);
+					}else {
+						possibleSelection = boardUI.selectPiece(e.x, e.y,client.getPlayer().getColor());
+					}
+					
+					if (possibleSelection !=null) {// if player chooses new piece, update selectedPiece
+
+						selectedPiece = possibleSelection;
+						System.out.println("UI - SELECTED NEW PIECE: " + selectedPiece);
+					}else {// player may have moved onto empty space or onto enemy
 						boolean testValid = boardUI.validMoveMade(e.x, e.y,selectedPiece);
-								if(testValid) {
-									System.out.println("VALID MOVE MADE! MOVING PIECE");
-									boardUI.movePiece(e.x, e.y,selectedPiece);
-									System.out.println("PIECE UPDATED!");
-								}else {
-									System.out.println("INVALID MOVE MADE!");
-								}
+						if(testValid) {
+							System.out.println("UI - VALID MOVE MADE! MOVING PIECE");
+							boardUI.movePiece(e.x, e.y,selectedPiece);
+							System.out.println("UI - PIECE UPDATED!");
+							canvas.redraw();
+						}else {
+							System.out.println("UI - INVALID MOVE MADE!");
+						}
 					}
 					
 				}
-				canvas.redraw();
 				
 			} 
 			public void mouseUp(MouseEvent e) {} 
