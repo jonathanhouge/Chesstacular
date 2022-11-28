@@ -86,7 +86,7 @@ public class UI {
 				//NOTE: For selectedPiece and possibleSelection, the else block is the actual code. For 
 				// testing, the debug version of selectPiece() is implemented which allows you to make valid
 				// opponent moves, however this debug version does not allow the player to take pieces.
-				// If you want to take a piece, set debugMode = false;
+				// If you want to take a piece and move only your own pieces, set debugMode = false;
 				boolean debugMode = true;
 				if(selectedPiece == null) {
 					if(debugMode) {

@@ -33,10 +33,7 @@ public class Queen extends Piece {
 	 */
 	@Override
 	public boolean standardMove(int x, int y) {
-		if (rook.standardMove(x, y) || bishop.standardMove(x, y)) {
-			return true;
-		}
-		return false;
+		return rook.standardMove(x, y) || bishop.standardMove(x, y);
 	}
 
 	/**
@@ -46,9 +43,15 @@ public class Queen extends Piece {
 	 */
 	@Override
 	public boolean hasNoCollisions(int x, int y, Tile[][] tiles) {
-		return (rook.hasNoCollisions(x, y, tiles) || bishop.hasNoCollisions(x, y, tiles));
+		return rook.hasNoCollisions(x, y, tiles) || bishop.hasNoCollisions(x, y, tiles);
 	}
 
+	@Override 
+	public void setLocation(int x, int y) {
+		super.setLocation(x, y);
+		this.rook.setLocation(x, y);
+		this.bishop.setLocation(x, y);
+	}
 	@Override
 	public void updateLocation(int x, int y) {
 		super.updateLocation(x, y);
