@@ -21,6 +21,8 @@ public class King extends Piece {
 		} else {
 			setImage(new Image(shell.getDisplay(), "images/" + blackPiece));
 		}
+		this.name = "KING";
+
 	}
 
 	@Override
