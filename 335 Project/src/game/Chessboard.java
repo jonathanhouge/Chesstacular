@@ -214,8 +214,8 @@ if(x == 0) {
 			return this.board[yCoord][xCoord].getPiece();
 		}
 		return null;
-
-		
-
+	}
+	public void removePiece(int xCoord, int yCoord) {
+		this.board[yCoord][xCoord].setPiece(null);
 	}
 }

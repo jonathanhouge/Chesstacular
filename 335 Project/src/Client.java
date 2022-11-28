@@ -60,6 +60,14 @@ public class Client {
 		out.write(player.getName() + "-" + player.getColor()); // sends username to client manager
 		out.newLine();
 		out.flush();
+		String msgFromOthers = in.readLine();
+		System.out.println("My INFO: " + msgFromOthers);
+		String[] list = msgFromOthers.split("[:-]");
+		int ID = Integer.parseInt(list[1]);
+		String color = list[2];
+		player.setID(ID);
+		System.out.println(color.equals("White"));
+		player.setColor(color);	
         UI ui = new UI(this, in, out, socket);
         ui.start();
 		

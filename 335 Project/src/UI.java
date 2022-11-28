@@ -10,6 +10,7 @@ import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
 import game.Chessboard;
+import pieces.Pawn;
 import pieces.Piece;
 
 import java.io.BufferedReader;
@@ -111,6 +112,20 @@ public class UI {
 						if(testValid) {
 							System.out.println("UI - VALID MOVE MADE! MOVING PIECE");
 							boardUI.movePiece(e.x, e.y,selectedPiece);
+							if(selectedPiece instanceof Pawn) {
+								Pawn pawn = (Pawn)selectedPiece;
+								if (pawn.didEnPassant) {
+									int xCoord = pawn.getX();
+									int yCoord = pawn.getY();
+									if(pawn.isWhite()) {
+										yCoord++;
+									}else {
+										yCoord--;
+									}
+									boardUI.removePiece(xCoord,yCoord);
+									pawn.removeEnPassantMove();
+								}
+							}
 							System.out.println("UI - PIECE UPDATED!");
 							canvas.redraw();
 						}else {

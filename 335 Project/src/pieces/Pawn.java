@@ -15,6 +15,7 @@ public class Pawn extends Piece {
 
 	boolean firstMove;
 	boolean enPassant = false; // if this is true, en passant may be done on this pawn
+	public boolean didEnPassant = false;
 
 	public Pawn(boolean white, Shell shell) {
 		super(white);
@@ -27,7 +28,9 @@ public class Pawn extends Piece {
 		this.name = "PAWN";
 
 	}
-
+	public void removeEnPassantMove() {
+		this.didEnPassant = false;
+	}
 	@Override
 	public void updateLocation(int x, int y) {
 		int yConverted = y/getSQUARE_WIDTH();
@@ -68,7 +71,10 @@ public class Pawn extends Piece {
 					return true;
 				} else if (tiles[y][x].getPiece() == null) { // en passant block
 					System.out.println("PAWN validMove(): Entered en passant block");
-					return enPassantMove(x,y,tiles);
+					if(enPassantMove(x,y,tiles)) {
+						didEnPassant = true;
+						return true;
+					}
 				}
 			}
 		}
