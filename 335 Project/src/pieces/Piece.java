@@ -38,7 +38,8 @@ public static void setWidth(int width) {
 	/**
 	 * This method returns a boolean indicating if the move is valid.
 	 * A move is valid if it is a standard move of that piece, and if 
-	 * it the movement does not collide with pieces already on the board.
+	 * it the movement does not collide with pieces already on the board. It assumes
+	 * that the new coordinate is different than the current pieces coordinate
 	 * 
 	 * @param x any integer between 0-7 inclusive.
 	 * @param y	any integer between 0-7 inclusive.
