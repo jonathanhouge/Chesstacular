@@ -29,7 +29,7 @@ public class UI {
 	
 	private BufferedWriter out;
 	private BufferedReader in;
-	
+	//test
 	Socket socket;
 
 	Client client;
