@@ -71,7 +71,7 @@ public static void setWidth(int width) {
 	 * @param gc the graphical context where the image is to be drawn onto
 	 */
 	public void draw(GC gc) {
-		gc.drawImage(this.visual, this.x * SQUARE_WIDTH + 10, this.y * SQUARE_WIDTH + 10);
+		gc.drawImage(this.visual, this.x * getSQUARE_WIDTH() + 10, this.y * getSQUARE_WIDTH() + 10);
 	}
 	
 	/**
@@ -141,4 +141,13 @@ public static void setWidth(int width) {
 	 * the move
 	 */
 	public abstract boolean hasNoCollisions(int x, int y, Tile[][] tiles);
+
+	public void setLocation(int x, int y) {
+		this.x = x / getSQUARE_WIDTH();
+		this.y = y / getSQUARE_WIDTH();
+	}
+
+	public static int getSQUARE_WIDTH() {
+		return SQUARE_WIDTH;
+	}
 }

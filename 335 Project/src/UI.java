@@ -78,11 +78,13 @@ public class UI {
 			public void mouseDown(MouseEvent e) {
 				//System.out.println("UI: " + e.x + ":" + e.y);
 				if(selectedPiece == null) {
-					selectedPiece = boardUI.selectPiece(e.x, e.y,client.getPlayer().getColor());
+					////selectedPiece = boardUI.selectPiece(e.x, e.y,client.getPlayer().getColor());
+					selectedPiece = boardUI.selectPiece(e.x,e.y);
 					System.out.println("SELECTED PIECE " + selectedPiece); //TODO add debug print
 				}else {
 					// if player chooses new piece, update selectedPiece
-					Piece possibleSelection = boardUI.selectPiece(e.x, e.y,client.getPlayer().getColor());
+					//////Piece possibleSelection = boardUI.selectPiece(e.x, e.y,client.getPlayer().getColor());
+					Piece possibleSelection = boardUI.selectPiece(e.x,e.y);
 					if (possibleSelection !=null) {
 						selectedPiece = possibleSelection;
 						System.out.println("SELECTED NEW PIECE" + selectedPiece);

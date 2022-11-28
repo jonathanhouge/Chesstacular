@@ -44,7 +44,7 @@ public class Tile {
 	public void setPiece(Piece piece) { 
 		this.piece = piece;
 		if (piece != null) {
-			this.piece.updateLocation(x, y); } }
+			this.piece.setLocation(x, y); } }
 	
 	public void setColor(Color color) { this.color = color; }
 

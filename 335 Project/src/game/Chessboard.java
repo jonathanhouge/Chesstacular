@@ -117,7 +117,8 @@ public class Chessboard implements ChessBoardUI{
 		
 		return new int[] {indX,indY};
 	}
-
+	
+	
 	public Piece selectPiece(int x, int y,String playerColor) {
 		boolean playerIsWhite = playerColor.equals("White");
 		int[] coordinates = getBoardIndex(x,y);
@@ -125,6 +126,17 @@ public class Chessboard implements ChessBoardUI{
 		int yCoord = coordinates[1];
 		//this if ensures that the player chooses their own color
 		if(this.board[yCoord][xCoord].getPiece()!=null && this.board[yCoord][xCoord].getPiece().isWhite() == playerIsWhite) {
+			return this.board[yCoord][xCoord].getPiece();
+		}
+		return null;
+	}
+
+	public Piece selectPiece(int x, int y) {
+		int[] coordinates = getBoardIndex(x,y);
+		int xCoord = coordinates[0];
+		int yCoord = coordinates[1];
+		//this if ensures that the player chooses their own color
+		if(this.board[yCoord][xCoord].getPiece()!=null) {
 			return this.board[yCoord][xCoord].getPiece();
 		}
 		return null;
