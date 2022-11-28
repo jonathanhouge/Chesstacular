@@ -1,5 +1,7 @@
 package pieces;
 
+import java.util.ArrayList;
+
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
@@ -19,7 +21,7 @@ public class Knight extends Piece {
 	}
 
 	@Override
-	public boolean move(int x, int y) {
+	public boolean standardMove(int x, int y) {
 		int xDistance = Math.abs(this.getX()-x);
 		int yDistance = Math.abs(this.getY()-y);
 		if(xDistance == 2) { // Horizontal L move
@@ -28,6 +30,14 @@ public class Knight extends Piece {
 			return yDistance == 2;
 		}
 		return false;
+	}
+	
+	@Override
+	public boolean hasNoCollisions(int x, int y, Tile[][] tiles) {
+		if (tiles[y][x].getPiece() != null && tiles[y][x].getPiece().isWhite() == this.isWhite()) {
+			return false;
+		}
+		return true;
 	}
 
 }

@@ -1,5 +1,7 @@
 package pieces;
 
+import java.util.ArrayList;
+
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
@@ -20,21 +22,22 @@ public class King extends Piece {
 	}
 
 	@Override
-	public boolean move(int x, int y) {
+	public boolean standardMove(int x, int y) {
 		int xDistance = Math.abs(x-this.getX());
 		int yDistance = Math.abs(y-this.getY());
 		
-		if(yDistance == 1 && xDistance == 1) {
-			updateLocation(x,y);
-			return true;
-		}else if (yDistance == 1 && xDistance == 0) {
-			updateLocation(x,y);
-			return true;
-		}else if(yDistance == 0 && xDistance == 1) {
-			updateLocation(x,y);
+		if(yDistance <= 1 && xDistance <= 1) {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public boolean hasNoCollisions(int x, int y, Tile[][] tiles) {
+		if (tiles[y][x].getPiece() != null && tiles[y][x].getPiece().isWhite() == this.isWhite()) {
+			return false;
+		}
+		return true;
 	}
 
 }

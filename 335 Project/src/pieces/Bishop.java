@@ -1,5 +1,7 @@
 package pieces;
 
+import java.util.ArrayList;
+
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
@@ -20,14 +22,51 @@ public class Bishop extends Piece {
 	}
 
 	@Override
-	public boolean move(int x, int y) {
+	public boolean standardMove(int x, int y) {
 		int xDistance = Math.abs(x - this.getX());
 		int yDistance = Math.abs(y - this.getY());
-		if (xDistance == yDistance) {
-			this.updateLocation(x, y);
-			return true;
+		return xDistance == yDistance;
+	}
+
+	/**
+	 * {@inheritDoc} Additionally, it also checks to see if the piece collides with
+	 * another piece while attempting to move to the new x/y coordinate.
+	 */
+	@Override
+	public boolean hasNoCollisions(int x, int y, Tile[][] tiles) {
+		if (tiles[y][x].getPiece() != null && tiles[y][x].getPiece().isWhite() == this.isWhite()) {
+			return false;
 		}
-		return false;
+		int distance = Math.abs(x - this.getX());
+
+		if (this.getX() < x && this.getY() < y) { // Moving south-east
+			for (int i = 1; i < distance; i++) {
+				if (tiles[this.getY() + i][this.getX() + i].hasPiece()) {
+					return false;
+				}
+			}
+		} else if (this.getX() > x && this.getY() > y) { // Moving north-west
+			for (int i = 1; i < distance; i++) {
+				if (tiles[this.getY() - i][this.getX() - i].hasPiece()) {
+					return false;
+				}
+			}
+		} else if (this.getX() < x && this.getY() > y) {// Moving north-east
+			for (int i = 1; i < distance; i++) {
+				if (tiles[this.getY() - i][this.getX() + i].hasPiece()) {
+					return false;
+				}
+			}
+		} else if (this.getX() > x && this.getY() < y) { // Moving south-west
+			for (int i = 1; i < distance; i++) {
+				if (tiles[this.getY() + i][this.getX() - i].hasPiece()) {
+					return false;
+				}
+			}
+		} else { // probably remove this later
+			System.out.println("BISHIOP.JAVA Something is wrong w/ collisions.");
+		}
+		return true;
 	}
 
 }
