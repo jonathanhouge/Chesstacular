@@ -89,6 +89,7 @@ public class Chessboard implements ChessBoardUI{
 	public void mouseClickUpdate(int x, int y) {
 		getBoardIndex(x,y);
 	}
+	//test
 	
 	private int[] getBoardIndex(float x, float y) {
 		float indexX = x/SQUARE_WIDTH;
