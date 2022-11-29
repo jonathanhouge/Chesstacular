@@ -165,6 +165,7 @@ public class Chessboard implements ChessBoardUI {
 		Font font = new Font(canvas.getDisplay(), "Tahoma", 15, SWT.BOLD);
 		gc.setFont(font);
 		gc.setBackground(new Color(255, 255, 255));
+		gc.setForeground(new Color(204, 136, 0));
 		if (x == 0) {
 			String vCoord = verticalCoords[y];
 			gc.drawText(vCoord, x * SQUARE_WIDTH + 20, y * SQUARE_WIDTH + 25);
