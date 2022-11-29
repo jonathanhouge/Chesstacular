@@ -68,11 +68,13 @@ public class UI {
 		setup();
 		canvas.addPaintListener(e -> {
 			if (initialized == false) { // create the tiles and initial starting positions
+				
 				boolean white;
-				//System.out.println(client.getPlayer().getColor());
+				
 				if (client.getPlayer().getColor().equals("White")) { 
 					System.out.println("Is White!");
 					white = true; }
+				
 				else { 
 					System.out.println("Is not White!");
 					white = false; }
@@ -102,17 +104,30 @@ public class UI {
 				//Select a piece OR move piece
 				if(selectedPiece == null) { // Selecting piece for first time
 					selectedPiece = boardUI.selectPiece(xCoord,  yCoord,whitesTurn);
+					if(selectedPiece != null) {
+						selectedPiece.setSelected();
+						canvas.redraw();
+					}
 				}else {// Determine if move being made or selecting new piece
 					Piece possibleSelection;
 					possibleSelection = boardUI.selectPiece(xCoord, yCoord,whitesTurn);
 					if (possibleSelection !=null) {// player has selected new piece
+
+						selectedPiece.SetNotSelected();
 						selectedPiece = possibleSelection;
+						selectedPiece.setSelected();
+						
+						System.out.println("UI - SELECTED NEW PIECE: " + selectedPiece);
+						canvas.redraw();
 					}else {// player may have moved onto empty space or onto enemy
 						if(boardUI.validMoveMade(xCoord,yCoord,selectedPiece,whitesTurn)) {
 							boardUI.updateBoard(xCoord,yCoord,selectedPiece);
 							whitesTurn = !whitesTurn;
-							selectedPiece = null;
 							canvas.redraw();
+							selectedPiece.SetNotSelected();
+							
+						}else {
+							System.out.println("UI - INVALID MOVE MADE!");
 						}
 					}
 					

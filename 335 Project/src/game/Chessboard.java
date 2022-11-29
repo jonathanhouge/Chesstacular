@@ -26,6 +26,11 @@ public class Chessboard implements ChessBoardUI {
 	String horizontalCoords[] = new String[] { "A", "B", "C", "D", "E", "F", "G", "H" };
 	int BOARD_COORD_OFFSET = 100;
 
+	
+	Color SELECTED = new Color(51, 204, 51);
+	Color BG = new Color(255, 255, 255);
+	Color SIDE = new Color(204, 136, 0);
+
 	public Chessboard(Canvas canvas, Shell shell) {
 		this.canvas = canvas;
 		this.shell = shell;
@@ -35,10 +40,26 @@ public class Chessboard implements ChessBoardUI {
 	public void draw(GC gc) {
 		for (int x = 0; x < 8; x++) {
 			for (int y = 0; y < 8; y++) {
-				board[x][y].draw(gc);
-				addBoardCoords(gc, x, y);
-			}
-		}
+				drawing(x, y, gc); } }
+	}
+	
+	private void drawing(int x, int y, GC gc) {
+		Tile t = board[x][y];
+		Piece p = t.getPiece();
+		
+		if(p != null) {
+			if(p.isSelected()) {
+				System.out.println("I am selected\n");
+				t.draw(gc, SELECTED); }
+			else {
+				t.draw(gc);
+			} }
+		
+		else {
+			t.draw(gc); }
+		
+		if (x == 0) { addBoardCoords(gc, x, y); }
+		if (y == 7) { addBoardCoords(gc, x, y); }
 	}
 
 	/*
@@ -48,53 +69,57 @@ public class Chessboard implements ChessBoardUI {
 	public void createBoardData(GC gc, boolean white) {
 		board = new Tile[8][8]; // list of tiles
 		boolean boardColor = true; // if true, tile is white and vice versa
-		Color w = new Color(255, 221, 153); Color b = new Color(204, 136, 0); // tile colors, white and black respectively
-		
-		for(int x = 0; x < 8; x++) {
-			for(int y = 0; y < 8; y++) {
-				
+		Color w = new Color(255, 221, 153);
+		Color b = new Color(204, 136, 0); // tile colors, white and black respectively
+
+		for (int x = 0; x < 8; x++) {
+			for (int y = 0; y < 8; y++) {
+
 				// create the tiles with the proper color
 
-				if(boardColor) { board[y][x] = new Tile(w, x*SQUARE_WIDTH+50, y*SQUARE_WIDTH, SQUARE_WIDTH); }
-				else { board[y][x] = new Tile(b, x*SQUARE_WIDTH+50, y*SQUARE_WIDTH, SQUARE_WIDTH); }
-				
+				if (boardColor) {
+					board[y][x] = new Tile(w, x * SQUARE_WIDTH + 50, y * SQUARE_WIDTH, SQUARE_WIDTH); } 
+				else {
+					board[y][x] = new Tile(b, x * SQUARE_WIDTH + 50, y * SQUARE_WIDTH, SQUARE_WIDTH); }
+
 				// set the piece using a helper function
-				board[y][x].setPiece(makePiece(x, y, white));
+				board[y][x].setPiece(makePiece(x, y));
 
 				// alternating tile colors
 				boardColor = !boardColor; }
-			boardColor = !boardColor; 
-		}
+			boardColor = !boardColor; }
 	}
-	
-	/* helper function responsible for making the pieces and putting
-	 * them in their starting positions. */
-	private Piece makePiece(int x, int y, boolean playerColor) {
-		
-		// want the pieces farthest from the player to be the opposite color (opponent's color)
-		playerColor = !playerColor;
 
-		if (y == 0) { // enemy specialty pieces
-			if (x == 0 || x == 7) { return (new Rook(playerColor, shell)); }
-			else if (x == 0 || x == 7) { return (new Rook(playerColor, shell)); }
-			else if (x == 1 || x == 6) { return (new Knight(playerColor, shell)); }
-			else if (x == 2 || x == 5) { return (new Bishop(playerColor, shell)); }
-			else if (x == 3) { return (new King(playerColor, shell)); }
-			else if (x == 4) { return (new Queen(playerColor, shell)); } }
-		else if (y == 1) { return (new Pawn(playerColor, shell)); } // enemy pawns
-		
-		// want the pieces closest to the player to be their color (player's color)
-		playerColor = !playerColor;
-		
-		if (y == 6) { return (new Pawn(playerColor, shell)); } // your pawns
+	/*
+	 * helper function responsible for making the pieces and putting them in their
+	 * starting positions.
+	 */
+	private Piece makePiece(int x, int y) {
+
+		// want the pieces farthest from the player to be the opposite color (opponent's
+		// color)
+		boolean pieceColor = false;
+
+		if (y == 0) { // black specialty pieces
+			if (x == 0 || x == 7) { return (new Rook(pieceColor, shell)); }
+			else if (x == 0 || x == 7) { return (new Rook(pieceColor, shell)); } 
+			else if (x == 1 || x == 6) { return (new Knight(pieceColor, shell)); } 
+			else if (x == 2 || x == 5) { return (new Bishop(pieceColor, shell)); } 
+			else if (x == 3) { return (new King(pieceColor, shell)); } 
+			else if (x == 4) { return (new Queen(pieceColor, shell)); } } 
+		else if (y == 1) { return (new Pawn(pieceColor, shell)); } // black pawns
+
+		pieceColor = !pieceColor;
+
+		if (y == 6) { return (new Pawn(pieceColor, shell)); } // your pawns
 		else if (y == 7) { // your specialty pieces
-			if (x == 0 || x == 7) { return (new Rook(playerColor, shell)); }
-			else if (x == 0 || x == 7) { return (new Rook(playerColor, shell)); }
-			else if (x == 1 || x == 6) { return (new Knight(playerColor, shell)); }
-			else if (x == 2 || x == 5) { return (new Bishop(playerColor, shell)); }
-			else if (x == 3) { return (new King(playerColor, shell)); }
-			else if (x == 4) { return (new Queen(playerColor, shell)); } }
-		
+			if (x == 0 || x == 7) { return (new Rook(pieceColor, shell)); }
+			else if (x == 0 || x == 7) { return (new Rook(pieceColor, shell)); } 
+			else if (x == 1 || x == 6) { return (new Knight(pieceColor, shell)); }
+			else if (x == 2 || x == 5) { return (new Bishop(pieceColor, shell)); }
+			else if (x == 3) { return (new King(pieceColor, shell)); } 
+			else if (x == 4) { return (new Queen(pieceColor, shell)); } }
+
 		return null; // tile is given no piece
 	}
 
@@ -102,17 +127,19 @@ public class Chessboard implements ChessBoardUI {
 		getBoardIndex(x, y);
 	}
 	
-
 	public int[] getBoardIndex(float x, float y) {
-
 		x -= BOARD_COORD_OFFSET / 2;
 //		System.out.println(x + ":" + y);
 		float indexX = x / SQUARE_WIDTH;
 		float indexY = y / SQUARE_WIDTH;
+//		System.out.println(indexX + ":" + indexY);
+
 		int indX = (int) indexX;
 		int indY = (int) indexY;
+//		System.out.println(indexY+":"+indexY);
+
 		if (indX < 0 || indX > 7 || indY < 0 || indY > 7 || indexX < 0) {
-			System.out.println("Clicking outside the board! Returning null");
+			System.out.println("Clicking outside the board!");
 			return null;
 		}
 		System.out.println(horizontalCoords[indX] + verticalCoords[indY]);
@@ -123,7 +150,8 @@ public class Chessboard implements ChessBoardUI {
 
 		Font font = new Font(canvas.getDisplay(), "Tahoma", 15, SWT.BOLD);
 		gc.setFont(font);
-		gc.setBackground(new Color(255, 255, 255));
+		gc.setBackground(BG);
+		gc.setForeground(SIDE);
 		if (x == 0) {
 			String vCoord = verticalCoords[y];
 			gc.drawText(vCoord, x * SQUARE_WIDTH + 20, y * SQUARE_WIDTH + 25);
@@ -169,6 +197,7 @@ public class Chessboard implements ChessBoardUI {
 	 * 
 	 * @param x     any integer between 0-7 inclusive
 	 * @param y     any integer between 0-7 inclusive
+
 	 * @param piece the Piece object that is to be moved
 	 * @param whitesTurn true if white is making the move, false if not
 	 * @return true if the move is legal, false if not.
@@ -176,14 +205,20 @@ public class Chessboard implements ChessBoardUI {
 	 */
 	public boolean validMoveMade(int x, int y, Piece piece,boolean whitesTurn) {
 		return piece.validMove(x, y, board) && validCheckMove(x, y, piece, whitesTurn);
+
 	}
 
 	/**
 	 * This method updates the piece's coordinates to the new x/y coordinate and
 	 * ensures that the old tilies piece field is set to null.
 	 * 
+<<<<<<< HEAD
 	 * @param x     any integer between 0-7 inclusive.
 	 * @param y     any integer between 0-7 inclusive.
+=======
+	 * @param x     the x coordinate where the user clicked
+	 * @param y     the x coordinate where the user clicked
+>>>>>>> refs/heads/master
 	 * @param piece the Piece object that is to be moved
 	 * @author Julius Ramirez
 	 */
@@ -191,9 +226,11 @@ public class Chessboard implements ChessBoardUI {
 		board[piece.getY()][piece.getX()].setPiece(null);
 		piece.updateLocation(x, y); // necessary so that pawn enPassant is updated
 		board[y][x].setPiece(piece);
-
 	}
+
 	/**
+	 * This method is responsible for returning a piece (or null) that the player
+	 * wants to move.
 	 * 
 	 * @param x any integer between 0-7 inclusive
 	 * @param y any integer between 0-7 inclusive
@@ -280,8 +317,10 @@ public class Chessboard implements ChessBoardUI {
 	public Piece selectPiece(int x, int y) {
 		if (this.board[y][x].getPiece() != null) {
 			return this.board[y][x].getPiece();
+
 		}
 		return null;
+
 	}
 
 	/**
@@ -291,6 +330,7 @@ public class Chessboard implements ChessBoardUI {
 	 */
 	public void removePiece(int xCoord, int yCoord) {
 		this.board[yCoord][xCoord].setPiece(null);
+
 	}
 
 	
