@@ -95,6 +95,11 @@ public class UI {
 						selectedPiece = boardUI.selectPiece(e.x, e.y,client.getPlayer().getColor());
 					}
 					System.out.println("UI - SELECTED PIECE: " + selectedPiece);
+					if(selectedPiece != null) {
+						selectedPiece.setSelected();
+						canvas.redraw();
+					}
+					
 				}else {	
 					Piece possibleSelection;
 					if(debugMode) {
@@ -105,8 +110,12 @@ public class UI {
 					
 					if (possibleSelection !=null) {// if player chooses new piece, update selectedPiece
 
+						selectedPiece.SetNotSelected();
 						selectedPiece = possibleSelection;
+						selectedPiece.setSelected();
+						
 						System.out.println("UI - SELECTED NEW PIECE: " + selectedPiece);
+						canvas.redraw();
 					}else {// player may have moved onto empty space or onto enemy
 						boolean testValid = boardUI.validMoveMade(e.x, e.y,selectedPiece);
 						if(testValid) {
@@ -128,6 +137,8 @@ public class UI {
 							}
 							System.out.println("UI - PIECE UPDATED!");
 							canvas.redraw();
+							selectedPiece.SetNotSelected();
+							
 						}else {
 							System.out.println("UI - INVALID MOVE MADE!");
 						}
