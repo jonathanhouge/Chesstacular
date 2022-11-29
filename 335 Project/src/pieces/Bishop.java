@@ -67,8 +67,8 @@ public class Bishop extends Piece {
 					return false;
 				}
 			}
-		} else { // probably remove this later
-			System.out.println("BISHIOP.JAVA Something is wrong w/ collisions.");
+		} else { //non-standard movement, need this block for queen movement
+			return false;
 		}
 		return true;
 	}

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 
+import game.Coordinate;
 import game.Tile;
 
 /**
@@ -15,7 +16,7 @@ import game.Tile;
  * @author Julius Ramirez
  */
 
-//TODO ideally, update setLocation/updateLocation to be 0-7 instead of pixel loc
+//TODO ideally, update setLocation to be 0-7 instead of pixel loc
 public abstract class Piece {
 	private boolean white;
 	private int x;
@@ -56,7 +57,7 @@ public abstract class Piece {
 		} else {
 			color = "BLACK ";
 		}
-		String builder = "PIECE X Y: " + color + name + " " + this.x + " " + this.y;
+		String builder = color + name + " (" + this.x + "," + this.y +")";
 		return builder;
 	}
 	
@@ -132,12 +133,12 @@ public abstract class Piece {
 	/**
 	 * This method updates the location of a given piece.
 	 * 
-	 * @param x the x coordinate where the user clicked
-	 * @param y the x coordinate where the user clicked
+	 * @param x any integer between 0-7 inclusive.
+	 * @param y any integer between 0-7 inclusive.
 	 */
 	public void updateLocation(int x, int y) {
-		this.x = (x-BOARD_COORD_OFFSET/2) / SQUARE_WIDTH;
-		this.y = y / SQUARE_WIDTH;
+		this.x =  x;
+		this.y = y;
 	}
 
 	/**
@@ -174,13 +175,14 @@ public abstract class Piece {
 	public abstract boolean hasNoCollisions(int x, int y, Tile[][] tiles);
 
 	/**
-	 * This method sets the x/y coordinate of the piece.
+	 * This method sets the x/y coordinate of the piece. It MUST be given 
+	 * the graphical x/y values where the user has clicked. It is the only
+	 * method that interprets x/y in this way.
 	 * 
 	 * @param x the x coordinate where the user clicked
 	 * @param y the x coordinate where the user clicked
 	 */
 	public void setLocation(int x, int y) {
-	
 		this.x = (x-BOARD_COORD_OFFSET/2) / getSQUARE_WIDTH();
 		this.y = y / getSQUARE_WIDTH();
 	}
@@ -192,5 +194,10 @@ public abstract class Piece {
 	 */
 	public static int getSQUARE_WIDTH() {
 		return SQUARE_WIDTH;
+	}
+
+	public Coordinate[] generateMoves() {
+		// TODO Auto-generated method stub, must make this abstract and implement in subclasses.
+		return new Coordinate[0];
 	}
 }

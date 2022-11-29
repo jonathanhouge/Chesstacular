@@ -42,6 +42,7 @@ public class UI {
 	int SHELL_WIDTH_OFFSET = 20;
 	int SHELL_HEIGHT_OFFSET = 50;
 	Piece selectedPiece; //Newly added field
+	public boolean whitesTurn; //Newly added field
 	public static int BOARD_COORD_OFFSET = 100;
 
 	/*
@@ -56,12 +57,14 @@ public class UI {
 		this.out = out;
 		this.socket = socket;
 		this.client = client;
+		this.whitesTurn = true; //Newly added field
 	}
 
 	/*
 	 * Starts running the UI
 	 */
 	public void start() {
+		System.out.println("It is currently whites turn!");
 		setup();
 		canvas.addPaintListener(e -> {
 			if (initialized == false) { // create the tiles and initial starting positions
@@ -79,70 +82,44 @@ public class UI {
 				boardUI.createBoardData(e.gc, white);
 				initialized = true; }
 			
-			if (initialized) { boardUI.draw(e.gc); }
+			if (initialized) { boardUI.draw(e.gc); 
+				if(whitesTurn) {
+					System.out.println("It is currently whites turn!");
+				}else {
+					System.out.println("It is currently blacks turn!");
+				}
+			}
 		}
 		);	
 
 		canvas.addMouseListener(new MouseListener() {
 			public void mouseDown(MouseEvent e) {
-				//NOTE: For selectedPiece and possibleSelection, the else block is the actual code. For 
-				// testing, the debug version of selectPiece() is implemented which allows you to make valid
-				// opponent moves, however this debug version does not allow the player to take pieces.
-				// If you want to take a piece and move only your own pieces, set debugMode = false;
-				boolean debugMode = true;
-				if(selectedPiece == null) {
-					if(debugMode) {
-						selectedPiece = boardUI.selectPiece(e.x,e.y);
-					}else {
-						selectedPiece = boardUI.selectPiece(e.x, e.y,client.getPlayer().getColor());
-					}
-					System.out.println("UI - SELECTED PIECE: " + selectedPiece);
-					if(selectedPiece != null) {
-						selectedPiece.setSelected();
-						canvas.redraw();
-					}
-					
-				}else {	
+				//Gather data, convert graphical coordinates into chessboard coordinates
+				int coordinates[] = boardUI.getBoardIndex(e.x,e.y);
+				if(coordinates == null) {
+					return;
+				}
+				int xCoord = coordinates[0];
+				int yCoord = coordinates[1];				
+				//Select a piece OR move piece
+				if(selectedPiece == null) { // Selecting piece for first time
+					selectedPiece = boardUI.selectPiece(xCoord,  yCoord,whitesTurn);
+				}else {// Determine if move being made or selecting new piece
 					Piece possibleSelection;
-					if(debugMode) {
-						possibleSelection = boardUI.selectPiece(e.x,e.y);
-					}else {
-						possibleSelection = boardUI.selectPiece(e.x, e.y,client.getPlayer().getColor());
-					}
-					
-					if (possibleSelection !=null) {// if player chooses new piece, update selectedPiece
-
-						selectedPiece.SetNotSelected();
+					possibleSelection = boardUI.selectPiece(xCoord, yCoord,whitesTurn);
+					if (possibleSelection !=null) {// player has selected new piece
 						selectedPiece = possibleSelection;
-						selectedPiece.setSelected();
-						
-						System.out.println("UI - SELECTED NEW PIECE: " + selectedPiece);
-						canvas.redraw();
 					}else {// player may have moved onto empty space or onto enemy
-						boolean testValid = boardUI.validMoveMade(e.x, e.y,selectedPiece);
-						if(testValid) {
-							System.out.println("UI - VALID MOVE MADE! MOVING PIECE");
-							boardUI.movePiece(e.x, e.y,selectedPiece);
-							if(selectedPiece instanceof Pawn) {
-								Pawn pawn = (Pawn)selectedPiece;
-								if (pawn.didEnPassant) {
-									int xCoord = pawn.getX();
-									int yCoord = pawn.getY();
-									if(pawn.isWhite()) {
-										yCoord++;
-									}else {
-										yCoord--;
-									}
-									boardUI.removePiece(xCoord,yCoord);
-									pawn.removeEnPassantMove();
-								}
-							}
-							System.out.println("UI - PIECE UPDATED!");
+						if(boardUI.validMoveMade(xCoord,yCoord,selectedPiece,whitesTurn)) {
+							boardUI.updateBoard(xCoord,yCoord,selectedPiece);
+							whitesTurn = !whitesTurn;
+							selectedPiece = null;
 							canvas.redraw();
 							selectedPiece.SetNotSelected();
 							
 						}else {
 							System.out.println("UI - INVALID MOVE MADE!");
+
 						}
 					}
 					
