@@ -42,7 +42,7 @@ public class UI {
 	int SHELL_WIDTH_OFFSET = 20;
 	int SHELL_HEIGHT_OFFSET = 50;
 	Piece selectedPiece; //Newly added field
-	public boolean whitesTurn;
+	public boolean whitesTurn; //Newly added field
 	public static int BOARD_COORD_OFFSET = 100;
 
 	/*
@@ -57,14 +57,14 @@ public class UI {
 		this.out = out;
 		this.socket = socket;
 		this.client = client;
-		this.whitesTurn = true;
+		this.whitesTurn = true; //Newly added field
 	}
 
 	/*
 	 * Starts running the UI
 	 */
 	public void start() {
-		
+		System.out.println("It is currently whites turn!");
 		setup();
 		canvas.addPaintListener(e -> {
 			if (initialized == false) { // create the tiles and initial starting positions
@@ -80,7 +80,13 @@ public class UI {
 				boardUI.createBoardData(e.gc, white);
 				initialized = true; }
 			
-			if (initialized) { boardUI.draw(e.gc); }
+			if (initialized) { boardUI.draw(e.gc); 
+				if(whitesTurn) {
+					System.out.println("It is currently whites turn!");
+				}else {
+					System.out.println("It is currently blacks turn!");
+				}
+			}
 		}
 		);	
 
@@ -92,8 +98,7 @@ public class UI {
 					return;
 				}
 				int xCoord = coordinates[0];
-				int yCoord = coordinates[1];
-				System.out.println("WHITESTURN = " + whitesTurn);
+				int yCoord = coordinates[1];				
 				//Select a piece OR move piece
 				if(selectedPiece == null) { // Selecting piece for first time
 					selectedPiece = boardUI.selectPiece(xCoord,  yCoord,whitesTurn);
@@ -107,7 +112,6 @@ public class UI {
 							boardUI.updateBoard(xCoord,yCoord,selectedPiece);
 							whitesTurn = !whitesTurn;
 							selectedPiece = null;
-							System.out.println("UI - PIECE UPDATED! WHITESTURN IS NOW " + whitesTurn);
 							canvas.redraw();
 						}
 					}

@@ -67,7 +67,7 @@ public class Bishop extends Piece {
 					return false;
 				}
 			}
-		} else { //non-standard movement
+		} else { //non-standard movement, need this block for queen movement
 			return false;
 		}
 		return true;

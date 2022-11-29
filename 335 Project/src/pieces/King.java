@@ -46,12 +46,9 @@ public class King extends Piece {
 
 	public void inCheck() {
 		this.checked = true;
-		System.out.println("KING IN CHECK!");
 	}
 	public void checkEvaded() {
 		this.checked = false;
-		System.out.println("KING EXITED CHECK!");
-
 	}
 
 }

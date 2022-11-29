@@ -33,9 +33,6 @@ public class Queen extends Piece {
 	 */
 	@Override
 	public boolean standardMove(int x, int y) {
-		System.out.println("QUEEN.java - standard move call " + x + " " + y);
-		System.out.println(rook);
-		System.out.println(bishop);
 		return rook.standardMove(x, y) || bishop.standardMove(x, y);
 	}
 
@@ -46,34 +43,20 @@ public class Queen extends Piece {
 	 */
 	@Override
 	public boolean hasNoCollisions(int x, int y, Tile[][] tiles) {
-		System.out.println("QUEEN.java - collisions call " + x + " " + y);
-		System.out.println(this);
-		System.out.println(rook);
-		System.out.println(bishop);
 		return rook.hasNoCollisions(x, y, tiles) || bishop.hasNoCollisions(x, y, tiles);
 	}
 
 	@Override 
 	public void setLocation(int x, int y) {
-		System.out.println("QUEEN.java - SET LOCATION CALLED WITH X/Y OF " + x + " " + y);
 		super.setLocation(x, y);
 		this.rook.setLocation(x, y);
 		this.bishop.setLocation(x, y);
-		System.out.println(this);
-		System.out.println(this.rook);
-		System.out.println(this.bishop);
-
 	}
 	@Override
 	public void updateLocation(int x, int y) {
 		super.updateLocation(x, y);
 		this.rook.updateLocation(x, y);
 		this.bishop.updateLocation(x, y);
-		System.out.println("QUEEN.java - UPDATE LOCATION CALLED WITH X/Y OF " + x + " " + y);
-
-		System.out.println(rook);
-		System.out.println(bishop);
-
 	}
 
 }

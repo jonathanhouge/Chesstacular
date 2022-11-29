@@ -109,12 +109,8 @@ public class Chessboard implements ChessBoardUI {
 //		System.out.println(x + ":" + y);
 		float indexX = x / SQUARE_WIDTH;
 		float indexY = y / SQUARE_WIDTH;
-//		System.out.println(indexX + ":" + indexY);
-
 		int indX = (int) indexX;
 		int indY = (int) indexY;
-//		System.out.println(indexY+":"+indexY);
-
 		if (indX < 0 || indX > 7 || indY < 0 || indY > 7 || indexX < 0) {
 			System.out.println("Clicking outside the board! Returning null");
 			return null;
@@ -141,18 +137,18 @@ public class Chessboard implements ChessBoardUI {
 	}
 
 	/**
-	 * This method returns the king piece so that it may be used for check and
+	 * This method returns a specific colored king piece so that it may be used for check and
 	 * checkmate calculations. It could be improved by removing the need to iterate
-	 * through the entire board.
+	 * through the entire board every time.
 	 * 
-	 * @param color a string, either "White" or "Black"
-	 * @return
+	 * @param getWhite, true if obtaining white king, false if obtaining black king.
+	 * @return the desired King piece.
 	 */
-	public King getKing(boolean playerIsWhite) {
+	public King getKing(boolean getWhite) {
 		for (int row = 0; row < 8; row++) {
 			for (int col = 0; col < 8; col++) {
 				if (board[row][col].getPiece() instanceof King) {
-					if (playerIsWhite) {
+					if (getWhite) {
 						if (board[row][col].getPiece().isWhite()) {
 							return (King) board[row][col].getPiece();
 						}
@@ -169,16 +165,17 @@ public class Chessboard implements ChessBoardUI {
 
 	/**
 	 * This method returns a boolean which indicates if the move to the desired x/y
-	 * coordinate is a legal move that the piece can make.
+	 * coordinate is a legal move that the piece can made.
 	 * 
-	 * @param x     the x coordinate where the user clicked
-	 * @param y     the x coordinate where the user clicked
+	 * @param x     any integer between 0-7 inclusive
+	 * @param y     any integer between 0-7 inclusive
 	 * @param piece the Piece object that is to be moved
+	 * @param whitesTurn true if white is making the move, false if not
 	 * @return true if the move is legal, false if not.
 	 * @author Julius Ramirez
 	 */
-	public boolean validMoveMade(int x, int y, Piece piece,boolean whiteTurn) {
-		return piece.validMove(x, y, board) && validCheckMove(x, y, piece, whiteTurn);
+	public boolean validMoveMade(int x, int y, Piece piece,boolean whitesTurn) {
+		return piece.validMove(x, y, board) && validCheckMove(x, y, piece, whitesTurn);
 	}
 
 	/**
@@ -191,32 +188,32 @@ public class Chessboard implements ChessBoardUI {
 	 * @author Julius Ramirez
 	 */
 	public void movePiece(int x, int y, Piece piece) {
-
 		board[piece.getY()][piece.getX()].setPiece(null);
-		piece.updateLocation(x, y);
+		piece.updateLocation(x, y); // necessary so that pawn enPassant is updated
 		board[y][x].setPiece(piece);
 
 	}
 	/**
 	 * 
-	 * @param x
-	 * @param y
-	 * @param piece
-	 * @param playerIsWhite
+	 * @param x any integer between 0-7 inclusive
+	 * @param y any integer between 0-7 inclusive
+	 * @param whitesTurn true if white is making the move, false if not
+	 * @param getWhite, true if obtaining white king, false if obtaining black king.
+	 * @return true if the movement does not put/have the king in check, false if it does.
 	 * @return
 	 */
-	public boolean validCheckMove(int x, int y, Piece piece, boolean playerIsWhite) {
+	public boolean validCheckMove(int x, int y, Piece piece, boolean getWhite) {
 		int oldX = piece.getX();
 		int oldY = piece.getY();
 		this.movePiece(x, y, piece);
-		determineKingCheckStatus(playerIsWhite);
-		King newKing = getKing(playerIsWhite);
+		determineKingCheckStatus(getWhite);
+		King newKing = getKing(getWhite);
 		if (!newKing.checked) {
-			System.out.println("Valid check move because king no longer in check");
+			System.out.println("Valid check move because king not in check");
 			this.movePiece(oldX, oldY, piece);
 			return true;
 		}
-		System.out.println("Invalid check move because king still in check");
+		System.out.println("Invalid check move because king in check");
 		this.movePiece(oldX, oldY, piece);
 		return false;
 		//return true;
@@ -224,24 +221,26 @@ public class Chessboard implements ChessBoardUI {
 
 	/**
 	 * The purpose of this method is to determine if a king is now in check or not.
+	 * The player's color is passed so that only the desired player's king is analyzed.
 	 * 
-	 * @param playerIsWhite, true if player is white, false if not
+	 * @param getWhite, true if player is white, false if not
 	 */
-	public void determineKingCheckStatus(boolean playerIsWhite) {
-		King king = getKing(playerIsWhite);
+	private boolean determineKingCheckStatus(boolean getWhite) {
+		King king = getKing(getWhite);
 		for (int row = 0; row < 8; row++) {
 			for (int col = 0; col < 8; col++) {
 				if (board[row][col].getPiece() != null
 						&& board[row][col].getPiece().validMove(king.getX(), king.getY(), board)) {
-					//System.out.println("CHESSBOARD: THE PIECE " +board[row][col].getPiece() +" CAN KILL THE KING" );
 					king.inCheck();
+					System.out.println("Oh no! The " + king + " is in check because of the " +board[row][col].getPiece());
 					board[king.getY()][king.getX()].setPiece(king);
-					return;
+					return true;
 				}
 			}
 		}
 		king.checkEvaded();
 		board[king.getY()][king.getX()].setPiece(king);
+		return false;
 	}
 
 	/**
@@ -268,9 +267,8 @@ public class Chessboard implements ChessBoardUI {
 	 * This is a debug version of selectPiece(). It acts the same however the user
 	 * can also move the opponents pieces.
 	 * 
-	 * @param x           the x coordinate 0-7.
-	 * @param y           the y coordinate 0-7.
-	 * @param playerColor the color (White or Black) of the player.
+	 * @param x           any integer between 0-7 inclusive.
+	 * @param y           any integer between 0-7 inclusive.
 	 * @return a piece object if the piece can be selected by the player, null if
 	 *         empty/opponents piece.
 	 * @author Julius Ramirez
@@ -282,13 +280,23 @@ public class Chessboard implements ChessBoardUI {
 		return null;
 	}
 
+	/**
+	 * This simply updates the Tile[][] array so that the piece field is null.
+	 * @param xCoord any integer between 0-7 inclusive.
+	 * @param yCoord any integer between 0-7 inclusive.
+	 */
 	public void removePiece(int xCoord, int yCoord) {
 		this.board[yCoord][xCoord].setPiece(null);
 	}
 
 	
-
-	public void checkEnPassantMoveMade(Piece selectedPiece) {
+	/**
+	 * This method checks if an en passant move has been made so that the board may
+	 * be updated accordingly.
+	 * 
+	 * @param selectedPiece the piece that was moved to a new spot.
+	 */
+	private void checkEnPassantMoveMade(Piece selectedPiece) {
 		if(selectedPiece instanceof Pawn) {
 			Pawn pawn = (Pawn)selectedPiece;
 			if (pawn.didEnPassant) {
@@ -305,9 +313,73 @@ public class Chessboard implements ChessBoardUI {
 		}
 	}
 
+	/**
+	 * This method is responsible for updating the board accordingly after a valid
+	 * move is made. 
+	 * 
+	 * @param xCoord any integer between 0-7 inclusive.
+	 * @param yCoord any integer between 0-7 inclusive.
+	 * @param selectedPiece the piece that is to be moved to xCoord, yCoord
+	 */
 	public void updateBoard(int xCoord, int yCoord, Piece selectedPiece) {
+		System.out.println("Chessboard.java - Moving..." + selectedPiece);
 		this.movePiece(xCoord,yCoord,selectedPiece);
+		System.out.println("Chessboard.java - Piece updated! " + selectedPiece);
 		this.checkEnPassantMoveMade(selectedPiece);
-		this.determineKingCheckStatus(!selectedPiece.isWhite());
+		this.checkPromotion(selectedPiece);
+		if(this.determineKingCheckStatus(!selectedPiece.isWhite())) {
+			this.determineCheckMate(selectedPiece);
+		};
+	}
+
+	/**
+	 * This method determines if the game is over.
+	 * 
+	 * @param movedPiece, the piece that was moved this turn. Used to determine next player's color,
+	 * could be changed
+	 */
+	private void determineCheckMate(Piece movedPiece) {
+		// TODO implemen this fully, also maybe only call if piece is in check?
+		for(int row = 0; row < 7; row++) {
+			for(int col = 0;col < 7; col++) {
+				if(board[row][col].getPiece()!= null) { 
+					// if piece is at this coord AND the piece belongs to the opponent,
+					// check if the opponent can make any valid moves.
+					// TODO could probably do validCheckMove since generateMoves SHOULD
+					// already pass the standardMove() check.
+					if (board[row][col].getPiece().isWhite() != movedPiece.isWhite()) {
+						Piece friendlyPiece = board[row][col].getPiece();
+						Coordinate[] friendlyMoves = friendlyPiece.generateMoves();
+						for(Coordinate coord: friendlyMoves) {
+							if(validMoveMade(coord.getX(),coord.getY(),friendlyPiece, friendlyPiece.isWhite())) {
+								//TODO if this part is reached check is, false could return something or set some field.
+								System.out.println("Chessboard.java - validMove possible, checkmate not met");
+								return;
+							}
+						}
+					}
+				}
+			}
+		}
+		//If this part is reached no validMoveMade returned true, thus game over!
+		//System.out.println("Chessboard.java - The opponent can not make any valid moves! Game over!");
+		return;
+	}
+
+	/**
+	 * This method promotes the pawn TODO to a queen if it is on the opposite side of the board.
+	 * @param selectedPiece the piece that has been moved.
+	 */
+	private void checkPromotion(Piece selectedPiece) {
+		// TODO add promotion selection
+		if(selectedPiece instanceof Pawn) {
+			Pawn pawn = (Pawn) selectedPiece;
+			if (pawn.promotion()) {
+				System.out.println("The pawn may now be promoted! Implement later, for now setting to queen.");
+				Queen queen = new Queen(selectedPiece.isWhite(),shell);
+				queen.updateLocation(pawn.getX(), pawn.getX());
+				board[selectedPiece.getY()][selectedPiece.getX()].setPiece(queen);
+			}
+		}
 	}
 }
