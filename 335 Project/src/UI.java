@@ -65,11 +65,13 @@ public class UI {
 		setup();
 		canvas.addPaintListener(e -> {
 			if (initialized == false) { // create the tiles and initial starting positions
+				
 				boolean white;
-				//System.out.println(client.getPlayer().getColor());
+				
 				if (client.getPlayer().getColor().equals("White")) { 
 					System.out.println("Is White!");
 					white = true; }
+				
 				else { 
 					System.out.println("Is not White!");
 					white = false; }
