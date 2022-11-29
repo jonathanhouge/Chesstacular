@@ -177,9 +177,8 @@ public class Chessboard implements ChessBoardUI {
 	 * @return true if the move is legal, false if not.
 	 * @author Julius Ramirez
 	 */
-	public boolean validMoveMade(int x, int y, Piece piece) {
-
-		return piece.validMove(x, y, board) && validCheckMove(x, y, piece, piece.isWhite());
+	public boolean validMoveMade(int x, int y, Piece piece,boolean whiteTurn) {
+		return piece.validMove(x, y, board) && validCheckMove(x, y, piece, whiteTurn);
 	}
 
 	/**
@@ -197,6 +196,52 @@ public class Chessboard implements ChessBoardUI {
 		piece.updateLocation(x, y);
 		board[y][x].setPiece(piece);
 
+	}
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 * @param piece
+	 * @param playerIsWhite
+	 * @return
+	 */
+	public boolean validCheckMove(int x, int y, Piece piece, boolean playerIsWhite) {
+		int oldX = piece.getX();
+		int oldY = piece.getY();
+		this.movePiece(x, y, piece);
+		determineKingCheckStatus(playerIsWhite);
+		King newKing = getKing(playerIsWhite);
+		if (!newKing.checked) {
+			System.out.println("Valid check move because king no longer in check");
+			this.movePiece(oldX, oldY, piece);
+			return true;
+		}
+		System.out.println("Invalid check move because king still in check");
+		this.movePiece(oldX, oldY, piece);
+		return false;
+		//return true;
+	}
+
+	/**
+	 * The purpose of this method is to determine if a king is now in check or not.
+	 * 
+	 * @param playerIsWhite, true if player is white, false if not
+	 */
+	public void determineKingCheckStatus(boolean playerIsWhite) {
+		King king = getKing(playerIsWhite);
+		for (int row = 0; row < 8; row++) {
+			for (int col = 0; col < 8; col++) {
+				if (board[row][col].getPiece() != null
+						&& board[row][col].getPiece().validMove(king.getX(), king.getY(), board)) {
+					//System.out.println("CHESSBOARD: THE PIECE " +board[row][col].getPiece() +" CAN KILL THE KING" );
+					king.inCheck();
+					board[king.getY()][king.getX()].setPiece(king);
+					return;
+				}
+			}
+		}
+		king.checkEvaded();
+		board[king.getY()][king.getX()].setPiece(king);
 	}
 
 	/**
@@ -241,49 +286,28 @@ public class Chessboard implements ChessBoardUI {
 		this.board[yCoord][xCoord].setPiece(null);
 	}
 
-	/**
-	 * 
-	 * @param x
-	 * @param y
-	 * @param piece
-	 * @param playerIsWhite
-	 * @return
-	 */
-	public boolean validCheckMove(int x, int y, Piece piece, boolean playerIsWhite) {
-		King king = getKing(playerIsWhite);
-		int oldX = piece.getX();
-		int oldY = piece.getY();
-		this.movePiece(x, y, piece);
-		determineKingCheckStatus(playerIsWhite);
-		King newKing = getKing(playerIsWhite);
-		if (!newKing.checked) {
-			System.out.println("Valid check move because king no longer in check");
-			this.movePiece(oldX, oldY, piece);
-			return true;
-		}
-		System.out.println("Invalid check move because king still in check");
-		this.movePiece(oldX, oldY, piece);
-		return false;
-	}
+	
 
-	/**
-	 * The purpose of this method is to determine if a king is now in check or not.
-	 * 
-	 * @param playerIsWhite, true if player is white, false if not
-	 */
-	public void determineKingCheckStatus(boolean playerIsWhite) {
-		King king = getKing(playerIsWhite);
-		for (int row = 0; row < 8; row++) {
-			for (int col = 0; col < 8; col++) {
-				if (board[row][col].getPiece() != null
-						&& board[row][col].getPiece().validMove(king.getX(), king.getY(), board)) {
-					king.inCheck();
-					board[king.getY()][king.getX()].setPiece(king);
-					return;
+	public void checkEnPassantMoveMade(Piece selectedPiece) {
+		if(selectedPiece instanceof Pawn) {
+			Pawn pawn = (Pawn)selectedPiece;
+			if (pawn.didEnPassant) {
+				int x = pawn.getX();
+				int y = pawn.getY();
+				if(pawn.isWhite()) {
+					y++;
+				}else {
+					y--;
 				}
+				this.removePiece(x,y);
+				pawn.removeEnPassantMove();
 			}
 		}
-		king.checkEvaded();
-		board[king.getY()][king.getX()].setPiece(king);
+	}
+
+	public void updateBoard(int xCoord, int yCoord, Piece selectedPiece) {
+		this.movePiece(xCoord,yCoord,selectedPiece);
+		this.checkEnPassantMoveMade(selectedPiece);
+		this.determineKingCheckStatus(!selectedPiece.isWhite());
 	}
 }
