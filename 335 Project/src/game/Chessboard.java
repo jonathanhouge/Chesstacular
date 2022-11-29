@@ -205,20 +205,16 @@ public class Chessboard implements ChessBoardUI {
 	public boolean validCheckMove(int x, int y, Piece piece, boolean getWhite) {
 		int oldX = piece.getX();
 		int oldY = piece.getY();
-		Piece oldPiece = board[y][x].getPiece(); // This is to ensure that if a piece is taken due to movePiece(), it gets restored.
 		this.movePiece(x, y, piece);
 		determineKingCheckStatus(getWhite);
 		King newKing = getKing(getWhite);
 		if (!newKing.checked) {
 			System.out.println("Valid check move because king not in check");
 			this.movePiece(oldX, oldY, piece);
-			board[y][x].setPiece(oldPiece);
 			return true;
 		}
 		System.out.println("Invalid check move because king in check");
 		this.movePiece(oldX, oldY, piece);
-		board[y][x].setPiece(oldPiece);
-
 		return false;
 		//return true;
 	}
