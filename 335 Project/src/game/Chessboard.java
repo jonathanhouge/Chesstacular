@@ -40,7 +40,7 @@ public class Chessboard implements ChessBoardUI {
 				if(p != null) {
 					if(p.isSelected()) {
 						System.out.println("I am selected\n");
-						t.draw(gc, new Color(210,43,43));
+						t.draw(gc, new Color(51, 204, 51));
 					}else {
 						t.draw(gc);
 					}
