@@ -37,7 +37,7 @@ public class Pawn extends Piece {
 		int yDistance = Math.abs(this.getY() - yConverted);
 		super.updateLocation(x, y);
 		System.out.println(yConverted);
-		System.out.println("PAWN updateLocation(): Y distance: " + yDistance + " Y: " + y);
+		//System.out.println("PAWN updateLocation(): Y distance: " + yDistance + " Y: " + y);
 		if (!firstMove && yDistance == 1) {
 			enPassant = false;
 		} else {
@@ -58,7 +58,7 @@ public class Pawn extends Piece {
 		int yDistance = Math.abs(this.getY() - y);
 
 		if (!standardMove(x, y)) {// ensures white pieces move up, black pieces move down
-			System.out.println("validMove(): Non standard pawn move made!");
+			//System.out.println("validMove(): Non standard pawn move made!");
 			return false;
 		}
 		
@@ -70,7 +70,7 @@ public class Pawn extends Piece {
 				if (tiles[y][x].getPiece() != null && tiles[y][x].getPiece().isWhite() != this.isWhite()) {
 					return true;
 				} else if (tiles[y][x].getPiece() == null) { // en passant block
-					System.out.println("PAWN validMove(): Entered en passant block");
+					//System.out.println("PAWN validMove(): Entered en passant block");
 					if(enPassantMove(x,y,tiles)) {
 						didEnPassant = true;
 						return true;
@@ -98,18 +98,18 @@ public class Pawn extends Piece {
 			if (tiles[y + 1][x].getPiece() != null && tiles[y + 1][x].getPiece() instanceof Pawn
 					&& tiles[y + 1][x].getPiece().isWhite() != this.isWhite()) {
 				Pawn opponent = (Pawn) tiles[y +1][x].getPiece();
-				System.out.println("PAWN enPassantMove(): returning pawns en passant field");
+				//System.out.println("PAWN enPassantMove(): returning pawns en passant field");
 				return opponent.enPassant;
 			}
 		} else {
 			if (tiles[y - 1][x].getPiece() != null && tiles[y - 1][x].getPiece() instanceof Pawn
 					&& tiles[y - 1][x].getPiece().isWhite() != this.isWhite()) {
 				Pawn opponent = (Pawn) tiles[y - 1][x].getPiece();
-				System.out.println("PAWN enPassantMove(): returning pawns en passant field");
+				//System.out.println("PAWN enPassantMove(): returning pawns en passant field");
 				return opponent.enPassant;
 			}
 		}
-		System.out.println("If/else failed to return field");
+		//System.out.println("If/else failed to return field");
 		return false;
 	}
 	
@@ -149,10 +149,10 @@ public class Pawn extends Piece {
 	public boolean standardMove(int x, int y) {
 		int yDistance = Math.abs(this.getY() - y);
 		if(yDistance >= 3) {
-			System.out.println("Moved 3+ spaces!");
+			//System.out.println("Moved 3+ spaces!");
 			return false;
 		}else if (yDistance == 2 && !firstMove) {
-			System.out.println("moved 2 spaces but after first move");
+			//System.out.println("moved 2 spaces but after first move");
 			return false;
 		}
 		if (this.isWhite()) { //TODO determine if white will always be moving up

@@ -12,7 +12,7 @@ public class King extends Piece {
 	String whitePiece = "wk.png";
 	String blackPiece = "bk.png";
 	
-	boolean checked = false;
+	public boolean checked = false;
 
 	public King(boolean white, Shell shell) {
 		super(white);
@@ -42,6 +42,16 @@ public class King extends Piece {
 			return false;
 		}
 		return true;
+	}
+
+	public void inCheck() {
+		this.checked = true;
+		System.out.println("KING IN CHECK!");
+	}
+	public void checkEvaded() {
+		this.checked = false;
+		System.out.println("KING EXITED CHECK!");
+
 	}
 
 }

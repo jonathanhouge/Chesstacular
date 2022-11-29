@@ -88,19 +88,27 @@ public class UI {
 				// opponent moves, however this debug version does not allow the player to take pieces.
 				// If you want to take a piece and move only your own pieces, set debugMode = false;
 				boolean debugMode = true;
+				boolean isWhite = client.getPlayer().getColor().equals("White");
+				int coordinates[] = boardUI.getBoardIndex(e.x,e.y);
+				if(coordinates == null) {
+					return;
+				}
+				int xCoord = coordinates[0];
+				int yCoord = coordinates[1];
+				
 				if(selectedPiece == null) {
 					if(debugMode) {
-						selectedPiece = boardUI.selectPiece(e.x,e.y);
+						selectedPiece = boardUI.selectPiece(xCoord,yCoord);
 					}else {
-						selectedPiece = boardUI.selectPiece(e.x, e.y,client.getPlayer().getColor());
+						selectedPiece = boardUI.selectPiece(xCoord,  yCoord,isWhite);
 					}
 					System.out.println("UI - SELECTED PIECE: " + selectedPiece);
 				}else {	
 					Piece possibleSelection;
 					if(debugMode) {
-						possibleSelection = boardUI.selectPiece(e.x,e.y);
+						possibleSelection = boardUI.selectPiece(xCoord,yCoord);
 					}else {
-						possibleSelection = boardUI.selectPiece(e.x, e.y,client.getPlayer().getColor());
+						possibleSelection = boardUI.selectPiece(xCoord, yCoord,isWhite);
 					}
 					
 					if (possibleSelection !=null) {// if player chooses new piece, update selectedPiece
@@ -108,24 +116,25 @@ public class UI {
 						selectedPiece = possibleSelection;
 						System.out.println("UI - SELECTED NEW PIECE: " + selectedPiece);
 					}else {// player may have moved onto empty space or onto enemy
-						boolean testValid = boardUI.validMoveMade(e.x, e.y,selectedPiece);
+						boolean testValid = boardUI.validMoveMade(xCoord,yCoord,selectedPiece);
 						if(testValid) {
 							System.out.println("UI - VALID MOVE MADE! MOVING PIECE");
-							boardUI.movePiece(e.x, e.y,selectedPiece);
+							boardUI.movePiece(xCoord,yCoord,selectedPiece);
 							if(selectedPiece instanceof Pawn) {
 								Pawn pawn = (Pawn)selectedPiece;
 								if (pawn.didEnPassant) {
-									int xCoord = pawn.getX();
-									int yCoord = pawn.getY();
+									int x = pawn.getX();
+									int y = pawn.getY();
 									if(pawn.isWhite()) {
-										yCoord++;
+										y++;
 									}else {
-										yCoord--;
+										y--;
 									}
-									boardUI.removePiece(xCoord,yCoord);
+									boardUI.removePiece(x,y);
 									pawn.removeEnPassantMove();
 								}
 							}
+							boardUI.determineKingCheckStatus(!isWhite);
 							System.out.println("UI - PIECE UPDATED!");
 							canvas.redraw();
 						}else {

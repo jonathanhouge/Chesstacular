@@ -113,12 +113,14 @@ public abstract class Piece {
 	/**
 	 * This method updates the location of a given piece.
 	 * 
-	 * @param x the x coordinate where the user clicked
-	 * @param y the x coordinate where the user clicked
+	 * @param x any integer between 0-7 inclusive.
+	 * @param y any integer between 0-7 inclusive.
 	 */
 	public void updateLocation(int x, int y) {
-		this.x = (x-BOARD_COORD_OFFSET/2) / SQUARE_WIDTH;
-		this.y = y / SQUARE_WIDTH;
+		//this.x = (x-BOARD_COORD_OFFSET/2) / SQUARE_WIDTH;
+		//this.y = y / SQUARE_WIDTH;
+		this.x =  x;
+		this.y = y;
 	}
 
 	/**
@@ -161,7 +163,6 @@ public abstract class Piece {
 	 * @param y the x coordinate where the user clicked
 	 */
 	public void setLocation(int x, int y) {
-	
 		this.x = (x-BOARD_COORD_OFFSET/2) / getSQUARE_WIDTH();
 		this.y = y / getSQUARE_WIDTH();
 	}
