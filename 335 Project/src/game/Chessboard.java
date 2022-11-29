@@ -212,13 +212,8 @@ public class Chessboard implements ChessBoardUI {
 	 * This method updates the piece's coordinates to the new x/y coordinate and
 	 * ensures that the old tilies piece field is set to null.
 	 * 
-<<<<<<< HEAD
 	 * @param x     any integer between 0-7 inclusive.
 	 * @param y     any integer between 0-7 inclusive.
-=======
-	 * @param x     the x coordinate where the user clicked
-	 * @param y     the x coordinate where the user clicked
->>>>>>> refs/heads/master
 	 * @param piece the Piece object that is to be moved
 	 * @author Julius Ramirez
 	 */

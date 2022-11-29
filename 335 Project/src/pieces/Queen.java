@@ -27,13 +27,25 @@ public class Queen extends Piece {
 		this.bishop = new Bishop(white, shell);
 	}
 
+	
+	@Override
+	public boolean validMove(int x, int y, Tile[][] tiles) {
+		if(rook.standardMove(x, y)) {
+			return rook.hasNoCollisions(x, y, tiles);
+		}else if (bishop.standardMove(x, y)) {
+			return bishop.hasNoCollisions(x, y, tiles);
+		}
+		return false;
+	}
 	/**
 	 * {@inheritDoc} Standard movement determination is done using the 
 	 * Rook and Bishop classes standardMove() methods.
 	 */
 	@Override
 	public boolean standardMove(int x, int y) {
-		return rook.standardMove(x, y) || bishop.standardMove(x, y);
+		System.out.println("Queen.java - queen standardMove() called, however it should never be called.");
+		System.exit(1);
+		return false;
 	}
 
 	/**
@@ -43,7 +55,9 @@ public class Queen extends Piece {
 	 */
 	@Override
 	public boolean hasNoCollisions(int x, int y, Tile[][] tiles) {
-		return rook.hasNoCollisions(x, y, tiles) || bishop.hasNoCollisions(x, y, tiles);
+		System.out.println("Queen.java - queen hasNoCollisions() called, however it should never be called.");
+		System.exit(1);
+		return false;
 	}
 
 	@Override 

@@ -112,11 +112,9 @@ public class UI {
 					Piece possibleSelection;
 					possibleSelection = boardUI.selectPiece(xCoord, yCoord,whitesTurn);
 					if (possibleSelection !=null) {// player has selected new piece
-
 						selectedPiece.SetNotSelected();
 						selectedPiece = possibleSelection;
 						selectedPiece.setSelected();
-						
 						System.out.println("UI - SELECTED NEW PIECE: " + selectedPiece);
 						canvas.redraw();
 					}else {// player may have moved onto empty space or onto enemy
@@ -125,7 +123,7 @@ public class UI {
 							whitesTurn = !whitesTurn;
 							canvas.redraw();
 							selectedPiece.SetNotSelected();
-							
+							selectedPiece = null;
 						}else {
 							System.out.println("UI - INVALID MOVE MADE!");
 						}
