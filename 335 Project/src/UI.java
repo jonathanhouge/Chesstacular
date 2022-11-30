@@ -44,7 +44,7 @@ public class UI {
 	Piece selectedPiece; //Newly added field
 	public boolean whitesTurn; //Newly added field
 	public static int BOARD_COORD_OFFSET = 100;
-
+	public boolean yourTurn;
 	/*
 	 * Constructor that assigns values
 	 * client: client object
@@ -57,7 +57,14 @@ public class UI {
 		this.out = out;
 		this.socket = socket;
 		this.client = client;
-		this.whitesTurn = true; //Newly added field
+		if (client.getPlayer().getColor().equals("White")) {
+			this.whitesTurn = true; //Newly added field
+			this.yourTurn = true;
+		}
+		else {
+			this.whitesTurn = false;
+			this.yourTurn = false;
+		}
 	}
 
 	/*
@@ -92,6 +99,8 @@ public class UI {
 
 		canvas.addMouseListener(new MouseListener() {
 			public void mouseDown(MouseEvent e) {
+				if (!yourTurn)
+					return;
 				//Gather data, convert graphical coordinates into chessboard coordinates
 				int coordinates[] = boardUI.getBoardIndex(e.x,e.y);
 				if(coordinates == null) {
@@ -128,7 +137,8 @@ public class UI {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
-							whitesTurn = !whitesTurn;
+//							whitesTurn = !whitesTurn;
+							yourTurn = !yourTurn;
 							canvas.redraw();
 							selectedPiece.SetNotSelected();
 							selectedPiece = null;
@@ -211,9 +221,10 @@ public class UI {
 							int yBefore = Integer.parseInt(list[2]);
 							int xAfter = Integer.parseInt(list[3]);
 							int yAfter = Integer.parseInt(list[4]);
-							selectedPiece = boardUI.selectPiece(xBefore, yBefore, whitesTurn);
+							selectedPiece = boardUI.selectPiece(xBefore, yBefore, !whitesTurn);
 							boardUI.updateBoard(xAfter,yAfter,selectedPiece);
-							whitesTurn = !whitesTurn;
+//							whitesTurn = !whitesTurn;
+							yourTurn = !yourTurn;
 							canvas.redraw();
 							selectedPiece.SetNotSelected();
 							selectedPiece = null;
