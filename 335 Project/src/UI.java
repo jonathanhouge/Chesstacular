@@ -72,11 +72,9 @@ public class UI {
 				boolean white;
 				
 				if (client.getPlayer().getColor().equals("White")) { 
-					System.out.println("Is White!");
 					white = true; }
 				
 				else { 
-					System.out.println("Is not White!");
 					white = false; }
 
 				boardUI.createBoardData(e.gc, white);
@@ -119,11 +117,22 @@ public class UI {
 						canvas.redraw();
 					}else {// player may have moved onto empty space or onto enemy
 						if(boardUI.validMoveMade(xCoord,yCoord,selectedPiece,whitesTurn)) {
+							int xCoordBefore = selectedPiece.getX();
+							int yCoordBefore = selectedPiece.getY();
 							boardUI.updateBoard(xCoord,yCoord,selectedPiece);
+							try {
+								out.write("MOVE:"+xCoordBefore+"-"+yCoordBefore+"-"+xCoord+"-"+yCoord);
+								out.newLine();
+								out.flush();
+							} catch (IOException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
 							whitesTurn = !whitesTurn;
 							canvas.redraw();
 							selectedPiece.SetNotSelected();
 							selectedPiece = null;
+							
 						}else {
 							System.out.println("UI - INVALID MOVE MADE!");
 						}
@@ -190,24 +199,26 @@ public class UI {
 	{
 		public void run() 
 		{
-			String msgFromOthers;
+			String msgFromOpponent;
 			try {
 				if (in.ready())
 				{
 					try {
-						msgFromOthers = in.readLine();
-						
-//						if (msgFromOthers.contains("ID")) { // your own ID
-//							System.out.println("My INFO: " + msgFromOthers);
-//							String[] list = msgFromOthers.split("[:-]");
-//							int ID = Integer.parseInt(list[1]);
-//							String color = list[2];
-//							client.getPlayer().setID(ID);
-//							client.getPlayer().setColor(color);	
-//						}
-//						
-//						else 
-							System.out.println("OPPOSITION: " + msgFromOthers);
+						msgFromOpponent = in.readLine();
+						if (msgFromOpponent.contains("MOVE")){
+							String[] list = msgFromOpponent.split("[:-]");
+							int xBefore = Integer.parseInt(list[1]);
+							int yBefore = Integer.parseInt(list[2]);
+							int xAfter = Integer.parseInt(list[3]);
+							int yAfter = Integer.parseInt(list[4]);
+							selectedPiece = boardUI.selectPiece(xBefore, yBefore, whitesTurn);
+							boardUI.updateBoard(xAfter,yAfter,selectedPiece);
+							whitesTurn = !whitesTurn;
+							canvas.redraw();
+							selectedPiece.SetNotSelected();
+							selectedPiece = null;
+							System.out.println(msgFromOpponent);
+						}
 					}
 							
 					 catch(IOException e) {

@@ -64,6 +64,8 @@ public class Client {
 		System.out.println("My INFO: " + msgFromOthers);
 		String[] list = msgFromOthers.split("[:-]");
 		int ID = Integer.parseInt(list[1]);
+		System.out.println("Client" + ID + " Connected!");
+
 		String color = list[2];
 		player.setID(ID);
 		System.out.println(color.equals("White"));
