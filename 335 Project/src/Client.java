@@ -29,17 +29,19 @@ public class Client {
 	public static void main(String[] args) throws Exception {
 		player = (new PlayerCreateDisplay()).start();
 		
-		if (player.getOpponent() == "Human") {
+		if (player.getOpponent() == "Remote") {
 			Socket socket = new Socket("localhost", 600);
 			Client client = new Client(socket); }
 		
-		else { // if we're going against a robot, no need for a server
+		else { // if we're going against someone locally or a robot, no need for a server
 			Robot opponent;
-			if (player.getOpponent() == "Robot (Easy)") {
+			if (player.getOpponent() == "Robot") {
 				opponent = new RandomAI(); }
 			else {
 				opponent = new AlgorithmAI(); }
 			// play against the robot!
+	        UI ui = new UI(null, null, null, null);
+	        ui.start();
 		}
     }
 	
