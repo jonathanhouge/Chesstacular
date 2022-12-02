@@ -10,6 +10,8 @@ import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
 import game.Chessboard;
+import game.GameStatus;
+import game.Tile;
 import pieces.Pawn;
 import pieces.Piece;
 
@@ -38,6 +40,7 @@ public class UI {
 
 	Client client;
 	Chessboard boardUI;
+	GameStatus gameStatus;
 	boolean initialized = false;
 	int SHELL_WIDTH_OFFSET = 20;
 	int SHELL_HEIGHT_OFFSET = 50;
@@ -45,6 +48,9 @@ public class UI {
 	public boolean whitesTurn; //Newly added field
 	public static int BOARD_COORD_OFFSET = 100;
 	public boolean yourTurn;
+	protected Menu menuBar, fileMenu;
+	protected MenuItem fileMenuHeader,fileSaveItem,fileExitItem;
+	boolean loadOldGame;
 	/*
 	 * Constructor that assigns values
 	 * client: client object
@@ -73,6 +79,23 @@ public class UI {
 	public void start() {
 		System.out.println("It is currently whites turn!");
 		setup();
+		gameStatus = new GameStatus(shell);
+		loadOldGame = false;
+		
+		shell.addListener(SWT.Close, new Listener() {
+
+			@Override
+			public void handleEvent(Event event) {
+				// TODO Auto-generated method stub
+				System.out.println("Closing the shell!");
+				gameStatus.getFileName("Do You Wanna Save the Game?", "Yes, please", "No, don't");
+				gameStatus.saveGame(boardUI.getBoard(), yourTurn, whitesTurn);
+				shell.dispose();
+				
+			}
+			
+		});
+		
 		canvas.addPaintListener(e -> {
 			if (initialized == false) { // create the tiles and initial starting positions
 				
@@ -83,8 +106,18 @@ public class UI {
 				
 				else { 
 					white = false; }
-
 				boardUI.createBoardData(e.gc, white);
+				   
+				if(!loadOldGame) {
+					boardUI.setAllPieces();
+				}else {
+					gameStatus.setFileName("test_file.txt");
+					boolean[] playerTurnData = gameStatus.loadGame(boardUI.getBoard());
+//					yourTurn = playerTurnData[0];
+//					whitesTurn = playerTurnData[1];
+					
+				}
+				
 				initialized = true; }
 			
 			if (initialized) { boardUI.draw(e.gc); 
@@ -179,14 +212,17 @@ public class UI {
 		shell = new Shell(display);
 		shell.setText("Chess (" + client.getPlayer().getName() + ")");
 		shell.setLayout(new FillLayout());
-		shell.setSize(640+BOARD_COORD_OFFSET + SHELL_WIDTH_OFFSET, 640+BOARD_COORD_OFFSET/2 + SHELL_HEIGHT_OFFSET);
+		shell.setSize(640+BOARD_COORD_OFFSET + SHELL_WIDTH_OFFSET, 700+BOARD_COORD_OFFSET/2 + SHELL_HEIGHT_OFFSET);
 		
 		canvas = new Canvas(shell, SWT.BACKGROUND);
 		canvas.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_WHITE));
 		canvas.setSize(640+BOARD_COORD_OFFSET, 640+BOARD_COORD_OFFSET/2 + SHELL_HEIGHT_OFFSET);
 //		canvas.setBounds(0, 0, 640, 640);
 		
+		createMenuBar();
+		shell.setMenuBar(menuBar);
 		boardUI = new Chessboard(canvas, shell);	
+		
 	}
 	
 	void notifyOtherUsers() {
@@ -198,6 +234,68 @@ public class UI {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		
+	}
+	/*
+	 * establishes the menu bar at the top of shell
+	 * 
+	 */
+	protected void createMenuBar() {
+		menuBar = new Menu(shell, SWT.BAR);
+		createFileMenu(); //file ops
+		
+	}
+	
+	/*
+	 * creates the file menu
+	 */
+	protected void createFileMenu() {
+		fileMenuHeader = new MenuItem(menuBar, SWT.CASCADE);
+		fileMenuHeader.setText("File");
+		fileMenu = new Menu(shell, SWT.DROP_DOWN);
+		fileMenuHeader.setMenu(fileMenu);
+		createFileSaveItem();
+		createFileExitItem();
+		
+		
+	}
+	
+	/*
+	 * file save menu.
+	 */
+	protected void createFileSaveItem() {
+		fileSaveItem = new MenuItem(fileMenu, SWT.PUSH);
+		fileSaveItem.setText("Save");
+		fileSaveItem.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent event) {
+				
+				gameStatus.getFileName("Wanna Take a Break?", " Save ","Cancel"); //prompts the player for a file name
+				gameStatus.saveGame(boardUI.getBoard(), yourTurn, whitesTurn); //saves the game status to a .txt file
+			}
+
+			public void widgetDefaultSelected(SelectionEvent event) {
+			}
+		});
+	}
+	
+	/*
+	 * file exit option. when selected, exits the program
+	 */
+	protected void createFileExitItem() {
+		fileExitItem = new MenuItem(fileMenu, SWT.PUSH);
+		fileExitItem.setText("Exit");
+		fileExitItem.addSelectionListener(new SelectionListener() {
+			public void widgetSelected(SelectionEvent event) {
+				shell.close();
+				display.dispose();
+			}
+
+			public void widgetDefaultSelected(SelectionEvent event) {
+				shell.close();
+				display.dispose();
+			}
+		});
 		
 		
 	}

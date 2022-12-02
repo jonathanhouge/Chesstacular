@@ -56,7 +56,7 @@ public class Client {
 		catch (IOException e) {
 			close();
 		}
-
+		
 		out.write(player.getName() + "-" + player.getColor()); // sends username to client manager
 		out.newLine();
 		out.flush();
@@ -72,6 +72,7 @@ public class Client {
 		player.setColor(color);	
         UI ui = new UI(this, in, out, socket);
         ui.start();
+        
 		
 		// CREATES UI OBJECT AND STARTS GAME
 
