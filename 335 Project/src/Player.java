@@ -40,4 +40,5 @@ public class Player {
 	public String getColor() { return color; }
 	public String getOpponent() { return opponent; }
 	public int getScore() { return score; }
+	public String getFileName() {return fileName;}
 }

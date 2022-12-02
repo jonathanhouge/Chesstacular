@@ -40,7 +40,7 @@ public class Client {
 			else {
 				opponent = new AlgorithmAI(); }
 			// play against the robot!
-	        UI ui = new UI(null, null, null, null);
+	        UI ui = new UI(null, null, null, null, player.getFileName());
 	        ui.start();
 		}
     }
@@ -72,7 +72,7 @@ public class Client {
 		player.setID(ID);
 		System.out.println(color.equals("White"));
 		player.setColor(color);	
-        UI ui = new UI(this, in, out, socket);
+        UI ui = new UI(this, in, out, socket, player.getFileName());
         ui.start();
         
 		

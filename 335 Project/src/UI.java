@@ -19,6 +19,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -51,6 +52,7 @@ public class UI {
 	protected Menu menuBar, fileMenu;
 	protected MenuItem fileMenuHeader,fileSaveItem,fileExitItem;
 	boolean loadOldGame;
+	private String fileName;
 	/*
 	 * Constructor that assigns values
 	 * client: client object
@@ -58,11 +60,12 @@ public class UI {
 	 * out: output stream
 	 * socket: Socket object
 	 */
-	public UI(Client client, BufferedReader in, BufferedWriter out, Socket socket) {
+	public UI(Client client, BufferedReader in, BufferedWriter out, Socket socket, String fileName) {
 		this.in = in;
 		this.out = out;
 		this.socket = socket;
 		this.client = client;
+		this.fileName = fileName;
 		if (in == null || client.getPlayer().getColor().equals("White")) {
 			this.whitesTurn = true; //Newly added field
 			this.yourTurn = true;
@@ -81,6 +84,7 @@ public class UI {
 		setup();
 		gameStatus = new GameStatus(shell);
 		loadOldGame = false;
+		validateFileName();
 		
 		shell.addListener(SWT.Close, new Listener() {
 
@@ -88,8 +92,9 @@ public class UI {
 			public void handleEvent(Event event) {
 				// TODO Auto-generated method stub
 				System.out.println("Closing the shell!");
-				gameStatus.getFileName("Do You Wanna Save the Game?", "Yes, please", "No, don't");
+				String fileToSaveGame = gameStatus.getFileName("Do You Wanna Save the Game?", "Yes, please", "No, don't");
 				gameStatus.saveGame(boardUI.getBoard(), yourTurn, whitesTurn);
+				
 				shell.dispose();
 				
 			}
@@ -111,7 +116,7 @@ public class UI {
 				if(!loadOldGame) {
 					boardUI.setAllPieces();
 				}else {
-					gameStatus.setFileName("test_file.txt");
+					gameStatus.setFileName(fileName);
 					boolean[] playerTurnData = gameStatus.loadGame(boardUI.getBoard());
 //					yourTurn = playerTurnData[0];
 //					whitesTurn = playerTurnData[1];
@@ -246,6 +251,24 @@ public class UI {
 		
 		
 	}
+	
+	/**
+	 * Checks if the entered game file exists.
+	 * If not, it generates a new game instead.
+	 */
+	private void validateFileName(){
+		if(fileName.equals("Enter file name")) {return;}
+		String cwd = System.getProperty("user.dir") + "\\Saved Games\\" + fileName;
+		 File dir = new File(cwd);
+		 if(dir.exists()) {
+			 loadOldGame = true;
+		 }else {
+			 loadOldGame = false;
+			 System.out.println("Sorry, the entered file could not be found!");
+		 }
+		
+		
+	}
 	/*
 	 * establishes the menu bar at the top of shell
 	 * 
@@ -279,8 +302,9 @@ public class UI {
 		fileSaveItem.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent event) {
 				
-				gameStatus.getFileName("Wanna Take a Break?", " Save ","Cancel"); //prompts the player for a file name
+				gameStatus.getFileName("Wanna Take a Break?", " Save and Exit "," Cancel "); //prompts the player for a file name
 				gameStatus.saveGame(boardUI.getBoard(), yourTurn, whitesTurn); //saves the game status to a .txt file
+				shell.dispose();
 			}
 
 			public void widgetDefaultSelected(SelectionEvent event) {

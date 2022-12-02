@@ -78,7 +78,7 @@ public class GameStatus {
 	    text.addListener(SWT.Modify, new Listener() {
 		      public void handleEvent(Event event) {
 		        try {
-		          fileName = text.getText() + ".txt";
+		          fileName = text.getText();
 		          saveButton.setEnabled(true);
 		        } catch (Exception e) {
 		          saveButton.setEnabled(false);
@@ -95,7 +95,7 @@ public class GameStatus {
 	    
 	    saveButton.addListener(SWT.Selection, new Listener() {
 		      public void handleEvent(Event event) {
-		    	if(fileName.equals(".txt")) {return;}
+		    	if(fileName.equals(".txt") || fileName.equals("")) {return;}
 		        shell.dispose();
 		      }
 		    });
@@ -122,7 +122,7 @@ public class GameStatus {
 	        display.sleep();
 	    }
 	    
-	    System.out.println("File name: "+fileName);
+//	    System.out.println("File name: "+fileName);
 		return fileName;
 		
 		
@@ -137,6 +137,7 @@ public class GameStatus {
 	 * 		BLACK PAWN (1,1)
 	 */
 	public void saveGame(Tile[][]board, boolean yourTurn, boolean whitesTurn) {
+		if(fileName.length() == 0 || !fileName.contains(".txt")) {return;}
 		checkForSavedGamesFolder();
 		PrintWriter writer;
 		
@@ -176,6 +177,7 @@ public class GameStatus {
 	 */
 	public boolean[] loadGame(Tile[][] board) {
 		File gameFile; Scanner reader;
+		if(fileName.length() == 0 || !fileName.contains(".txt")) {return null;}
 		gameFile = new File("Saved Games/" + fileName);
 		boolean yourTurn,whitesTurn;
 		
@@ -234,7 +236,7 @@ public class GameStatus {
 	 * "Saved Games" folder is used to store the saved games.
 	 */
 	private void checkForSavedGamesFolder() {
-		System.out.println("Checking the directory ...");
+//		System.out.println("Checking the directory ...");
 		String cwd = System.getProperty("user.dir") + "\\Saved Games";
 		 File dir = new File(cwd);
 		 

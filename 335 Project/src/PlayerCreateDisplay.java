@@ -74,7 +74,7 @@ public class PlayerCreateDisplay {
 		Label loadL = new Label(load, SWT.NONE);
 		loadL.setText("Resume a Saved Game"); loadL.setFont(labelFont); loadL.setForeground(color);
 		Text file = new Text(load, SWT.BORDER); file.setLayoutData(widgetData);
-		file.setText("Enter .txt here!"); file.setTextLimit(16);
+		file.setText("Enter .txt file"); file.setTextLimit(16);
 		
 		// play button - will use the current selections to create a new Player
 		ArrayList<String> decision = new ArrayList<String>();
