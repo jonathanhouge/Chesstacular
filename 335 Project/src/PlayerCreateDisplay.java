@@ -53,20 +53,28 @@ public class PlayerCreateDisplay {
 		//-- the widgets
 		
 		// enter your name; default will pick a random emoticon from the Player class
-		Group colors = new Group(shell, SWT.NONE);
-		colors.setLayout(widgetLayout);
-		Label label = new Label(colors, SWT.NONE);
-		label.setText("Let's Get Your Name"); label.setFont(labelFont); label.setForeground(color);
-		Text name = new Text(colors, SWT.BORDER); name.setLayoutData(widgetData);
+		Group naming = new Group(shell, SWT.NONE);
+		naming.setLayout(widgetLayout);
+		Label nameL = new Label(naming, SWT.NONE);
+		nameL.setText("Let's Get Your Name"); nameL.setFont(labelFont); nameL.setForeground(color);
+		Text name = new Text(naming, SWT.BORDER); name.setLayoutData(widgetData);
 		name.setText("Enter name here!"); name.setTextLimit(16);
 		
 		// pick preferred color; default: White
 		ArrayList<String> decision2 = new ArrayList<String>(); decision2.add("White");
 		colorButtons(shell, decision2, widgetLayout, labelFont, buttonFont, color);
 
-		// pick opponent to face; default: Human
-		ArrayList<String> decision3 = new ArrayList<String>(); decision3.add("Human");
+		// pick opponent to face; default: Remote
+		ArrayList<String> decision3 = new ArrayList<String>(); decision3.add("Remote");
 		typeButtons(shell, decision3, widgetLayout, labelFont, buttonFont, color);
+		
+		// if the user wishes to resume a game;
+		Group load = new Group(shell, SWT.NONE);
+		load.setLayout(widgetLayout);
+		Label loadL = new Label(load, SWT.NONE);
+		loadL.setText("Resume a Saved Game"); loadL.setFont(labelFont); loadL.setForeground(color);
+		Text file = new Text(load, SWT.BORDER); file.setLayoutData(widgetData);
+		file.setText("Enter .txt here!"); file.setTextLimit(16);
 		
 		// play button - will use the current selections to create a new Player
 		ArrayList<String> decision = new ArrayList<String>();
@@ -79,11 +87,12 @@ public class PlayerCreateDisplay {
 				display.sleep (); }
 		
 		// gathers the data the client picked to create their player
-		String playerName = name.getText(); display.dispose();
+		String playerName = name.getText();
+		String fileName = file.getText(); display.dispose();
 		String preferredColor = decision2.get(decision2.size() - 1);
 		String opponent = decision3.get(decision3.size() - 1);
 
-		Player player = new Player(playerName, preferredColor, opponent);
+		Player player = new Player(playerName, preferredColor, opponent, fileName);
 		return player; } // player successfully created!
 
 	// radio button for picking piece color
@@ -106,23 +115,23 @@ public class PlayerCreateDisplay {
 	// radio button for picking the type of game
 	private static void typeButtons(Shell shell, ArrayList<String> decision, GridLayout layout, Font title, Font button, Color color) {
 		//-- set up general button layout
-				Group colors = new Group(shell, SWT.NONE);
-				colors.setLayout(layout);
-				Label label = new Label(colors, SWT.NONE);
-				label.setText("Who are you facing?"); label.setFont(title); label.setForeground(color);
+		Group type = new Group(shell, SWT.NONE);
+		type.setLayout(layout);
+		Label label = new Label(type, SWT.NONE);
+		label.setText("Who are you facing?"); label.setFont(title); label.setForeground(color);
 
-				//-- buttons themselves - default select the first option
-				Button human = new Button(colors, SWT.RADIO); human.setText("Human");
-				human.setSelection(true); human.setFont(button); human.setForeground(color);
-				selectListenCreation(human, decision);
+		//-- buttons themselves - default select the second option
+		Button locally = new Button(type, SWT.RADIO); locally.setText("Local");
+		locally.setFont(button); locally.setForeground(color);
+		selectListenCreation(locally, decision);
 						
-				Button random = new Button(colors, SWT.RADIO); random.setText("Robot (Easy)");
-				random.setFont(button); random.setForeground(color);
-				selectListenCreation(random, decision);
-				
-				Button algorithm = new Button(colors, SWT.RADIO); algorithm.setText("Robot (Hard)");
-				algorithm.setFont(button); algorithm.setForeground(color);
-				selectListenCreation(algorithm, decision); }
+		Button remotely = new Button(type, SWT.RADIO); remotely.setText("Remote");
+		remotely.setSelection(true); remotely.setFont(button); remotely.setForeground(color);
+		selectListenCreation(remotely, decision);
+
+		Button bot = new Button(type, SWT.RADIO); bot.setText("Robot");
+		bot.setFont(button); bot.setForeground(color);
+		selectListenCreation(bot, decision); }
 	
 	// selection listener - for the radio buttons & submit button
 	protected static void selectListenCreation(Button button, ArrayList<String> decision) {

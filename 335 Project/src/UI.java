@@ -63,7 +63,7 @@ public class UI {
 		this.out = out;
 		this.socket = socket;
 		this.client = client;
-		if (client.getPlayer().getColor().equals("White")) {
+		if (in == null || client.getPlayer().getColor().equals("White")) {
 			this.whitesTurn = true; //Newly added field
 			this.yourTurn = true;
 		}
@@ -106,7 +106,7 @@ public class UI {
 				
 				else { 
 					white = false; }
-				boardUI.createBoardData(e.gc, white);
+				boardUI.createBoardData(e.gc);
 				   
 				if(!loadOldGame) {
 					boardUI.setAllPieces();
@@ -118,6 +118,7 @@ public class UI {
 					
 				}
 				
+
 				initialized = true; }
 			
 			if (initialized) { boardUI.draw(e.gc); 
@@ -132,7 +133,7 @@ public class UI {
 
 		canvas.addMouseListener(new MouseListener() {
 			public void mouseDown(MouseEvent e) {
-				if (!yourTurn)
+				if (!yourTurn) // thinking here?
 					return;
 				//Gather data, convert graphical coordinates into chessboard coordinates
 				int coordinates[] = boardUI.getBoardIndex(e.x,e.y);
@@ -140,10 +141,10 @@ public class UI {
 					return;
 				}
 				int xCoord = coordinates[0];
-				int yCoord = coordinates[1];				
+				int yCoord = coordinates[1];
 				//Select a piece OR move piece
 				if(selectedPiece == null) { // Selecting piece for first time
-					selectedPiece = boardUI.selectPiece(xCoord,  yCoord,whitesTurn);
+					selectedPiece = boardUI.selectPiece(xCoord, yCoord, whitesTurn);
 					if(selectedPiece != null) {
 						selectedPiece.setSelected();
 						canvas.redraw();
@@ -162,16 +163,20 @@ public class UI {
 							int xCoordBefore = selectedPiece.getX();
 							int yCoordBefore = selectedPiece.getY();
 							boardUI.updateBoard(xCoord,yCoord,selectedPiece);
-							try {
-								out.write("MOVE:"+xCoordBefore+"-"+yCoordBefore+"-"+xCoord+"-"+yCoord);
-								out.newLine();
-								out.flush();
-							} catch (IOException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
+							if (in != null) {
+								try {
+									out.write("MOVE:"+xCoordBefore+"-"+yCoordBefore+"-"+xCoord+"-"+yCoord);
+									out.newLine();
+									out.flush();
+								} catch (IOException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								} 
+								yourTurn = !yourTurn;
 							}
-//							whitesTurn = !whitesTurn;
-							yourTurn = !yourTurn;
+							else {
+								whitesTurn = !whitesTurn; }
+							
 							canvas.redraw();
 							selectedPiece.SetNotSelected();
 							selectedPiece = null;
@@ -190,14 +195,15 @@ public class UI {
 
 		canvas.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
-				notifyOtherUsers();
+				if (in != null) { notifyOtherUsers(); }
 				canvas.redraw();
 				} 
 			public void keyReleased(KeyEvent e) {}
 		});
-
-		Runnable runnable = new Runner();
-		display.asyncExec(runnable);
+		
+		if (in != null) {
+			Runnable runnable = new Runner();
+			display.asyncExec(runnable); }
 		shell.open(); 
 		while (!shell.isDisposed()) 
 			if (!display.readAndDispatch())
@@ -210,7 +216,10 @@ public class UI {
 		display = new Display();
 		
 		shell = new Shell(display);
-		shell.setText("Chess (" + client.getPlayer().getName() + ")");
+		if (client != null) {
+			shell.setText("Chess: " + client.getPlayer().getName() + " (" + client.getPlayer().getColor() + ")"); }
+		else {
+			shell.setText("Chess"); }
 		shell.setLayout(new FillLayout());
 		shell.setSize(640+BOARD_COORD_OFFSET + SHELL_WIDTH_OFFSET, 700+BOARD_COORD_OFFSET/2 + SHELL_HEIGHT_OFFSET);
 		
