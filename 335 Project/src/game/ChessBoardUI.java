@@ -20,5 +20,5 @@ import pieces.Knight;
 // could perhaps make another instance of ChessBoardUI that's for testing - only white pieces, no turns, etc.
 interface ChessBoardUI {
 	public void draw(GC gc);
-	public void createBoardData(GC gc, boolean white);
+	public void createBoardData(GC gc);
 }

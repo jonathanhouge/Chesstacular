@@ -66,7 +66,7 @@ public class Chessboard implements ChessBoardUI {
 	 * 'simpleton' function, only ran once for initialization. color boolean
 	 * parameter determines what pieces should be in front of the player.
 	 */
-	public void createBoardData(GC gc, boolean white) {
+	public void createBoardData(GC gc) {
 		board = new Tile[8][8]; // list of tiles
 		boolean boardColor = true; // if true, tile is white and vice versa
 		Color w = new Color(255, 221, 153);
