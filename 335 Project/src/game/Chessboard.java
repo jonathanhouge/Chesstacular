@@ -35,6 +35,9 @@ public class Chessboard implements ChessBoardUI {
 		this.canvas = canvas;
 		this.shell = shell;
 	}
+	
+	public Tile[][] getBoard(){return board;}
+	public void setBoard(Tile[][]board) {this.board = board;}
 
 	@Override
 	public void draw(GC gc) {
@@ -65,6 +68,8 @@ public class Chessboard implements ChessBoardUI {
 	/*
 	 * 'simpleton' function, only ran once for initialization. color boolean
 	 * parameter determines what pieces should be in front of the player.
+	 * 
+	 * it creates an empty board
 	 */
 	public void createBoardData(GC gc) {
 		board = new Tile[8][8]; // list of tiles
@@ -82,12 +87,26 @@ public class Chessboard implements ChessBoardUI {
 				else {
 					board[y][x] = new Tile(b, x * SQUARE_WIDTH + 50, y * SQUARE_WIDTH, SQUARE_WIDTH); }
 
-				// set the piece using a helper function
-				board[y][x].setPiece(makePiece(x, y));
 
 				// alternating tile colors
 				boardColor = !boardColor; }
 			boardColor = !boardColor; }
+	}
+	
+	/**
+	 * Adds all the chess pieces to the board.
+	 * Used for the new game only.
+	 */
+	public void setAllPieces() {
+		for (int x = 0; x < 8; x++) {
+			for (int y = 0; y < 8; y++) {
+				
+				// set the piece using a helper function
+				board[y][x].setPiece(makePiece(x, y));
+			}
+			
+		}
+		
 	}
 
 	/*
