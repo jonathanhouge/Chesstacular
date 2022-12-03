@@ -353,6 +353,7 @@ public class UI {
 							int xAfter = Integer.parseInt(list[3]);
 							int yAfter = Integer.parseInt(list[4]);
 							selectedPiece = boardUI.selectPiece(xBefore, yBefore, !whitesTurn);
+							boardUI.validMoveMade(xAfter,yAfter,selectedPiece,whitesTurn); // necessary b/c pawn's validMove updates didEnPassant
 							boardUI.updateBoard(xAfter,yAfter,selectedPiece);
 //							whitesTurn = !whitesTurn;
 							yourTurn = !yourTurn;

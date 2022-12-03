@@ -261,12 +261,12 @@ public class Chessboard implements ChessBoardUI {
 		determineKingCheckStatus(getWhite);
 		King newKing = getKing(getWhite);
 		if (!newKing.checked) {
-			System.out.println("Valid check move because king not in check");
+			//System.out.println("Valid check move because king not in check");
 			this.movePiece(oldX, oldY, piece);
 			board[y][x].setPiece(oldPiece);
 			return true;
 		}
-		System.out.println("Invalid check move because king in check");
+		//System.out.println("Invalid check move because king in check");
 		this.movePiece(oldX, oldY, piece);
 		board[y][x].setPiece(oldPiece);
 
@@ -318,6 +318,7 @@ public class Chessboard implements ChessBoardUI {
 		return null;
 	}
 
+	
 	/**
 	 * This is a debug version of selectPiece(). It acts the same however the user
 	 * can also move the opponents pieces.
@@ -358,6 +359,7 @@ public class Chessboard implements ChessBoardUI {
 		if(selectedPiece instanceof Pawn) {
 			Pawn pawn = (Pawn)selectedPiece;
 			if (pawn.didEnPassant) {
+				System.out.println("Chessboard - Entered block!");
 				int x = pawn.getX();
 				int y = pawn.getY();
 				if(pawn.isWhite()) {
@@ -380,9 +382,9 @@ public class Chessboard implements ChessBoardUI {
 	 * @param selectedPiece the piece that is to be moved to xCoord, yCoord
 	 */
 	public void updateBoard(int xCoord, int yCoord, Piece selectedPiece) {
-		System.out.println("Chessboard.java - Moving..." + selectedPiece);
+		//System.out.println("Chessboard.java - Moving..." + selectedPiece);
 		this.movePiece(xCoord,yCoord,selectedPiece);
-		System.out.println("Chessboard.java - Piece updated! " + selectedPiece);
+		//System.out.println("Chessboard.java - Piece updated! " + selectedPiece);
 		this.checkEnPassantMoveMade(selectedPiece);
 		this.checkPromotion(selectedPiece);
 		if(this.determineKingCheckStatus(!selectedPiece.isWhite())) {
