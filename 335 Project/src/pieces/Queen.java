@@ -1,10 +1,12 @@
 package pieces;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
+import game.Coordinate;
 import game.Tile;
 
 public class Queen extends Piece {
@@ -71,6 +73,15 @@ public class Queen extends Piece {
 		super.updateLocation(x, y);
 		this.rook.updateLocation(x, y);
 		this.bishop.updateLocation(x, y);
+	}
+
+
+	@Override
+	public List<Coordinate> generateMoves(Tile[][] tiles) {
+		List<Coordinate> coordinates = new ArrayList<>();
+		coordinates = rook.generateMoves(tiles);
+		coordinates.addAll(bishop.generateMoves(tiles));
+		return coordinates;
 	}
 
 }

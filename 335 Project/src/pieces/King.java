@@ -1,10 +1,12 @@
 package pieces;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
+import game.Coordinate;
 import game.Tile;
 
 public class King extends Piece {
@@ -49,6 +51,26 @@ public class King extends Piece {
 	}
 	public void checkEvaded() {
 		this.checked = false;
+	}
+
+	@Override
+	public List<Coordinate> generateMoves(Tile[][] tiles) {
+		List<Coordinate> coordinates = new ArrayList<>();
+		for(int row = -1;row<= 1;row++) {
+			for(int col = -1; col <= 1;col++) {
+				if(getX()+col < 0 || getY()+row < 0 || getX()+col > 7 || getY()+row >7) {
+					break;
+				}
+				if(!tiles[getY()+row][getX()+col].hasPiece()) {
+					coordinates.add(new Coordinate(getX()+col,getY()+row));
+				}else {
+					if(tiles[getY()+row][getX()+col].getPiece().isWhite()!= this.isWhite()) {
+						coordinates.add(new Coordinate(getX()+col,getY()+row));
+					}
+				}
+			}
+		}
+		return coordinates;
 	}
 
 }

@@ -1,10 +1,12 @@
 package pieces;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
+import game.Coordinate;
 import game.Tile;
 
 public class Bishop extends Piece {
@@ -67,10 +69,88 @@ public class Bishop extends Piece {
 					return false;
 				}
 			}
-		} else { //non-standard movement, need this block for queen movement
+		} else { // non-standard movement, need this block for queen movement
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public List<Coordinate> generateMoves(Tile[][] tiles) {
+		List<Coordinate> coordinates = new ArrayList<>();
+		// UP-RIGHT
+		int y = getY() - 1;
+		int x = getX() + 1;
+		while (true) {
+			if(x < 0 || y < 0 || x > 7 || y >7) {
+				break;
+			}
+			if (!tiles[y][x].hasPiece()) {
+				coordinates.add(new Coordinate(x, y));
+			} else {
+				if(tiles[y][x].getPiece().isWhite() != this.isWhite()) {
+					coordinates.add(new Coordinate(x,y));
+				}
+				break;
+			}
+			y--;
+			x++;
+		}
+		// DOWN-RIGHT
+		y = getY() + 1;
+		x = getX() + 1;
+		while (true) {
+			if(x < 0 || y < 0 || x > 7 || y >7) {
+				break;
+			}
+			if (!tiles[y][x].hasPiece()) {
+				coordinates.add(new Coordinate(x, y));
+			} else {
+				if(tiles[y][x].getPiece().isWhite() != this.isWhite()) {
+					coordinates.add(new Coordinate(x,y));
+				}
+				break;
+			}
+			y++;
+			x++;
+		}
+		// UP-LEFT
+		y = getY() - 1;
+		x = getX() - 1;
+		while (true) {
+			if(x < 0 || y < 0 || x > 7 || y >7) {
+				break;
+			}
+			if (!tiles[y][x].hasPiece()) {
+				coordinates.add(new Coordinate(x, y));
+			} else {
+				if(tiles[y][x].getPiece().isWhite() != this.isWhite()) {
+					coordinates.add(new Coordinate(x,y));
+				}
+				break;
+			}
+			x--;
+			y--;
+		}
+		// DOWN-LEFT
+		y = getY() + 1;
+		x = getX() - 1;
+		while (true) {
+			if(x < 0 || y < 0 || x > 7 || y >7) {
+				break;
+			}
+			if (!tiles[y][x].hasPiece()) {
+				coordinates.add(new Coordinate(x, y));
+			} else {
+				if(tiles[y][x].getPiece().isWhite() != this.isWhite()) {
+					coordinates.add(new Coordinate(x,y));
+				}
+				break;
+			}
+			x--;
+			y++;
+		}
+		return coordinates;
 	}
 
 }

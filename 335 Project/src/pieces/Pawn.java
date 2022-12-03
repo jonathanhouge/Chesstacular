@@ -1,10 +1,12 @@
 package pieces;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
+import game.Coordinate;
 import game.Tile;
 
 public class Pawn extends Piece {
@@ -173,6 +175,51 @@ public class Pawn extends Piece {
 			return this.getY() == 0;
 		}
 		return this.getY() == 7;
+	}
+ 
+	@Override
+	public List<Coordinate> generateMoves(Tile[][] tiles) {
+		 List<Coordinate> coordinates = new ArrayList<>();
+		if(this.isWhite()) { 
+			if(getY() - 1 >= 0 && !tiles[getY()-1][getX()].hasPiece()) {
+				coordinates.add(new Coordinate(getX(),getY()-1));
+				if(firstMove && !tiles[getY()-2][getX()].hasPiece()) {
+					coordinates.add(new Coordinate(getX(),getY()-2));
+				}
+			}
+			if(getY() - 1 >= 0) {// Diagonal moves
+				if(getX() -1 >= 0 && tiles[getY()-1][getX()-1].hasPiece()) {
+					if(tiles[getY()-1][getX()-1].getPiece().isWhite()!= this.isWhite()) {
+						coordinates.add(new Coordinate(getX()-1,getY()-1));
+					}
+				}
+				if(getX() + 1 <= 7 && tiles[getY()-1][getX()+1].hasPiece()) {
+					if(tiles[getY()-1][getX()+1].getPiece().isWhite()!= this.isWhite()) {
+						coordinates.add(new Coordinate(getX()+1,getY()-1));
+					}
+				}	
+			}
+		}else {
+			if(getY() + 1 <= 7 && !tiles[getY()+1][getX()].hasPiece()) {
+				coordinates.add(new Coordinate(getX(),getY()+1));
+				if(firstMove && !tiles[getY()+2][getX()].hasPiece()) {
+					coordinates.add(new Coordinate(getX(),getY()+2));
+				}
+			}
+			if(getY() + 1 <= 7) {
+				if(getX() - 1 >= 0 && tiles[getY()+1][getX()-1].hasPiece()) {
+					if(tiles[getY()+1][getX()-1].getPiece().isWhite()!= this.isWhite()) {
+						coordinates.add(new Coordinate(getX()-1,getY()+1));
+					}
+				}
+				if(getX() + 1 <= 7 && tiles[getY()+1][getX()+1].hasPiece()) {
+					if(tiles[getY()+1][getX()+1].getPiece().isWhite()!= this.isWhite()) {
+						coordinates.add(new Coordinate(getX()+1,getY()+1));
+					}
+				}
+			}
+		}
+		return coordinates;
 	}
 
 }
