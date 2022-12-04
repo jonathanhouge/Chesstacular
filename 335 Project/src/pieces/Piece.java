@@ -212,4 +212,11 @@ public abstract class Piece {
 		else
 			return "Black";
 	}
+	
+	/*
+	 * Returns name of the piece
+	 */
+	public String getName() {
+		return this.name;
+	}
 }

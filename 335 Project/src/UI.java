@@ -148,16 +148,16 @@ public class UI {
 					System.out.println("It is currently blacks turn!");
 				}
 			}
-			boardUI.printBoard();
-			if (robot != null)
-				robot.printPieces(boardUI.getBoard());
+//			boardUI.printBoard();
+//			if (robot != null)
+//				robot.printPieces(boardUI.getBoard());
 		}
 		
 		);	
 
 		canvas.addMouseListener(new MouseListener() {
 			public void mouseDown(MouseEvent e) {
-				if (!yourTurn) // thinking here?
+				if (!yourTurn) // thinking here?{
 					return;
 				//Gather data, convert graphical coordinates into chessboard coordinates
 				int coordinates[] = boardUI.getBoardIndex(e.x,e.y);
@@ -197,6 +197,11 @@ public class UI {
 								} 
 								yourTurn = !yourTurn;
 							}
+							else if (robot != null) {
+//								yourTurn = !yourTurn;
+								robot.movePiece();
+								
+							}
 							else {
 								whitesTurn = !whitesTurn; }
 							
@@ -234,6 +239,7 @@ public class UI {
 		display.dispose();		
 	}
 	
+
 	void setup() {
 		display = new Display();
 		
