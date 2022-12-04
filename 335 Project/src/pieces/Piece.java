@@ -1,6 +1,7 @@
 package pieces;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
@@ -195,11 +196,6 @@ public abstract class Piece {
 	public static int getSQUARE_WIDTH() {
 		return SQUARE_WIDTH;
 	}
-
-	public Coordinate[] generateMoves() {
-		// TODO Auto-generated method stub, must make this abstract and implement in subclasses.
-		return new Coordinate[0];
-	}
 	
 	/**
 	 * Returns the color of the piece
@@ -219,4 +215,5 @@ public abstract class Piece {
 	public String getName() {
 		return this.name;
 	}
+	public abstract List<Coordinate> generateMoves(Tile[][] tiles);
 }

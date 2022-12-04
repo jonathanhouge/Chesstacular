@@ -1,10 +1,12 @@
 package pieces;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
+import game.Coordinate;
 import game.Tile;
 
 public class Rook extends Piece {
@@ -81,5 +83,63 @@ public class Rook extends Piece {
         }
         return true;
     }
+
+	@Override
+	public List<Coordinate> generateMoves(Tile[][] tiles) {
+		 List<Coordinate> coordinates = new ArrayList<>();
+		//UP
+		int y = getY() - 1;
+		while(y >= 0) {
+			if(!tiles[y][getX()].hasPiece()) {
+				coordinates.add(new Coordinate(getX(),y));
+			}else {
+				if(tiles[y][getX()].getPiece().isWhite() != this.isWhite()) {
+					coordinates.add(new Coordinate(getX(),y));
+				}
+				break;
+			}
+			y--;
+		}
+		//DOWN
+		y = getY() + 1;
+		while(y <=7) {
+			if(!tiles[y][getX()].hasPiece()) {
+				coordinates.add(new Coordinate(getX(),y));
+			}else {
+				if(tiles[y][getX()].getPiece().isWhite() != this.isWhite()) {
+					coordinates.add(new Coordinate(getX(),y));
+				}
+				break;
+			}
+			y++;
+		}
+		//RIGHT
+		int x = getX() + 1;
+		while(x <= 7) {
+			if(!tiles[getY()][x].hasPiece()) {
+				coordinates.add(new Coordinate(x,getY()));
+			}else {
+				if(tiles[getY()][x].getPiece().isWhite() != this.isWhite()) {
+					coordinates.add(new Coordinate(x,getY()));
+				}
+				break;
+			}
+			x++;
+		}
+		//LEFT
+		x = getX() - 1;
+		while(x >= 0) {
+			if(!tiles[getY()][x].hasPiece()) {
+				coordinates.add(new Coordinate(x,getY()));
+			}else {
+				if(tiles[getY()][x].getPiece().isWhite() != this.isWhite()) {
+					coordinates.add(new Coordinate(x,getY()));
+				}
+				break;
+			}
+			x--;
+		}
+		return coordinates;
+	}
 
 }

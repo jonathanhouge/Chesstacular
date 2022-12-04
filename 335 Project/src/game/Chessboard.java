@@ -1,6 +1,8 @@
 package game;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -26,11 +28,12 @@ public class Chessboard implements ChessBoardUI {
 	String horizontalCoords[] = new String[] { "A", "B", "C", "D", "E", "F", "G", "H" };
 	int BOARD_COORD_OFFSET = 100;
 
+	List<Coordinate> selectedCoordinates;
 	
 	Color SELECTED = new Color(51, 204, 51);
 	Color BG = new Color(255, 255, 255);
 	Color SIDE = new Color(204, 136, 0);
-
+	Color HIGHLIGHTED = new Color(110, 211, 255);
 	public Chessboard(Canvas canvas, Shell shell) {
 		this.canvas = canvas;
 		this.shell = shell;
@@ -49,17 +52,24 @@ public class Chessboard implements ChessBoardUI {
 	private void drawing(int x, int y, GC gc) {
 		Tile t = board[x][y];
 		Piece p = t.getPiece();
-		
+		//System.out.println("CHESSBOARD - DRAWING: " + x + " " + y);
 		if(p != null) {
 			if(p.isSelected()) {
 				System.out.println("I am selected\n");
 				t.draw(gc, SELECTED); }
-			else {
+			else if(selectedCoordinates!= null && selectedCoordinates.contains(new Coordinate(y,x))){
+				t.draw(gc, HIGHLIGHTED);
+			}
+			else{
 				t.draw(gc);
 			} }
 		
 		else {
-			t.draw(gc); }
+			if(selectedCoordinates!= null && selectedCoordinates.contains(new Coordinate(y,x))){
+				t.draw(gc, HIGHLIGHTED);
+			}else {
+				t.draw(gc);
+			}}
 		
 		if (x == 0) { addBoardCoords(gc, x, y); }
 		if (y == 7) { addBoardCoords(gc, x, y); }
@@ -264,12 +274,12 @@ public class Chessboard implements ChessBoardUI {
 		determineKingCheckStatus(getWhite);
 		King newKing = getKing(getWhite);
 		if (!newKing.checked) {
-			System.out.println("Valid check move because king not in check");
+			//System.out.println("Valid check move because king not in check");
 			this.movePiece(oldX, oldY, piece);
 			board[y][x].setPiece(oldPiece);
 			return true;
 		}
-		System.out.println("Invalid check move because king in check");
+		//System.out.println("Invalid check move because king in check");
 		this.movePiece(oldX, oldY, piece);
 		board[y][x].setPiece(oldPiece);
 
@@ -321,6 +331,7 @@ public class Chessboard implements ChessBoardUI {
 		return null;
 	}
 
+	
 	/**
 	 * This is a debug version of selectPiece(). It acts the same however the user
 	 * can also move the opponents pieces.
@@ -361,6 +372,7 @@ public class Chessboard implements ChessBoardUI {
 		if(selectedPiece instanceof Pawn) {
 			Pawn pawn = (Pawn)selectedPiece;
 			if (pawn.didEnPassant) {
+				System.out.println("Chessboard - Entered block!");
 				int x = pawn.getX();
 				int y = pawn.getY();
 				if(pawn.isWhite()) {
@@ -383,12 +395,13 @@ public class Chessboard implements ChessBoardUI {
 	 * @param selectedPiece the piece that is to be moved to xCoord, yCoord
 	 */
 	public void updateBoard(int xCoord, int yCoord, Piece selectedPiece) {
-		System.out.println("Chessboard.java - Moving..." + selectedPiece);
+		//System.out.println("Chessboard.java - Moving..." + selectedPiece);
 		this.movePiece(xCoord,yCoord,selectedPiece);
-		System.out.println("Chessboard.java - Piece updated! " + selectedPiece);
+		//System.out.println("Chessboard.java - Piece updated! " + selectedPiece);
 		this.checkEnPassantMoveMade(selectedPiece);
 		this.checkPromotion(selectedPiece);
 		if(this.determineKingCheckStatus(!selectedPiece.isWhite())) {
+			System.out.println("King in check!");
 			this.determineCheckMate(selectedPiece);
 		};
 	}
@@ -401,8 +414,8 @@ public class Chessboard implements ChessBoardUI {
 	 */
 	private void determineCheckMate(Piece movedPiece) {
 		// TODO implemen this fully, also maybe only call if piece is in check?
-		for(int row = 0; row < 7; row++) {
-			for(int col = 0;col < 7; col++) {
+		for(int row = 0; row <= 7; row++) {
+			for(int col = 0;col <= 7; col++) {
 				if(board[row][col].getPiece()!= null) { 
 					// if piece is at this coord AND the piece belongs to the opponent,
 					// check if the opponent can make any valid moves.
@@ -410,10 +423,10 @@ public class Chessboard implements ChessBoardUI {
 					// already pass the standardMove() check.
 					if (board[row][col].getPiece().isWhite() != movedPiece.isWhite()) {
 						Piece friendlyPiece = board[row][col].getPiece();
-						Coordinate[] friendlyMoves = friendlyPiece.generateMoves();
+						List<Coordinate> friendlyMoves = friendlyPiece.generateMoves(board);
 						for(Coordinate coord: friendlyMoves) {
+							System.out.println(friendlyPiece + ": " + coord);
 							if(validMoveMade(coord.getX(),coord.getY(),friendlyPiece, friendlyPiece.isWhite())) {
-								//TODO if this part is reached check is, false could return something or set some field.
 								System.out.println("Chessboard.java - validMove possible, checkmate not met");
 								return;
 							}
@@ -423,7 +436,7 @@ public class Chessboard implements ChessBoardUI {
 			}
 		}
 		//If this part is reached no validMoveMade returned true, thus game over!
-		//System.out.println("Chessboard.java - The opponent can not make any valid moves! Game over!");
+		System.out.println("Chessboard.java - The opponent can not make any valid moves! Game over!");
 		return;
 	}
 
@@ -442,6 +455,17 @@ public class Chessboard implements ChessBoardUI {
 				board[selectedPiece.getY()][selectedPiece.getX()].setPiece(queen);
 			}
 		}
+	}
+	
+	public void highlightCoordinates(Piece selectedPiece) {
+		selectedCoordinates = selectedPiece.generateMoves(board);
+		for(Coordinate c:selectedCoordinates) {
+			System.out.println(c);
+		}
+	}
+
+	public void unhighlightCoordinates(Piece selectedPiece) {
+		selectedCoordinates = null;		
 	}
 	
 	public void printBoard() {

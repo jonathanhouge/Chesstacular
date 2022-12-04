@@ -171,21 +171,25 @@ public class UI {
 					selectedPiece = boardUI.selectPiece(xCoord, yCoord, whitesTurn);
 					if(selectedPiece != null) {
 						selectedPiece.setSelected();
+						boardUI.highlightCoordinates(selectedPiece);
 						canvas.redraw();
 					}
 				}else {// Determine if move being made or selecting new piece
 					Piece possibleSelection;
 					possibleSelection = boardUI.selectPiece(xCoord, yCoord,whitesTurn);
 					if (possibleSelection !=null) {// player has selected new piece
+						boardUI.unhighlightCoordinates(selectedPiece);
 						selectedPiece.SetNotSelected();
 						selectedPiece = possibleSelection;
 						selectedPiece.setSelected();
-						System.out.println("UI - SELECTED NEW PIECE: " + selectedPiece);
+						boardUI.highlightCoordinates(selectedPiece);
+						//System.out.println("UI - SELECTED NEW PIECE: " + selectedPiece);
 						canvas.redraw();
 					}else {// player may have moved onto empty space or onto enemy
 						if(boardUI.validMoveMade(xCoord,yCoord,selectedPiece,whitesTurn)) {
 							int xCoordBefore = selectedPiece.getX();
 							int yCoordBefore = selectedPiece.getY();
+							boardUI.unhighlightCoordinates(selectedPiece);
 							boardUI.updateBoard(xCoord,yCoord,selectedPiece);
 							if (in != null) {
 								try {
@@ -365,6 +369,7 @@ public class UI {
 							int xAfter = Integer.parseInt(list[3]);
 							int yAfter = Integer.parseInt(list[4]);
 							selectedPiece = boardUI.selectPiece(xBefore, yBefore, !whitesTurn);
+							boardUI.validMoveMade(xAfter,yAfter,selectedPiece,whitesTurn); // necessary b/c pawn's validMove updates didEnPassant
 							boardUI.updateBoard(xAfter,yAfter,selectedPiece);
 //							whitesTurn = !whitesTurn;
 							yourTurn = !yourTurn;
