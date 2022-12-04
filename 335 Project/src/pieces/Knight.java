@@ -62,10 +62,10 @@ public class Knight extends Piece {
 				}
 			}
 			if (getX() + 1 <= 7) {
-				if(!tiles[y][getX()-1].hasPiece()) {
+				if(!tiles[y][getX()+1].hasPiece()) {
 					coordinates.add(new Coordinate(getX() + 1, y));
 
-				}else if (tiles[y][getX()-1].getPiece().isWhite() != this.isWhite()) {
+				}else if (tiles[y][getX()+1].getPiece().isWhite() != this.isWhite()) {
 					coordinates.add(new Coordinate(getX() + 1, y));
 				}
 			}

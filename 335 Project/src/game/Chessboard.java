@@ -399,7 +399,7 @@ public class Chessboard implements ChessBoardUI {
 		this.checkPromotion(selectedPiece);
 		if(this.determineKingCheckStatus(!selectedPiece.isWhite())) {
 			System.out.println("King in check!");
-			//this.determineCheckMate(selectedPiece);
+			this.determineCheckMate(selectedPiece);
 		};
 	}
 
@@ -411,8 +411,8 @@ public class Chessboard implements ChessBoardUI {
 	 */
 	private void determineCheckMate(Piece movedPiece) {
 		// TODO implemen this fully, also maybe only call if piece is in check?
-		for(int row = 0; row < 7; row++) {
-			for(int col = 0;col < 7; col++) {
+		for(int row = 0; row <= 7; row++) {
+			for(int col = 0;col <= 7; col++) {
 				if(board[row][col].getPiece()!= null) { 
 					// if piece is at this coord AND the piece belongs to the opponent,
 					// check if the opponent can make any valid moves.
@@ -422,8 +422,8 @@ public class Chessboard implements ChessBoardUI {
 						Piece friendlyPiece = board[row][col].getPiece();
 						List<Coordinate> friendlyMoves = friendlyPiece.generateMoves(board);
 						for(Coordinate coord: friendlyMoves) {
+							System.out.println(friendlyPiece + ": " + coord);
 							if(validMoveMade(coord.getX(),coord.getY(),friendlyPiece, friendlyPiece.isWhite())) {
-								//TODO if this part is reached check is, false could return something or set some field.
 								System.out.println("Chessboard.java - validMove possible, checkmate not met");
 								return;
 							}
@@ -433,7 +433,7 @@ public class Chessboard implements ChessBoardUI {
 			}
 		}
 		//If this part is reached no validMoveMade returned true, thus game over!
-		//System.out.println("Chessboard.java - The opponent can not make any valid moves! Game over!");
+		System.out.println("Chessboard.java - The opponent can not make any valid moves! Game over!");
 		return;
 	}
 
