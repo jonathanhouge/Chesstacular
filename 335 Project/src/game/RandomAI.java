@@ -6,5 +6,10 @@
 package game;
 
 public class RandomAI extends Robot {
+
+	public RandomAI(String color) {
+		super(color);
+		// TODO Auto-generated constructor stub
+	}
 	
 }

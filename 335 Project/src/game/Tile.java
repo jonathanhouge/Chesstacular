@@ -58,4 +58,10 @@ public class Tile {
 		return this.piece != null; }
 	public Piece getPiece() { return this.piece; }
 	public Color getColor() { return this.color; }
+	
+	public String toString() {
+		if (this.piece == null)
+			return "null";
+		return piece.toString();
+	}
 }

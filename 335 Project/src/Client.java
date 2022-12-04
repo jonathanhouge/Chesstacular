@@ -31,19 +31,35 @@ public class Client {
 		
 		if (player.getOpponent() == "Remote") {
 			Socket socket = new Socket("localhost", 600);
-			Client client = new Client(socket); }
+			Client client = new Client(socket); 
+			}
 		
-		else { // if we're going against someone locally or a robot, no need for a server
+		else if (player.getOpponent() == "Robot"){ // if we're going against someone locally or a robot, no need for a server
 			Robot opponent;
-			if (player.getOpponent() == "Robot") {
-				opponent = new RandomAI(); }
-			else {
-				opponent = new AlgorithmAI(); }
-			// play against the robot!
+//			if (player.getOpponent() == "Robot") {
+			String robotColor;
+			if (player.getColor().equals("White"))
+				robotColor = "Black";
+			else
+				robotColor = "White";
+			
+			opponent = new Robot(robotColor); 
+			Client client = new Client(opponent);
+			
+		}
+		else {
+			// play locally
 	        UI ui = new UI(null, null, null, null, player.getFileName());
 	        ui.start();
 		}
+		
     }
+	
+	public Client(Robot opponent) {
+		UI ui = new UI(this, opponent, player.getFileName());
+        ui.start();
+	}
+	
 	
 	/*
 	 * Creates new input output streams and takes in a new socket

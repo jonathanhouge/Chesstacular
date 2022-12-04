@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.*;
 
 import game.Chessboard;
 import game.GameStatus;
+import game.Robot;
 import game.Tile;
 import pieces.Pawn;
 import pieces.Piece;
@@ -53,6 +54,7 @@ public class UI {
 	protected MenuItem fileMenuHeader,fileSaveItem,fileExitItem;
 	boolean loadOldGame;
 	private String fileName;
+	private Robot robot;
 	/*
 	 * Constructor that assigns values
 	 * client: client object
@@ -75,12 +77,25 @@ public class UI {
 			this.yourTurn = false;
 		}
 	}
+	
+	public UI(Client client, Robot robot, String fileName) {
+		this.robot = robot;
+		this.fileName = fileName;
+		this.client = client;
+		if (client.getPlayer().getColor().equals("White")) {
+			this.whitesTurn = true; //Newly added field
+			this.yourTurn = true;
+		}
+		else {
+			this.whitesTurn = false;
+			this.yourTurn = false;
+		}
+	}
 
 	/*
 	 * Starts running the UI
 	 */
 	public void start() {
-		System.out.println("It is currently whites turn!");
 		setup();
 		gameStatus = new GameStatus(shell);
 		loadOldGame = false;
@@ -92,7 +107,7 @@ public class UI {
 			public void handleEvent(Event event) {
 				// TODO Auto-generated method stub
 				System.out.println("Closing the shell!");
-				String fileToSaveGame = gameStatus.getFileName("Do You Wanna Save the Game?", "Yes, please", "No, don't");
+				String fileToSaveGame = gameStatus.getFileName("Do You Wanna Save the Game?", "YES", "NO");
 				gameStatus.saveGame(boardUI.getBoard(), yourTurn, whitesTurn);
 				
 				shell.dispose();
@@ -104,23 +119,23 @@ public class UI {
 		canvas.addPaintListener(e -> {
 			if (initialized == false) { // create the tiles and initial starting positions
 				
-				boolean white;
-				
-				if (client.getPlayer().getColor().equals("White")) { 
-					white = true; }
-				
-				else { 
-					white = false; }
+//				boolean white;
+//				
+//				if (client.getPlayer().getColor().equals("White")) { 
+//					white = true; }
+//				
+//				else { 
+//					white = false; }
 				boardUI.createBoardData(e.gc);
 				   
 				if(!loadOldGame) {
 					boardUI.setAllPieces();
+//					boardUI.printBoard();
+					if (robot != null)
+					robot.populatePiecesList(boardUI.getBoard());
 				}else {
 					gameStatus.setFileName(fileName);
 					boolean[] playerTurnData = gameStatus.loadGame(boardUI.getBoard());
-//					yourTurn = playerTurnData[0];
-//					whitesTurn = playerTurnData[1];
-					
 				}
 				
 
@@ -133,7 +148,11 @@ public class UI {
 					System.out.println("It is currently blacks turn!");
 				}
 			}
+			boardUI.printBoard();
+			if (robot != null)
+				robot.printPieces(boardUI.getBoard());
 		}
+		
 		);	
 
 		canvas.addMouseListener(new MouseListener() {
@@ -174,7 +193,6 @@ public class UI {
 									out.newLine();
 									out.flush();
 								} catch (IOException e1) {
-									// TODO Auto-generated catch block
 									e1.printStackTrace();
 								} 
 								yourTurn = !yourTurn;
@@ -200,7 +218,6 @@ public class UI {
 
 		canvas.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e) {
-				if (in != null) { notifyOtherUsers(); }
 				canvas.redraw();
 				} 
 			public void keyReleased(KeyEvent e) {}
@@ -236,21 +253,10 @@ public class UI {
 		createMenuBar();
 		shell.setMenuBar(menuBar);
 		boardUI = new Chessboard(canvas, shell);	
-		
+		if (this.robot != null)
+			robot.setBoard(boardUI);
 	}
 	
-	void notifyOtherUsers() {
-		
-		try {
-			out.write(" " + client.getPlayer().getName() + ": I pressed a key hehe!");
-			out.newLine();
-			out.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		
-	}
 	
 	/**
 	 * Checks if the entered game file exists.

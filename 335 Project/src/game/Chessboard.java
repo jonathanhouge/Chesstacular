@@ -239,7 +239,10 @@ public class Chessboard implements ChessBoardUI {
 	public void movePiece(int x, int y, Piece piece) {
 		board[piece.getY()][piece.getX()].setPiece(null);
 		piece.updateLocation(x, y); // necessary so that pawn enPassant is updated
+		if (board[y][x].getPiece() != null)
+			board[y][x].getPiece().updateLocation(1000, 1000); // changing location of previous piece to 1000 for robot class
 		board[y][x].setPiece(piece);
+	
 	}
 
 	/**
@@ -438,6 +441,16 @@ public class Chessboard implements ChessBoardUI {
 				queen.updateLocation(pawn.getX(), pawn.getX());
 				board[selectedPiece.getY()][selectedPiece.getX()].setPiece(queen);
 			}
+		}
+	}
+	
+	public void printBoard() {
+		for (int row = 0; row < 8; row++) {
+			
+			for (int col = 0; col < 8; col ++) {
+				System.out.print(this.board[row][col]+ " ");
+			}
+			System.out.println();
 		}
 	}
 }

@@ -200,4 +200,16 @@ public abstract class Piece {
 		// TODO Auto-generated method stub, must make this abstract and implement in subclasses.
 		return new Coordinate[0];
 	}
+	
+	/**
+	 * Returns the color of the piece
+	 * 
+	 * @return String representing the color
+	 */
+	public String getColor() {
+		if (white)
+			return "White";
+		else
+			return "Black";
+	}
 }

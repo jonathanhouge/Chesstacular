@@ -6,5 +6,10 @@
 package game;
 
 public class AlgorithmAI extends Robot {
+
+	public AlgorithmAI(String color) {
+		super(color);
+		// TODO Auto-generated constructor stub
+	}
 	
 }
