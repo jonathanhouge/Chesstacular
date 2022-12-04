@@ -262,7 +262,7 @@ public class UI {
 		
 		createMenuBar();
 		shell.setMenuBar(menuBar);
-		boardUI = new Chessboard(canvas, shell);	
+		boardUI = new Chessboard(canvas, shell, display.getSystemColor(SWT.COLOR_BLACK));	
 		if (this.robot != null)
 			robot.setBoard(boardUI);
 	}

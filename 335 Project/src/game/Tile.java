@@ -4,7 +4,6 @@ package game;
  * Author: Jonathan Houge
  */
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
@@ -15,7 +14,9 @@ public class Tile {
 	
 	private Rectangle tile;
 	private Piece piece;
+	
 	private Color color;
+	private Color outline;
 	
 	private int x;
 	private int y;
@@ -23,9 +24,9 @@ public class Tile {
 	
 	/* constructor. initialize piece location, tile color, x and y
 	 * location, and tell piece what each square's width is. */
-	public Tile(Color color, int x, int y, int dimensions) {
+	public Tile(Color color, Color outline, int x, int y, int dimensions) {
 		this.piece = null;
-		this.color = color;
+		this.color = color; this.outline = outline;
 		this.x = x; this.y = y;
 		this.tile = new Rectangle(this.x, this.y, dimensions, dimensions); 
 		Piece.setWidth(dimensions); }
@@ -35,11 +36,15 @@ public class Tile {
 	public void draw(GC gc) {
 		gc.setBackground(this.color);
 		gc.fillRectangle(this.tile);
+		gc.setForeground(this.outline);
+		gc.drawRectangle(this.tile);
 		if (piece != null) { piece.draw(gc); } }
 	
 	public void draw(GC gc, Color newColor) {
 		gc.setBackground(newColor);
 		gc.fillRectangle(tile);
+		gc.setForeground(this.outline);
+		gc.drawRectangle(this.tile);
 		if (piece != null) { piece.draw(gc); } }
 	
 	//-- setters

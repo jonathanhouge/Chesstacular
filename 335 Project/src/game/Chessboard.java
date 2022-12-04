@@ -34,9 +34,12 @@ public class Chessboard implements ChessBoardUI {
 	Color BG = new Color(255, 255, 255);
 	Color SIDE = new Color(204, 136, 0);
 	Color HIGHLIGHTED = new Color(110, 211, 255);
-	public Chessboard(Canvas canvas, Shell shell) {
+	Color OUTLINE;
+	
+	public Chessboard(Canvas canvas, Shell shell, Color outline) {
 		this.canvas = canvas;
 		this.shell = shell;
+		this.OUTLINE = outline;
 	}
 	
 	public Tile[][] getBoard(){return board;}
@@ -93,9 +96,9 @@ public class Chessboard implements ChessBoardUI {
 				// create the tiles with the proper color
 
 				if (boardColor) {
-					board[y][x] = new Tile(w, x * SQUARE_WIDTH + 50, y * SQUARE_WIDTH, SQUARE_WIDTH); } 
+					board[y][x] = new Tile(w, OUTLINE, x * SQUARE_WIDTH + 50, y * SQUARE_WIDTH, SQUARE_WIDTH); } 
 				else {
-					board[y][x] = new Tile(b, x * SQUARE_WIDTH + 50, y * SQUARE_WIDTH, SQUARE_WIDTH); }
+					board[y][x] = new Tile(b, OUTLINE, x * SQUARE_WIDTH + 50, y * SQUARE_WIDTH, SQUARE_WIDTH); }
 
 
 				// alternating tile colors
