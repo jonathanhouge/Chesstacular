@@ -77,7 +77,7 @@ public class Robot {
 	
 	public boolean makeMove(Piece piece) {
 		Random rand = new Random();
-		int iteration = rand.nextInt(1, 5);
+		int iteration = 4; //rand.nextInt(1, 5);
 		if (iteration == 1)
 			return iteration1(piece);
 		else if(iteration ==2)

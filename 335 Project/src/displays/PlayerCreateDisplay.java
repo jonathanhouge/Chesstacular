@@ -1,3 +1,4 @@
+package displays;
 /* The Display for Player Creation.
  * Prompts the client to enter their name, pick their tank, and choose their color.
  * This is accomplished using SWT widgets and Arraylists. After submitting the information, 
