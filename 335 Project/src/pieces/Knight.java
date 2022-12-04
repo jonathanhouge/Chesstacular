@@ -54,39 +54,79 @@ public class Knight extends Piece {
 		int y = getY() - 2;
 		if (y >= 0) {
 			if (getX() - 1 >= 0) {
-				coordinates.add(new Coordinate(getX() - 1, y));
+				if(!tiles[y][getX()-1].hasPiece()) {
+					coordinates.add(new Coordinate(getX() - 1, y));
+
+				}else if (tiles[y][getX()-1].getPiece().isWhite() != this.isWhite()) {
+					coordinates.add(new Coordinate(getX() - 1, y));
+				}
 			}
 			if (getX() + 1 <= 7) {
-				coordinates.add(new Coordinate(getX() + 1, y));
+				if(!tiles[y][getX()-1].hasPiece()) {
+					coordinates.add(new Coordinate(getX() + 1, y));
+
+				}else if (tiles[y][getX()-1].getPiece().isWhite() != this.isWhite()) {
+					coordinates.add(new Coordinate(getX() + 1, y));
+				}
 			}
 		}
 		// Botom L - type moves
 		y = getY() + 2;
 		if (y <= 7) {
 			if (getX() - 1 >= 0) {
-				coordinates.add(new Coordinate(getX() - 1, y));
+				if(!tiles[y][getX()-1].hasPiece()) {
+					coordinates.add(new Coordinate(getX() - 1, y));
+
+				}else if (tiles[y][getX()-1].getPiece().isWhite() != this.isWhite()) {
+					coordinates.add(new Coordinate(getX() - 1, y));
+				}
 			}
 			if (getX() + 1 <= 7) {
-				coordinates.add(new Coordinate(getX() + 1, y));
+				if(!tiles[y][getX()+1].hasPiece()) {
+					coordinates.add(new Coordinate(getX() + 1, y));
+
+				}else if (tiles[y][getX()+1].getPiece().isWhite() != this.isWhite()) {
+					coordinates.add(new Coordinate(getX() + 1, y));
+				}
 			}
 		}
 		
 		int x = getX() - 2;
 		if (x >= 0) {
 			if (getY() - 1 >= 0) {
-				coordinates.add(new Coordinate(x, getY() - 1));
+				if(!tiles[getY()-1][x].hasPiece()) {
+					coordinates.add(new Coordinate(x, getY() - 1));
+
+				}else if (tiles[getY()-1][x].getPiece().isWhite() != this.isWhite()) {
+					coordinates.add(new Coordinate(x, getY() - 1));
+				}
 			}
 			if (getY() + 1 <= 7) {
-				coordinates.add(new Coordinate(x,getY() + 1));
+				if(!tiles[getY()+1][x].hasPiece()) {
+					coordinates.add(new Coordinate(x, getY() + 1));
+
+				}else if (tiles[getY()+1][x].getPiece().isWhite() != this.isWhite()) {
+					coordinates.add(new Coordinate(x, getY() + 1));
+				}
 			}
 		}
 		x = getX() + 2;
 		if (x <= 7) {
 			if (getY() - 1 >= 0) {
-				coordinates.add(new Coordinate(x, getY() - 1));
+				if(!tiles[getY()-1][x].hasPiece()) {
+					coordinates.add(new Coordinate(x, getY() - 1));
+
+				}else if (tiles[getY()-1][x].getPiece().isWhite() != this.isWhite()) {
+					coordinates.add(new Coordinate(x, getY() - 1));
+				}
 			}
 			if (getY() + 1 <= 7) {
-				coordinates.add(new Coordinate(x,getY() + 1));
+				if(!tiles[getY()+1][x].hasPiece()) {
+					coordinates.add(new Coordinate(x, getY() + 1));
+
+				}else if (tiles[getY()+1][x].getPiece().isWhite() != this.isWhite()) {
+					coordinates.add(new Coordinate(x, getY() + 1));
+				}
 			}
 		}
 		return coordinates;

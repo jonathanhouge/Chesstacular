@@ -32,8 +32,8 @@ public class Pawn extends Piece {
 	}
 
 	public void removeEnPassantMove() {
-			this.didEnPassant = false;
-		
+		this.didEnPassant = false;
+
 	}
 
 	@Override
@@ -165,8 +165,8 @@ public class Pawn extends Piece {
 	}
 
 	/**
-	 * This method simply returns if the pawn is now on the opposite side
-	 *	of the board so that it may then be promoted to some other piece
+	 * This method simply returns if the pawn is now on the opposite side of the
+	 * board so that it may then be promoted to some other piece
 	 *
 	 * @return true if promotion is possible, false if not.
 	 */
@@ -176,49 +176,96 @@ public class Pawn extends Piece {
 		}
 		return this.getY() == 7;
 	}
- 
+
 	@Override
 	public List<Coordinate> generateMoves(Tile[][] tiles) {
-		 List<Coordinate> coordinates = new ArrayList<>();
-		if(this.isWhite()) { 
-			if(getY() - 1 >= 0 && !tiles[getY()-1][getX()].hasPiece()) {
-				coordinates.add(new Coordinate(getX(),getY()-1));
-				if(firstMove && !tiles[getY()-2][getX()].hasPiece()) {
-					coordinates.add(new Coordinate(getX(),getY()-2));
+		List<Coordinate> coordinates = new ArrayList<>();
+		if (this.isWhite()) {
+			if (getY() - 1 >= 0 && !tiles[getY() - 1][getX()].hasPiece()) { // Vertical moves
+				coordinates.add(new Coordinate(getX(), getY() - 1));
+				if (firstMove && !tiles[getY() - 2][getX()].hasPiece()) {
+					coordinates.add(new Coordinate(getX(), getY() - 2));
 				}
 			}
-			if(getY() - 1 >= 0) {// Diagonal moves
-				if(getX() -1 >= 0 && tiles[getY()-1][getX()-1].hasPiece()) {
-					if(tiles[getY()-1][getX()-1].getPiece().isWhite()!= this.isWhite()) {
-						coordinates.add(new Coordinate(getX()-1,getY()-1));
+			if (getY() - 1 >= 0) {// Diagonal moves
+				if (getX() - 1 >= 0) {
+					if (tiles[getY() - 1][getX() - 1].hasPiece()) {
+						if (tiles[getY() - 1][getX() - 1].getPiece().isWhite() != this.isWhite()) {
+							coordinates.add(new Coordinate(getX() - 1, getY() - 1));
+						}
+					} else {
+						if (tiles[getY()][getX() - 1].hasPiece()
+								&& tiles[getY()][getX() - 1].getPiece().isWhite() != this.isWhite()
+								&& tiles[getY()][getX() - 1].getPiece() instanceof Pawn) {
+							Pawn p = (Pawn) tiles[getY()][getX() - 1].getPiece();
+							if (p.enPassantable) {
+								coordinates.add(new Coordinate(getX() - 1, getY() - 1));
+							}
+						}
 					}
 				}
-				if(getX() + 1 <= 7 && tiles[getY()-1][getX()+1].hasPiece()) {
-					if(tiles[getY()-1][getX()+1].getPiece().isWhite()!= this.isWhite()) {
-						coordinates.add(new Coordinate(getX()+1,getY()-1));
+				if (getX() + 1 <= 7) {
+					if (tiles[getY() - 1][getX() + 1].hasPiece()) {
+						if (tiles[getY() - 1][getX() + 1].getPiece().isWhite() != this.isWhite()) {
+							coordinates.add(new Coordinate(getX() + 1, getY() - 1));
+						}
+					} else {
+						if (tiles[getY()][getX() + 1].hasPiece()
+								&& tiles[getY()][getX() + 1].getPiece().isWhite() != this.isWhite()
+								&& tiles[getY()][getX() + 1].getPiece() instanceof Pawn) {
+							Pawn p = (Pawn) tiles[getY()][getX() + 1].getPiece();
+							if (p.enPassantable) {
+								coordinates.add(new Coordinate(getX() + 1, getY() - 1));
+							}
+
+						}
 					}
-				}	
+				}
 			}
-		}else {
-			if(getY() + 1 <= 7 && !tiles[getY()+1][getX()].hasPiece()) {
-				coordinates.add(new Coordinate(getX(),getY()+1));
-				if(firstMove && !tiles[getY()+2][getX()].hasPiece()) {
-					coordinates.add(new Coordinate(getX(),getY()+2));
+		} else {
+			if (getY() + 1 <= 7 && !tiles[getY() + 1][getX()].hasPiece()) { // Vertical moves
+				coordinates.add(new Coordinate(getX(), getY() + 1));
+				if (firstMove && !tiles[getY() + 2][getX()].hasPiece()) {
+					coordinates.add(new Coordinate(getX(), getY() + 2));
 				}
 			}
-			if(getY() + 1 <= 7) {
-				if(getX() - 1 >= 0 && tiles[getY()+1][getX()-1].hasPiece()) {
-					if(tiles[getY()+1][getX()-1].getPiece().isWhite()!= this.isWhite()) {
-						coordinates.add(new Coordinate(getX()-1,getY()+1));
+			if (getY() + 1 <= 7) { // Diagonal moves
+				if (getX() - 1 >= 0) {
+					if (tiles[getY() + 1][getX() - 1].hasPiece()) {
+						if (tiles[getY() + 1][getX() - 1].getPiece().isWhite() != this.isWhite()) {
+							coordinates.add(new Coordinate(getX() - 1, getY() + 1));
+						}
+					} else {
+						if (tiles[getY()][getX() - 1].hasPiece()
+								&& tiles[getY()][getX() - 1].getPiece().isWhite() != this.isWhite()
+								&& tiles[getY()][getX() - 1].getPiece() instanceof Pawn) {
+							Pawn p = (Pawn) tiles[getY()][getX() - 1].getPiece();
+							if (p.enPassantable) {
+								coordinates.add(new Coordinate(getX() - 1, getY() + 1));
+
+							}
+						}
 					}
 				}
-				if(getX() + 1 <= 7 && tiles[getY()+1][getX()+1].hasPiece()) {
-					if(tiles[getY()+1][getX()+1].getPiece().isWhite()!= this.isWhite()) {
-						coordinates.add(new Coordinate(getX()+1,getY()+1));
+				if (getX() + 1 <= 7) {
+					if (tiles[getY() + 1][getX() + 1].hasPiece()) {
+						if (tiles[getY() + 1][getX() + 1].getPiece().isWhite() != this.isWhite()) {
+							coordinates.add(new Coordinate(getX() + 1, getY() + 1));
+						}
+					} else {
+						if (tiles[getY()][getX() + 1].hasPiece()
+								&& tiles[getY()][getX() + 1].getPiece().isWhite() != this.isWhite()
+								&& tiles[getY()][getX() + 1].getPiece() instanceof Pawn) {
+							Pawn p = (Pawn) tiles[getY()][getX() + 1].getPiece();
+							if (p.enPassantable) {
+								coordinates.add(new Coordinate(getX() + 1, getY() + 1));
+							}
+						}
 					}
 				}
 			}
 		}
+
 		return coordinates;
 	}
 
