@@ -24,6 +24,7 @@ public class Client {
 	private BufferedWriter out;
 	private BufferedReader in;
 	private static Player player;
+	UI ui;
 	
 	//	Chess ui
 	public static void main(String[] args) throws Exception {
@@ -40,7 +41,7 @@ public class Client {
 			else {
 				opponent = new AlgorithmAI(); }
 			// play against the robot!
-	        UI ui = new UI(null, null, null, null, player.getFileName());
+	        UI ui = new UI(null, null, null, null, player.getFileName(), player.getName());
 	        ui.start();
 		}
     }
@@ -67,12 +68,13 @@ public class Client {
 		String[] list = msgFromOthers.split("[:-]");
 		int ID = Integer.parseInt(list[1]);
 		System.out.println("Client" + ID + " Connected!");
+		
 
 		String color = list[2];
 		player.setID(ID);
 		System.out.println(color.equals("White"));
 		player.setColor(color);	
-        UI ui = new UI(this, in, out, socket, player.getFileName());
+        UI ui = new UI(this, in, out, socket, player.getFileName(),player.getName());
         ui.start();
         
 		

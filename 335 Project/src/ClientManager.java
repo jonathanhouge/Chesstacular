@@ -42,7 +42,7 @@ public class ClientManager implements Runnable
 				if (ID == 2)
 					setValidColor();
 	        	broadcastIdToYourself();
-	        	broadcastToOthers("PLAYER:" + ID + "-" +color);
+	        	broadcastToOthers("PLAYER:" + ID + "-" +color + "-" + username);
 	        	othersBroadcastToYou();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -117,7 +117,7 @@ public class ClientManager implements Runnable
         	for (ClientManager user: users) {
 				try {
 					if (user.username != this.username) {
-						this.out.write("PLAYER:" + user.ID + "-" + user.color);
+						this.out.write("PLAYER:" + user.ID + "-" + user.color + "-" +user.username);
 						this.out.newLine();
 						this.out.flush();}
 				}catch (Exception e) {

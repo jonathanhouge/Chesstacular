@@ -41,8 +41,8 @@ public class GameStatus {
 	
 	Shell parent;
 	String fileName;
-	public GameStatus(Shell shell) {
-		this.parent = shell;
+	public GameStatus(Shell parentShell) {
+		this.parent = parentShell;
 		
 		fileName = "";
 	}
@@ -96,13 +96,14 @@ public class GameStatus {
 	    saveButton.addListener(SWT.Selection, new Listener() {
 		      public void handleEvent(Event event) {
 		    	if(fileName.equals(".txt") || fileName.equals("")) {return;}
-		        shell.dispose();
+//		        shell.dispose();
+		        shell.close();
 		      }
 		    });
 
 		    cancelButton.addListener(SWT.Selection, new Listener() {
 		      public void handleEvent(Event event) {
-		        shell.dispose();
+		        shell.close();
 		      }
 		    });
 		    
@@ -116,7 +117,7 @@ public class GameStatus {
 //	    shell.pack();
 	    shell.open();
 	    
-	    Display display = parent.getDisplay();
+	    Display display = shell.getDisplay();
 	    while (!shell.isDisposed()) {
 	      if (!display.readAndDispatch())
 	        display.sleep();
