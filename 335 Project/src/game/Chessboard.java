@@ -67,7 +67,7 @@ public class Chessboard implements ChessBoardUI {
 		//System.out.println("CHESSBOARD - DRAWING: " + x + " " + y);
 		if(p != null) {
 			if(p.isSelected()) {
-				System.out.println("I am selected\n");
+				//System.out.println("I am selected\n");
 				t.draw(gc, SELECTED); }
 			else if(selectedCoordinates!= null && selectedCoordinates.contains(new Coordinate(y,x))){
 				t.draw(gc, HIGHLIGHTED);
@@ -183,7 +183,7 @@ public class Chessboard implements ChessBoardUI {
 			System.out.println("Clicking outside the board!");
 			return null;
 		}
-		System.out.println(horizontalCoords[indX] + verticalCoords[indY]);
+		//System.out.println(horizontalCoords[indX] + verticalCoords[indY]);
 		return new int[] { indX, indY };
 	}
 
@@ -249,6 +249,10 @@ public class Chessboard implements ChessBoardUI {
 
 	}
 
+	public boolean newValidMoveMade(int x, int y, Piece piece) {
+		return selectedCoordinates.contains(new Coordinate(x,y));
+		
+	}
 	/**
 	 * This method updates the piece's coordinates to the new x/y coordinate and
 	 * ensures that the old tilies piece field is set to null.
@@ -260,9 +264,9 @@ public class Chessboard implements ChessBoardUI {
 	 */
 	public void movePiece(int x, int y, Piece piece) {
 		board[piece.getY()][piece.getX()].setPiece(null);
-		piece.updateLocation(x, y); // necessary so that pawn enPassant is updated
+		piece.updateLocation(x, y); // necessary so that pawn enPassant/castling is updated
 		if (board[y][x].getPiece() != null)
-			board[y][x].getPiece().killPiece(); // killing previous piece for robot class
+			board[y][x].getPiece().updateLocation(1000, 1000); // changing location of previous piece to 1000 for robot class
 		board[y][x].setPiece(piece);
 	
 	}
@@ -279,21 +283,21 @@ public class Chessboard implements ChessBoardUI {
 	 * @return
 	 */
 	public boolean validCheckMove(int x, int y, Piece piece, boolean getWhite) {
-		System.out.println("CHESSBOARD.JAVA - validCheckMove - " + piece);
+		//System.out.println("CHESSBOARD.JAVA - validCheckMove - " + piece);
 		Pawn p = null;
-		boolean firstMove = false;
+		boolean booleanToSave = false;
 		Rook r = null;
 		King k = null;
 		if(piece instanceof Pawn) {
 			p = (Pawn) piece;
-			firstMove = p.firstMove;
+			booleanToSave = p.firstMove;
 		}else if(piece instanceof Rook) {
 			r = (Rook) piece;
-			firstMove = r.moved;
-			System.out.println("CHESSBOARD.JAVA - initial bool: " + firstMove);
+			booleanToSave = r.moved;
+			System.out.println("CHESSBOARD.JAVA - initial bool: " + booleanToSave);
 		}else if(piece instanceof King) { // TODO determine if this is necessary
 			k = (King) piece;
-			firstMove = k.moved;
+			booleanToSave = k.moved;
 		}
 		int oldX = piece.getX();
 		int oldY = piece.getY();
@@ -301,39 +305,24 @@ public class Chessboard implements ChessBoardUI {
 		this.movePiece(x, y, piece);
 		determineKingCheckStatus(getWhite);
 		King newKing = getKing(getWhite);
-		if (!newKing.checked) {
-			//System.out.println("Valid check move because king not in check");
-			this.movePiece(oldX, oldY, piece);
-			if(piece instanceof Pawn) {
-				p.firstMove = firstMove;
-				board[oldY][oldX].setPiece(p); // prevent's pawn's firstMove being overwritten
-			}else if(piece instanceof Rook) {
-				r.moved = firstMove;
-				board[oldY][oldX].setPiece(r); // prevent's rooks moved from being overwritten
-				System.out.println("CHESSBOARD.JAVA - after bool: " + r.moved);
-
-			}else if(piece instanceof King) {
-				k.moved = firstMove;
-				board[oldY][oldX].setPiece(k); // prevent's king's moved from being overwritten
-			}
-			board[y][x].setPiece(oldPiece); 
-			return true;
-		}
-		//System.out.println("Invalid check move because king in check");
+		boolean checked = newKing.checked;
+		//System.out.println("Chessboard - validCheckMove - checked val is " + checked);
 		this.movePiece(oldX, oldY, piece);
 		if(piece instanceof Pawn) {
-			p.firstMove = firstMove;
+			p.firstMove = booleanToSave;
 			board[oldY][oldX].setPiece(p); // prevent's pawn's firstMove being overwritten
 		}else if(piece instanceof Rook) {
-			r.moved = firstMove;
+			r.moved = booleanToSave;
 			board[oldY][oldX].setPiece(r); // prevent's rooks moved from being overwritten
 			System.out.println("CHESSBOARD.JAVA - after bool: " + r.moved);
+
 		}else if(piece instanceof King) {
-			k.moved = firstMove;
+			k.moved = booleanToSave;
 			board[oldY][oldX].setPiece(k); // prevent's king's moved from being overwritten
 		}
-		board[y][x].setPiece(oldPiece);
-		return false;
+		board[y][x].setPiece(oldPiece); 
+		determineKingCheckStatus(getWhite);
+		return !checked;
 	}
 
 	/**
@@ -349,7 +338,7 @@ public class Chessboard implements ChessBoardUI {
 				if (board[row][col].getPiece() != null
 						&& !(board[row][col].getPiece() instanceof King) && board[row][col].getPiece().validMove(king.getX(), king.getY(), board)) {
 					king.inCheck();
-					System.out.println("Oh no! The " + king + " is in check because of the " +board[row][col].getPiece());
+					//System.out.println("Oh no! The " + king + " is in check because of the " +board[row][col].getPiece());
 					board[king.getY()][king.getX()].setPiece(king);
 					return true;
 				}
@@ -409,30 +398,6 @@ public class Chessboard implements ChessBoardUI {
 		this.board[yCoord][xCoord].setPiece(null); }
 	
 	/**
-	 * This method checks if an en passant move has been made so that the board may
-	 * be updated accordingly.
-	 * 
-	 * @param selectedPiece the piece that was moved to a new spot.
-	 */
-	private void checkEnPassantMoveMade(Piece selectedPiece) {
-		if(selectedPiece instanceof Pawn) {
-			Pawn pawn = (Pawn)selectedPiece;
-			if (pawn.didEnPassant) {
-				System.out.println("Chessboard - Entered block!");
-				int x = pawn.getX();
-				int y = pawn.getY();
-				if(pawn.isWhite()) {
-					y++;
-				}else {
-					y--;
-				}
-				this.removePiece(x,y);
-				pawn.removeEnPassantMove();
-			}
-		}
-	}
-
-	/**
 	 * This method is responsible for updating the board accordingly after a valid
 	 * move is made. 
 	 * 
@@ -442,8 +407,9 @@ public class Chessboard implements ChessBoardUI {
 	 */
 	public void updateBoard(int xCoord, int yCoord, Piece selectedPiece) {
 		//System.out.println("Chessboard.java - Moving..." + selectedPiece);
-		this.movePieceFinal(xCoord,yCoord,selectedPiece);
+		this.movePiece(xCoord,yCoord,selectedPiece);
 		//System.out.println("Chessboard.java - Piece updated! " + selectedPiece);
+		this.checkCastleMoveMade(selectedPiece);
 		this.checkEnPassantMoveMade(selectedPiece);
 		this.checkPromotion(selectedPiece);
 		if(this.determineKingCheckStatus(!selectedPiece.isWhite())) {
@@ -451,14 +417,58 @@ public class Chessboard implements ChessBoardUI {
 			this.determineCheckMate(selectedPiece);
 		};
 	}
-
-	private void movePieceFinal(int x, int y, Piece piece) {
-		board[piece.getY()][piece.getX()].setPiece(null);
-		piece.updateLocation(x, y); // necessary so that pawn enPassant is updated
-		if (board[y][x].getPiece() != null)
-			board[y][x].getPiece().updateLocation(1000, 1000); // changing location of previous piece to 1000 for robot class
-		board[y][x].setPiece(piece);
+	/**
+	 * This method checks if an en passant move has been made so that the board may
+	 * be updated accordingly.
+	 * 
+	 * @param selectedPiece the piece that was moved to a new spot.
+	 */
+	private void checkEnPassantMoveMade(Piece selectedPiece) {
+		if(selectedPiece instanceof Pawn) {
+			Pawn pawn = (Pawn)selectedPiece;
+			if (pawn.didEnPassant) {
+				//System.out.println("Chessboard - Entered block!");
+				int x = pawn.getX();
+				int y = pawn.getY();
+				if(pawn.isWhite()) {
+					y++;
+				}else {
+					y--;
+				}
+				pawn.removeEnPassantMove();
+			}
+		}
 	}
+	private void checkCastleMoveMade(Piece piece) {
+		if(piece instanceof King) {
+			King k = (King) piece;
+			if(k.castlingMoveMade) {
+				this.removePiece(k.getX(),k.getY());
+				King newKing = new King(piece.isWhite(), shell);
+				newKing.moved = true;
+				Rook newRook = new Rook(piece.isWhite(), shell);
+				newRook.moved = true;
+				if(k.getX() == 7 && k.getY() == 7) {
+					board[7][5].setPiece(newRook);
+					board[7][6].setPiece(newKing);
+				}else if(k.getX() == 0 && k.getY() ==7) {
+					board[7][3].setPiece(newRook);
+					board[7][2].setPiece(newKing);
+				}else if(k.getX() == 0 && k.getY() == 0) {
+					board[0][3].setPiece(newRook);
+					board[0][2].setPiece(newKing);
+				}else if (k.getX() == 7 && k.getY() == 0) {
+					board[0][5].setPiece(newRook);
+					board[0][6].setPiece(newKing);
+				}else {
+					System.out.println("CHESSBOARD.JAVA - CHECKCASTLEMOVEMADE - this block should never be reached: " + k);
+				}
+				
+			}
+		}
+	}
+	
+	
 
 	/**
 	 * This method determines if the game is over.
@@ -467,14 +477,11 @@ public class Chessboard implements ChessBoardUI {
 	 * could be changed
 	 */
 	private boolean determineCheckMate(Piece movedPiece) {
-		// TODO implement this fully, also maybe only call if piece is in check?
 		for(int row = 0; row <= 7; row++) {
 			for(int col = 0;col <= 7; col++) {
 				if(board[row][col].getPiece()!= null) { 
 					// if piece is at this coord AND the piece belongs to the opponent,
 					// check if the opponent can make any valid moves.
-					// TODO could probably do validCheckMove since generateMoves SHOULD
-					// already pass the standardMove() check.
 					if (board[row][col].getPiece().isWhite() != movedPiece.isWhite()) {
 						Piece friendlyPiece = board[row][col].getPiece();
 						List<Coordinate> friendlyMoves = friendlyPiece.generateMoves(board);
@@ -503,7 +510,7 @@ public class Chessboard implements ChessBoardUI {
 		if(selectedPiece instanceof Pawn) {
 			Pawn pawn = (Pawn) selectedPiece;
 			if (pawn.promotion()) {
-				System.out.println("The pawn may now be promoted!");
+				//System.out.println("The pawn may now be promoted!");
 				String decision = new QueenPromotionDisplay().start(display);
 				
 				Object piece = new Queen(selectedPiece.isWhite(), shell);
@@ -524,19 +531,22 @@ public class Chessboard implements ChessBoardUI {
 	
 	public void highlightCoordinates(Piece selectedPiece) {
 		selectedCoordinates = selectedPiece.generateMoves(board);
-		for(Coordinate c:selectedCoordinates) {
-			System.out.println(c);
-		}
+		filterCheckMoves(selectedPiece,selectedCoordinates);
+	}
+	private void filterCheckMoves(Piece piece,List<Coordinate> coordinates) {
+		//System.out.println("COORDINATES FOR " + piece + " BEFORE: " + coordinates);
 		for(int i = 0;i<selectedCoordinates.size();i++) {
 			Coordinate c = selectedCoordinates.get(i);
-			if(!validMoveMade(c.x,c.y,selectedPiece,selectedPiece.isWhite())) {
+			if(!validMoveMade(c.x,c.y,piece,piece.isWhite())) {
 				selectedCoordinates.remove(i);
 				i--;
-				System.out.println();
 			}
 		}
-	}
+		
+		//TODO filter out castling if king ends up in check
+		//System.out.println("COORDINATES AFTER " + piece + " BEFORE: " + coordinates);
 
+	}
 	public void unhighlightCoordinates(Piece selectedPiece) { selectedCoordinates = null; }
 	
 	public Tile getTile(int x, int y) { return board[y][x]; }

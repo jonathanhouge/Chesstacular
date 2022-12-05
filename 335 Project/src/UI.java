@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.*;
 
 import displays.Player;
 import game.Chessboard;
+import game.Coordinate;
 import game.GameStatus;
 import game.Robot;
 import game.Tile;
@@ -212,50 +213,20 @@ public class UI {
 					Piece possibleSelection;
 					possibleSelection = boardUI.selectPiece(xCoord, yCoord,whitesTurn);
 					if (possibleSelection !=null) {// player has selected new piece
-						//TODO add castling code here!
-						
-						
-						boardUI.unhighlightCoordinates(selectedPiece);
-						selectedPiece.SetNotSelected();
-						selectedPiece = possibleSelection;
-						selectedPiece.setSelected();
-						boardUI.highlightCoordinates(selectedPiece);
-						//System.out.println("UI - SELECTED NEW PIECE: " + selectedPiece);
-						canvas.redraw();
-					}else {// player may have moved onto empty space or onto enemy
-						if(boardUI.validMoveMade(xCoord,yCoord,selectedPiece,whitesTurn)) {
-							int xCoordBefore = selectedPiece.getX();
-							int yCoordBefore = selectedPiece.getY();
+						if(boardUI.newValidMoveMade(xCoord,yCoord,selectedPiece)) { //castling requires use to click rook
+							makeMove(xCoord,yCoord);
+						}else {
 							boardUI.unhighlightCoordinates(selectedPiece);
-							boardUI.updateBoard(xCoord,yCoord,selectedPiece);
-							if (in != null) {
-								try {
-									
-									if (boardUI.getPromotion()) {
-										String promotedPiece = boardUI.getTile(xCoord, yCoord).getPiece().getName();
-										out.write("MOVE:"+xCoordBefore+"-"+yCoordBefore+"-"+xCoord+"-"+yCoord+"-PROMOTION:"+promotedPiece); }
-									else { 
-										out.write("MOVE:"+xCoordBefore+"-"+yCoordBefore+"-"+xCoord+"-"+yCoord); }
-									
-									out.newLine();
-									out.flush();
-								} catch (IOException e1) {
-									e1.printStackTrace();
-								} 
-								yourTurn = !yourTurn;
-							}
-							else if (robot != null) {
-//								yourTurn = !yourTurn;
-								robot.movePiece();
-								
-							}
-							else {
-								whitesTurn = !whitesTurn; }
-							
-							canvas.redraw();
 							selectedPiece.SetNotSelected();
-							selectedPiece = null;
-							
+							selectedPiece = possibleSelection;
+							selectedPiece.setSelected();
+							boardUI.highlightCoordinates(selectedPiece);
+							//System.out.println("UI - SELECTED NEW PIECE: " + selectedPiece);
+							canvas.redraw();
+						}
+					}else {// player may have moved onto empty space or onto enemy
+						if(boardUI.newValidMoveMade(xCoord,yCoord,selectedPiece)) {
+							makeMove(xCoord,yCoord);
 						}else {
 							System.out.println("UI - INVALID MOVE MADE!");
 						}
@@ -264,6 +235,39 @@ public class UI {
 				}
 				
 			} 
+			public void makeMove(int xCoord,int yCoord) {
+				int xCoordBefore = selectedPiece.getX();
+				int yCoordBefore = selectedPiece.getY();
+				boardUI.unhighlightCoordinates(selectedPiece);
+				boardUI.updateBoard(xCoord,yCoord,selectedPiece);
+				if (in != null) {
+					try {
+						
+						if (boardUI.getPromotion()) {
+							String promotedPiece = boardUI.getTile(xCoord, yCoord).getPiece().getName();
+							out.write("MOVE:"+xCoordBefore+"-"+yCoordBefore+"-"+xCoord+"-"+yCoord+"-PROMOTION:"+promotedPiece); }
+						else { 
+							out.write("MOVE:"+xCoordBefore+"-"+yCoordBefore+"-"+xCoord+"-"+yCoord); }
+						
+						out.newLine();
+						out.flush();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					} 
+					yourTurn = !yourTurn;
+				}
+				else if (robot != null) {
+//					yourTurn = !yourTurn;
+					robot.movePiece();
+					
+				}
+				else {
+					whitesTurn = !whitesTurn; }
+				
+				canvas.redraw();
+				selectedPiece.SetNotSelected();
+				selectedPiece = null;
+			}
 			public void mouseUp(MouseEvent e) {} 
 			public void mouseDoubleClick(MouseEvent e) {} 
 		});
@@ -525,9 +529,9 @@ public void setConnected() {this.isOpponentConnected = true;}
 							canvas.redraw();
 							selectedPiece.SetNotSelected();
 							selectedPiece = null;
-							System.out.println(msgFromOpponent);
+							//System.out.println(msgFromOpponent);
 						}else if(msgFromOpponent.contains("PLAYER")) {
-							System.out.println(msgFromOpponent);
+							//System.out.println(msgFromOpponent);
 							opponent = list[3];
 							opponentsPreferedTime = list[4];
 							opponentsPreferedTime += (":" + list[5]);
