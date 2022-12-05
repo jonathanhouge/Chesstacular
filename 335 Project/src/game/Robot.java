@@ -2,7 +2,7 @@
  * random possible moves (the "easy" version) or one utilizing an algorithm 
  * designed to pick the best possible move (the "hard" version).
  * 
- * Authors: Jonathan Houge &
+ * Authors: Ali Sartaz Khan
  */
 
 package game;
@@ -19,8 +19,13 @@ public class Robot {
 	private String color;
 	private Chessboard boardUI;
 	List<Piece> pieces;
-	
 	boolean whitesTurn;
+	
+	/*
+	 * Constructor takes in color of robot
+	 *
+	 * color: robot color
+	 */
 	public Robot(String color) {
 		this.color = color;
 		if (color.equals("White"))
@@ -31,10 +36,18 @@ public class Robot {
 		System.out.println("Robot is working and he is "+ this.getColor());
 	}
 	
+	/*
+	 * Setting board object
+	 * 
+	 * boardUI: boardUI
+	 */
 	public void setBoard(Chessboard boardUI) {
 		this.boardUI = boardUI;
 	}
 	
+	/*
+	 * Move robot piece
+	 */
 	public void movePiece() {
 		updatePieces();
 		Random random = new Random();
@@ -44,6 +57,12 @@ public class Robot {
 			movePiece();
 		
 	}
+	
+	/*
+	 * Fill list with all of the robot's pieces
+	 * 
+	 * board: 2D tile array
+	 */
 	public void populatePiecesList(Tile[][] board) {
 		for (int row = 0; row < 8; row++) {
 			for (int col = 0; col < 8; col ++) {
@@ -55,6 +74,10 @@ public class Robot {
 		}
 	}
 	
+	
+	/*
+	 * Updates the pieces list to check which pieces are killed off
+	 */
 	public void updatePieces() {
 		List<Piece> list = new ArrayList<>();
 		for (Piece p: pieces) 
@@ -63,6 +86,13 @@ public class Robot {
 		for (Piece p: list)
 			pieces.remove(p);
 	}
+	
+	
+	/*
+	 * Prints all the pieces out
+	 * 
+	 * board: 2D tile array
+	 */
 	public void printPieces(Tile[][] board) {
 		updatePieces();
 		for (Piece p: pieces) {
@@ -74,6 +104,11 @@ public class Robot {
 		
 	}
 	
+	/*
+	 * Makes a move using one of the 4 iteration patterns
+	 * 
+	 * piece: piece that will move
+	 */
 	public boolean makeMove(Piece piece) {
 		Random rand = new Random();
 		int iteration = rand.nextInt(4);
@@ -87,6 +122,12 @@ public class Robot {
 			return iteration4(piece);			
 	}
 	
+	
+	/*
+	 * Iteration pattern 1
+	 * 
+	 * piece: piece that will move
+	 */
 	public boolean iteration1(Piece piece) {
 		for (int row = 0; row < 8; row++) {
 			for (int col = 0; col < 8; col++) {
@@ -98,6 +139,12 @@ public class Robot {
 		}
 		return false;
 	}
+	
+	/*
+	 * Iteration pattern 2
+	 * 
+	 * piece: piece that will move
+	 */
 	public boolean iteration2(Piece piece) {
 		for (int row = 0; row < 8; row+=2) {
 			for (int col = 0; col < 8; col++) {
@@ -118,6 +165,11 @@ public class Robot {
 		return false;
 	}
 	
+	/*
+	 * Iteration pattern 3
+	 * 
+	 * piece: piece that will move
+	 */
 	public boolean iteration3(Piece piece) {
 		for (int row = 7; row >= 0; row--) {
 			for (int col = 7; col >= 0; col --) {
@@ -129,6 +181,11 @@ public class Robot {
 		}
 		return false;	}
 	
+	/*
+	 * Iteration pattern 4
+	 * 
+	 * piece: piece that will move
+	 */
 	public boolean iteration4(Piece piece) {
 		for (int row = 7; row >=0; row-=2) {
 			for (int col = 0; col < 8; col++) {
@@ -149,6 +206,9 @@ public class Robot {
 		return false;
 	}
 	
+	/*
+	 * Returns color of the robot
+	 */
 	public String getColor() {
 		return this.color;
 	}

@@ -24,6 +24,7 @@ public class ClientManager implements Runnable
         String newUserInput;
         int ID;
         String preferredTime;
+        
         /*
          * Constructor takes in socket and creates new input and output streams
          * socket: socket
@@ -73,6 +74,10 @@ public class ClientManager implements Runnable
         } 
         
         
+        /*
+         * Sets valid of the the client by comparing colors with both users, where user 1 gets preference
+         * on which color to choose.
+         */
         public void setValidColor() {
         	for (ClientManager user: users) {
 				try {
@@ -96,6 +101,7 @@ public class ClientManager implements Runnable
 				}
         	}
         }
+        
         
         /*
          * Method to broadcast string from others to yourself 
@@ -170,14 +176,25 @@ public class ClientManager implements Runnable
         	return username;
         }
     	 
+        /*
+         * Returns the color of this client
+         */
         public String getColor() {
         	return this.color;
         }
         
+        
+        /*
+         * Returns client ID
+         */
         public int getID() {
         	return this.ID;
         }
         
+        /*
+         * Sets color for the client
+         * 
+         */
         public void setColor(String color) {
         	this.color = color;
         }
