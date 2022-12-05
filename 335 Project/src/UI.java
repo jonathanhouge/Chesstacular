@@ -174,6 +174,9 @@ public class UI {
 					Piece possibleSelection;
 					possibleSelection = boardUI.selectPiece(xCoord, yCoord,whitesTurn);
 					if (possibleSelection !=null) {// player has selected new piece
+						//TODO add castling code here!
+						
+						
 						boardUI.unhighlightCoordinates(selectedPiece);
 						selectedPiece.SetNotSelected();
 						selectedPiece = possibleSelection;
