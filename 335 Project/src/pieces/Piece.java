@@ -24,6 +24,7 @@ public abstract class Piece {
 	private int y;
 	private Image visual;
 	private static int SQUARE_WIDTH = 80;
+	private boolean dead = false;
 
 	public String name;
 	int BOARD_COORD_OFFSET = 100;
@@ -207,6 +208,20 @@ public abstract class Piece {
 			return "White";
 		else
 			return "Black";
+	}
+	
+	/*
+	 * Returns if piece is killed off
+	 */
+	public boolean isDead() {
+		return this.dead;
+	}
+	
+	/*
+	 * Kill this piece
+	 */
+	public void killPiece() {
+		this.dead = true;
 	}
 	
 	/*
