@@ -1,7 +1,10 @@
+/* Chess Board.
+ * 
+ * Authors: Jonathan Houge & Julius Ramirez & Khojiakbar Yokubjonov
+ */
+
 package game;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
@@ -28,6 +31,7 @@ public class Chessboard implements ChessBoardUI {
 	
 	int SQUARE_WIDTH = 80;
 	Tile[][] board;
+	boolean promotion = false;
 	String verticalCoords[] = new String[] { "8", "7", "6", "5", "4", "3", "2", "1" };
 	String horizontalCoords[] = new String[] { "A", "B", "C", "D", "E", "F", "G", "H" };
 	int BOARD_COORD_OFFSET = 100;
@@ -365,10 +369,7 @@ public class Chessboard implements ChessBoardUI {
 	 * @param yCoord any integer between 0-7 inclusive.
 	 */
 	public void removePiece(int xCoord, int yCoord) {
-		this.board[yCoord][xCoord].setPiece(null);
-
-	}
-
+		this.board[yCoord][xCoord].setPiece(null); }
 	
 	/**
 	 * This method checks if an en passant move has been made so that the board may
@@ -470,6 +471,8 @@ public class Chessboard implements ChessBoardUI {
 				
 				((Piece) piece).updateLocation(pawn.getX(), pawn.getX());
 				board[selectedPiece.getY()][selectedPiece.getX()].setPiece((Piece) piece);
+				
+				this.promotion = true;
 			}
 		}
 	}
@@ -481,8 +484,15 @@ public class Chessboard implements ChessBoardUI {
 		}
 	}
 
-	public void unhighlightCoordinates(Piece selectedPiece) {
-		selectedCoordinates = null;		
+	public void unhighlightCoordinates(Piece selectedPiece) { selectedCoordinates = null; }
+	
+	public Tile getTile(int x, int y) { return board[y][x]; }
+	public boolean getPromotion() {
+		if (this.promotion) {
+			this.promotion = false;
+			return true; }
+		
+		return false;
 	}
 	
 	public void printBoard() {

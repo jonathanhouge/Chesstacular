@@ -1,33 +1,27 @@
 /*
- * Name: Ali Sartaz Khan
+ * Name: Ali Sartaz Khan & Jonathan Houge & Khojiakbar Yokubjonov & Julius Ramirez
  * Course: CSc 335
  * Description: Creates the UI for the client
  */
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
-import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
 import game.Chessboard;
 import game.GameStatus;
 import game.Robot;
-import game.Tile;
-import pieces.Pawn;
+import pieces.Bishop;
+import pieces.Knight;
 import pieces.Piece;
+import pieces.Queen;
+import pieces.Rook;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 public class UI {
 
@@ -157,7 +151,7 @@ public class UI {
 
 		canvas.addMouseListener(new MouseListener() {
 			public void mouseDown(MouseEvent e) {
-				if (!yourTurn) // thinking here?{
+				if (!yourTurn) 
 					return;
 				//Gather data, convert graphical coordinates into chessboard coordinates
 				int coordinates[] = boardUI.getBoardIndex(e.x,e.y);
@@ -193,7 +187,13 @@ public class UI {
 							boardUI.updateBoard(xCoord,yCoord,selectedPiece);
 							if (in != null) {
 								try {
-									out.write("MOVE:"+xCoordBefore+"-"+yCoordBefore+"-"+xCoord+"-"+yCoord);
+									
+									if (boardUI.getPromotion()) {
+										String promotedPiece = boardUI.getTile(xCoord, yCoord).getPiece().getName();
+										out.write("MOVE:"+xCoordBefore+"-"+yCoordBefore+"-"+xCoord+"-"+yCoord+"-PROMOTION:"+promotedPiece); }
+									else { 
+										out.write("MOVE:"+xCoordBefore+"-"+yCoordBefore+"-"+xCoord+"-"+yCoord); }
+									
 									out.newLine();
 									out.flush();
 								} catch (IOException e1) {
@@ -363,14 +363,37 @@ public class UI {
 					try {
 						msgFromOpponent = in.readLine();
 						if (msgFromOpponent.contains("MOVE")){
+							System.out.println(msgFromOpponent);
 							String[] list = msgFromOpponent.split("[:-]");
 							int xBefore = Integer.parseInt(list[1]);
 							int yBefore = Integer.parseInt(list[2]);
 							int xAfter = Integer.parseInt(list[3]);
 							int yAfter = Integer.parseInt(list[4]);
+							
+							String piecePromotion = "no";
+							if (msgFromOpponent.contains("PROMOTION")) {
+								System.out.println("HELLO");
+								piecePromotion = list[6]; }
+							
 							selectedPiece = boardUI.selectPiece(xBefore, yBefore, !whitesTurn);
 							boardUI.validMoveMade(xAfter,yAfter,selectedPiece,whitesTurn); // necessary b/c pawn's validMove updates didEnPassant
-							boardUI.updateBoard(xAfter,yAfter,selectedPiece);
+							
+							if (!piecePromotion.equals("no")) {
+								boardUI.getTile(xBefore, yBefore).setPiece(null);
+								
+								if (piecePromotion.equals("QUEEN")) {
+									boardUI.getTile(xAfter, yAfter).setPiece(new Queen(!whitesTurn, shell)); }
+								else if (piecePromotion.equals("ROOK")) {
+									boardUI.getTile(xAfter, yAfter).setPiece(new Rook(!whitesTurn, shell)); }
+								else if (piecePromotion.equals("KNIGHT")) {
+									boardUI.getTile(xAfter, yAfter).setPiece(new Knight(!whitesTurn, shell)); }
+								else if (piecePromotion.equals("BISHOP")) {
+									boardUI.getTile(xAfter, yAfter).setPiece(new Bishop(!whitesTurn, shell)); }
+								
+								boardUI.updateBoard(xAfter,yAfter,boardUI.getTile(xAfter, yAfter).getPiece()); }
+							else {
+								boardUI.updateBoard(xAfter,yAfter,selectedPiece); }
+							
 //							whitesTurn = !whitesTurn;
 							yourTurn = !yourTurn;
 							canvas.redraw();

@@ -134,7 +134,7 @@ public class PlayerCreateDisplay {
 		bot.setFont(button); bot.setForeground(color);
 		selectListenCreation(bot, decision); }
 	
-	// selection listener - for the radio buttons & submit button
+	// selection listener - for the radio buttons & submit button [utilized by other displays to save code]
 	protected static void selectListenCreation(Button button, ArrayList<String> decision) {
 		button.addSelectionListener(new SelectionAdapter()  {
 			@Override
