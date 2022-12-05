@@ -38,7 +38,6 @@ public class Client {
 		
 		else if (player.getOpponent() == "Robot"){ // if we're going against someone locally or a robot, no need for a server
 			Robot opponent;
-//			if (player.getOpponent() == "Robot") {
 			String robotColor;
 			if (player.getColor().equals("White"))
 				robotColor = "Black";
@@ -57,6 +56,11 @@ public class Client {
 		
     }
 	
+	/*
+	 * Creates new UI class when playing against the robot
+	 * 
+	 * opponent: robot object
+	 */
 	public Client(Robot opponent) {
 		UI ui = new UI(this, opponent);
         ui.start();
@@ -65,6 +69,7 @@ public class Client {
 	
 	/*
 	 * Creates new input output streams and takes in a new socket
+	 * 
 	 * socket: Socket object
 	 */
 	public Client(Socket socket) throws IOException {
@@ -95,11 +100,11 @@ public class Client {
 		String time = list[4]; // minutes
 		time += (":" + list[5]); // seconds
 		player.setTime(time);
+		// CREATES UI OBJECT AND STARTS GAME
         UI ui = new UI(this, in, out, socket);
         ui.start();
         
 		
-		// CREATES UI OBJECT AND STARTS GAME
 
 	}
 	
@@ -114,5 +119,8 @@ public class Client {
      	System.out.println("Server is closed!");
  	}
 	 
+	/*
+	 * Returns player object
+	 */
 	 public Player getPlayer() { return player; }
 }
