@@ -26,6 +26,7 @@ public class TimedMode {
 	int minutes;
 	Timer timer;
 	Label timeLabel;
+	Label nameLabel;
 	Composite composite;
 	Shell shell;
 	DecimalFormat decimalFormat;
@@ -37,11 +38,20 @@ public class TimedMode {
 		this.shell = shell;
 		this.composite = comp;
 		decimalFormat = new DecimalFormat("00");
-		timeLabel = new Label(comp, SWT.None);
-		timeLabel.setSize(270, 30);
-		timeLabel.setFont(new Font(Display.getDefault(), "Custom Font", 11, SWT.NORMAL));
-		timeLabel.setForeground(shell.getDisplay().getSystemColor(SWT.COLOR_BLACK));
-		timeLabel.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_GRAY));
+		timeLabel = new Label(composite, SWT.None);
+		timeLabel.setSize(270, 40);
+		timeLabel.setFont(new Font(Display.getDefault(), "Custom Font", 15, SWT.BOLD));
+		timeLabel.setForeground(shell.getDisplay().getSystemColor(SWT.COLOR_RED));
+		timeLabel.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_BLACK));
+		timeLabel.setText("00:00");
+		
+		nameLabel = new Label(composite, SWT.None);
+		nameLabel.setFont(new Font(Display.getDefault(), "Custom Font", 15, SWT.BOLD));
+		nameLabel.setForeground(shell.getDisplay().getSystemColor(SWT.COLOR_BLUE));
+		nameLabel.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_GRAY));
+		nameLabel.setSize(450, 40);
+		nameLabel.setText("Player");
+		nameLabel.moveAbove(timeLabel);
 		isOutOfTime = false;
 
 	}
@@ -52,14 +62,17 @@ public class TimedMode {
 		seconds--;
 		min = decimalFormat.format(minutes);
 		sec = decimalFormat.format(seconds);
-		timeLabel.setText(player + "'s time: " + min + ":" + sec);
+		timeLabel.setText(min + ":" + sec);
+		timeLabel.requestLayout();
+		
 		
 		if (seconds == -1) {
 			seconds = 59;
 			minutes--;
 			min = decimalFormat.format(minutes);
 			sec = decimalFormat.format(seconds);
-			timeLabel.setText(player + "'s time: " + min + ":" + sec);
+			timeLabel.setText(min + ":" + sec);
+			timeLabel.requestLayout();
 		
 		}
 		if (minutes == 0 && seconds == 0) {
@@ -76,9 +89,10 @@ public class TimedMode {
 	
 	public void setPlayer(String player) {
 		this.player = player;
-		String min = decimalFormat.format(minutes);
-		String sec = decimalFormat.format(seconds);
-		timeLabel.setText(player + "'s time: " + min + ":" + sec);
+		nameLabel.setText(player);
+		nameLabel.requestLayout();
+//		composite.layout();
+		
 		}
 
 
@@ -95,7 +109,7 @@ public class TimedMode {
 		String min = decimalFormat.format(minutes);
 		String sec = decimalFormat.format(seconds);
 //		if(player == null) {player = "opponent";}
-		timeLabel.setText(player + "'s time: " + min + ":" + sec);
+		timeLabel.setText(min + ":" + sec);
 
 	}
 

@@ -23,6 +23,7 @@ public class ClientManager implements Runnable
         String color;
         String newUserInput;
         int ID;
+        String preferredTime;
         /*
          * Constructor takes in socket and creates new input and output streams
          * socket: socket
@@ -36,13 +37,15 @@ public class ClientManager implements Runnable
 				String[] list = newUserInput.split("[:-]");
 				this.username = list[0];
 				this.color = list[1];
+				this.preferredTime = list[2]; //minutes
+				this.preferredTime += (":" + list[3]); // seconds
 				System.out.println(newUserInput);
 				users.add(this);
 				ID = users.size();
 				if (ID == 2)
 					setValidColor();
 	        	broadcastIdToYourself();
-	        	broadcastToOthers("PLAYER:" + ID + "-" +color + "-" + username);
+	        	broadcastToOthers("PLAYER:" + ID + "-" +color + "-" + username + "-" + preferredTime);
 	        	othersBroadcastToYou();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -117,7 +120,8 @@ public class ClientManager implements Runnable
         	for (ClientManager user: users) {
 				try {
 					if (user.username != this.username) {
-						this.out.write("PLAYER:" + user.ID + "-" + user.color + "-" +user.username);
+						this.out.write("PLAYER:" + user.ID + "-" + user.color + "-" 
+									+user.username + "-" + user.preferredTime);
 						this.out.newLine();
 						this.out.flush();}
 				}catch (Exception e) {

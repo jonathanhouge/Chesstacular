@@ -62,6 +62,7 @@ public class UI {
 	public boolean isOpponentConnected;
 	String opponent;
 	String username;
+	String opponentsPreferedTime;
 	
 	/*
 	 * Constructor that assigns values
@@ -70,13 +71,13 @@ public class UI {
 	 * out: output stream
 	 * socket: Socket object
 	 */
-	public UI(Client client, BufferedReader in, BufferedWriter out, Socket socket, String fileName, String username) {
+	public UI(Client client, BufferedReader in, BufferedWriter out, Socket socket) {
 		this.in = in;
 		this.out = out;
 		this.socket = socket;
 		this.client = client;
-		this.fileName = fileName;
-		this.username = username;
+		this.fileName = client.getPlayer().getFileName();
+		this.username = client.getPlayer().getName();;
 		if (in == null || client.getPlayer().getColor().equals("White")) {
 			this.whitesTurn = true; //Newly added field
 			this.yourTurn = true;
@@ -152,7 +153,7 @@ public class UI {
 
 		canvas.addMouseListener(new MouseListener() {
 			public void mouseDown(MouseEvent e) {
-				if (!yourTurn) // thinking here?
+				if (!yourTurn || yourTimer.isTimerOver()) // thinking here?
 					return;
 				//Gather data, convert graphical coordinates into chessboard coordinates
 				int coordinates[] = boardUI.getBoardIndex(e.x,e.y);
@@ -224,6 +225,7 @@ public class UI {
 			Runnable runnable = new Runner();
 			display.asyncExec(runnable); }
 		shell.open(); 
+		boolean isJustConnected = true;
 		long start = System.currentTimeMillis();
 		while (!shell.isDisposed()) 
 			if (!display.readAndDispatch()) {
@@ -232,11 +234,22 @@ public class UI {
 				if(diff==1) { // the timers start when both players are connected
 					
 					if(isOpponentConnected) {
-						opponentsTimer.setPlayer(opponent);
-						if(yourTurn) {yourTimer.update();}
-						else {opponentsTimer.update();}
+						if(isJustConnected) {
+							System.out.println("adding OPPONENT'S TIME ... ");
+							if(opponentsTimer == null) {return;}
+							opponentsTimer.setTimeLimit(opponentsPreferedTime);
+							opponentsTimer.setPlayer(opponent);
+							isJustConnected = false;
+							}
+						
+						
+						if(yourTurn && yourTimer != null) {
+							yourTimer.update();}
+						else if(opponentsTimer != null) {opponentsTimer.update();}
 						
 					}
+					
+					
 					start = end;
 				}
 			
@@ -252,6 +265,8 @@ public class UI {
 		display.dispose();		
 	}
 	
+	
+
 	void setup() {
 		
 		
@@ -263,8 +278,8 @@ public class UI {
 		shell.setLayout(new GridLayout());
 		defineComposites();
 		
-		defineYourTimer("1:00");
-		defineOpponentsTimer("1:00");
+		defineYourTimer(this.client.getPlayer().getPreferredTime());
+		defineOpponentsTimer("00:00");
 		
 		if (client != null) {
 			shell.setText("Chess: " + client.getPlayer().getName() + " (" + client.getPlayer().getColor() + ")"); }
@@ -288,9 +303,11 @@ public class UI {
 	}
 	
 	public void setConnected() {this.isOpponentConnected = true;}
+
 	
 	private void defineYourTimer(String time) {
 		// TODO Auto-generated method stub
+		if(time.contains("M") || time.contains("S")) {return;}
 		yourTimer = new TimedMode(shell, lowerComposite);
 		yourTimer.setPlayer(username);
 		yourTimer.setTimeLimit(time);
@@ -300,9 +317,8 @@ public class UI {
 	
 	private void defineOpponentsTimer(String time) {
 		// TODO Auto-generated method stub
+		if(time.contains("M") || time.contains("S")) {return;}
 		opponentsTimer = new TimedMode(shell, upperComposite);
-		opponentsTimer.setPlayer(opponent);
-		opponentsTimer.setTimeLimit(time);
 		
 		
 		
@@ -310,14 +326,22 @@ public class UI {
 
 	private void defineComposites() {
 		// TODO Auto-generated method stub
+		RowLayout rowLayout = new RowLayout();
+		rowLayout.type = SWT.HORIZONTAL;
+		rowLayout.marginLeft = 0;
+		rowLayout.marginRight = 0;
+		
+		
 		upperComposite = new Composite(shell, SWT.NO_FOCUS);
 		upperComposite.setLayoutData(opponentsTimer);
+		upperComposite.setLayout(rowLayout);
 		
 		middleComposite = new Composite(shell, SWT.NO_FOCUS);
 		middleComposite.setLayoutData(canvas);
 		
 		lowerComposite = new Composite(shell, SWT.NO_FOCUS);
 		lowerComposite.setLayoutData(yourTimer);
+		lowerComposite.setLayout(rowLayout);
 	}
 
 	void notifyOtherUsers() {
@@ -445,6 +469,8 @@ public class UI {
 						}else if(msgFromOpponent.contains("PLAYER")) {
 							System.out.println(msgFromOpponent);
 							opponent = list[3];
+							opponentsPreferedTime = list[4];
+							opponentsPreferedTime += (":" + list[5]);
 							isOpponentConnected = true;}
 					}
 							

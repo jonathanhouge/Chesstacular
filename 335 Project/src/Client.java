@@ -18,7 +18,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-
+ 
 public class Client {
 	private Socket socket;
 	private BufferedWriter out;
@@ -41,7 +41,7 @@ public class Client {
 			else {
 				opponent = new AlgorithmAI(); }
 			// play against the robot!
-	        UI ui = new UI(null, null, null, null, player.getFileName(), player.getName());
+	        UI ui = new UI(null, null, null, null);
 	        ui.start();
 		}
     }
@@ -60,7 +60,7 @@ public class Client {
 			close();
 		}
 		
-		out.write(player.getName() + "-" + player.getColor()); // sends username to client manager
+		out.write(player.getName() + "-" + player.getColor() + "-" + player.getPreferredTime()); // sends username to client manager
 		out.newLine();
 		out.flush();
 		String msgFromOthers = in.readLine();
@@ -74,7 +74,7 @@ public class Client {
 		player.setID(ID);
 		System.out.println(color.equals("White"));
 		player.setColor(color);	
-        UI ui = new UI(this, in, out, socket, player.getFileName(),player.getName());
+        UI ui = new UI(this, in, out, socket);  
         ui.start();
         
 		
