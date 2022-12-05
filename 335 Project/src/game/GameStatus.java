@@ -16,6 +16,7 @@ import java.util.Scanner;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
@@ -51,9 +52,87 @@ public class GameStatus {
 	 * Creates a display that prompts the player for a file name
 	 * 
 	 */
-	public String getFileName(String dialogTitle, String yesButtonTitle, String cancelButtonTitle) {
-	    final Shell shell = new Shell(parent, SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL);
-	    shell.setText(dialogTitle);
+	public String getFileName() {
+		 final Shell shell = new Shell(parent, SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL);
+		    shell.setText("Do You Wanna Take a Break?");
+
+		    GridLayout layout = new GridLayout(2, true);
+		    Color shellColor = new Color(255, 221, 153);
+		    layout.marginWidth = 20;
+		    shell.setLayout(layout);
+		    shell.setSize(350, 200);
+		    shell.setBackground(shellColor);
+		    
+		    Label label = new Label(shell, SWT.NULL);
+		    label.setText("Enter File Name Here:");
+		    label.setLayoutData(new GridData(SWT.TOP, SWT.CENTER,true,true,1,1));
+		    label.setBackground(new Color(255, 221, 153));
+
+		    final Text text = new Text(shell, SWT.SINGLE | SWT.BORDER);
+//		    text.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER,true,true,1,1));
+		    Color buttonColor = new Color(204, 136, 0);
+		    final Button saveButton = new Button(shell, SWT.PUSH);
+		    saveButton.setText("Save and Exit");
+		    saveButton.setLayoutData(new GridData(SWT.END, 1,false,false));
+		    saveButton.setBackground(buttonColor);
+		    
+		    text.addListener(SWT.Modify, new Listener() {
+			      public void handleEvent(Event event) {
+			        try {
+			          fileName = text.getText();
+			          saveButton.setEnabled(true);
+			        } catch (Exception e) {
+			          saveButton.setEnabled(false);
+			        }
+			      }
+
+				
+			    });
+		    Button cancelButton = new Button(shell, SWT.PUSH);
+		    cancelButton.setText("Cancel");
+		    cancelButton.setBackground(buttonColor);
+//		    saveButton.setSize(cancelButton.getSize());
+		    
+		    
+		    saveButton.addListener(SWT.Selection, new Listener() {
+			      public void handleEvent(Event event) {
+			    	if(fileName.equals(".txt") || fileName.equals("")) {return;}
+//			        shell.dispose();
+			        shell.close();
+			      }
+			    });
+
+			    cancelButton.addListener(SWT.Selection, new Listener() {
+			      public void handleEvent(Event event) {
+			        shell.close();
+			      }
+			    });
+			    
+			    shell.addListener(SWT.Traverse, new Listener() {
+			      public void handleEvent(Event event) {
+			        if(event.detail == SWT.TRAVERSE_ESCAPE)
+			          event.doit = false;
+			      }
+			    });
+		    text.setText("");
+		    shell.open();
+	    
+	    Display display = parent.getDisplay();
+	    while (!parent.isDisposed()) {
+	      if (!display.readAndDispatch())
+	        display.sleep();
+	    }
+	    
+	    parent.dispose();
+	    
+		return fileName;
+		
+		
+	}
+	
+	public String promptsFileWhileExiting() {
+		final Shell shell = new Shell(parent, SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL);
+	    shell.setText("Do You Wanna Save the Game?");
 
 	    GridLayout layout = new GridLayout(2, true);
 	    Color shellColor = new Color(255, 221, 153);
@@ -68,10 +147,9 @@ public class GameStatus {
 	    label.setBackground(new Color(255, 221, 153));
 
 	    final Text text = new Text(shell, SWT.SINGLE | SWT.BORDER);
-//	    text.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER,true,true,1,1));
 	    Color buttonColor = new Color(204, 136, 0);
 	    final Button saveButton = new Button(shell, SWT.PUSH);
-	    saveButton.setText(" "+yesButtonTitle+" ");
+	    saveButton.setText("Yes");
 	    saveButton.setLayoutData(new GridData(SWT.END, 1,false,false));
 	    saveButton.setBackground(buttonColor);
 	    
@@ -88,10 +166,8 @@ public class GameStatus {
 			
 		    });
 	    Button cancelButton = new Button(shell, SWT.PUSH);
-	    cancelButton.setText(cancelButtonTitle);
+	    cancelButton.setText("No");
 	    cancelButton.setBackground(buttonColor);
-//	    saveButton.setSize(cancelButton.getSize());
-	    
 	    
 	    saveButton.addListener(SWT.Selection, new Listener() {
 		      public void handleEvent(Event event) {
@@ -113,19 +189,19 @@ public class GameStatus {
 		      }
 		    });
 	    text.setText("");
-//	    shell.pack();
 	    shell.open();
-	    
-	    Display display = parent.getDisplay();
-	    while (!shell.isDisposed()) {
-	      if (!display.readAndDispatch())
-	        display.sleep();
-	    }
-	    
-//	    System.out.println("File name: "+fileName);
-		return fileName;
-		
-		
+    
+    Display display = parent.getDisplay();
+    while (!shell.isDisposed()) {
+      if (!display.readAndDispatch())
+        display.sleep();
+    }
+    
+    shell.dispose();
+    
+	return fileName;
+	
+	
 	}
 	
 	/*

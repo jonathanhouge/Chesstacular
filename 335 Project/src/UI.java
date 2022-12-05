@@ -107,10 +107,9 @@ public class UI {
 			public void handleEvent(Event event) {
 				// TODO Auto-generated method stub
 				System.out.println("Closing the shell!");
-				String fileToSaveGame = gameStatus.getFileName("Do You Wanna Save the Game?", "YES", "NO");
+				String fileToSaveGame = gameStatus.promptsFileWhileExiting();
 				gameStatus.saveGame(boardUI.getBoard(), yourTurn, whitesTurn);
-				
-				shell.dispose();
+			
 				
 			}
 			
@@ -314,9 +313,8 @@ public class UI {
 		fileSaveItem.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent event) {
 				
-				gameStatus.getFileName("Wanna Take a Break?", " Save and Exit "," Cancel "); //prompts the player for a file name
+				gameStatus.getFileName(); //prompts the player for a file name
 				gameStatus.saveGame(boardUI.getBoard(), yourTurn, whitesTurn); //saves the game status to a .txt file
-				shell.dispose();
 			}
 
 			public void widgetDefaultSelected(SelectionEvent event) {
