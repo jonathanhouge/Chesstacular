@@ -101,10 +101,9 @@ public class UI {
 			public void handleEvent(Event event) {
 				// TODO Auto-generated method stub
 				System.out.println("Closing the shell!");
-				String fileToSaveGame = gameStatus.getFileName("Do You Wanna Save the Game?", "YES", "NO");
+				String fileToSaveGame = gameStatus.promptsFileWhileExiting();
 				gameStatus.saveGame(boardUI.getBoard(), yourTurn, whitesTurn);
-				
-				shell.dispose();
+			
 				
 			}
 			
@@ -112,14 +111,6 @@ public class UI {
 		
 		canvas.addPaintListener(e -> {
 			if (initialized == false) { // create the tiles and initial starting positions
-				
-//				boolean white;
-//				
-//				if (client.getPlayer().getColor().equals("White")) { 
-//					white = true; }
-//				
-//				else { 
-//					white = false; }
 				boardUI.createBoardData(e.gc);
 				   
 				if(!loadOldGame) {
@@ -127,24 +118,28 @@ public class UI {
 //					boardUI.printBoard();
 					if (robot != null)
 					robot.populatePiecesList(boardUI.getBoard());
-				}else {
+					}else {
 					gameStatus.setFileName(fileName);
 					boolean[] playerTurnData = gameStatus.loadGame(boardUI.getBoard());
-				}
-				
-
-				initialized = true; }
+					}
 			
-			if (initialized) { boardUI.draw(e.gc); 
+				initialized = true; 
+				if (robot != null && !yourTurn) {
+					robot.movePiece();
+					yourTurn = true;
+				}
+				}
+			
+			if (initialized) { 
+				boardUI.draw(e.gc); 
 				if(whitesTurn) {
 					System.out.println("It is currently whites turn!");
 				}else {
 					System.out.println("It is currently blacks turn!");
 				}
+				
 			}
-//			boardUI.printBoard();
-//			if (robot != null)
-//				robot.printPieces(boardUI.getBoard());
+			
 		}
 		
 		);	
@@ -318,9 +313,8 @@ public class UI {
 		fileSaveItem.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent event) {
 				
-				gameStatus.getFileName("Wanna Take a Break?", " Save and Exit "," Cancel "); //prompts the player for a file name
+				gameStatus.getFileName(); //prompts the player for a file name
 				gameStatus.saveGame(boardUI.getBoard(), yourTurn, whitesTurn); //saves the game status to a .txt file
-				shell.dispose();
 			}
 
 			public void widgetDefaultSelected(SelectionEvent event) {
