@@ -14,8 +14,8 @@ public class King extends Piece {
 	String whitePiece = "wk.png";
 	String blackPiece = "bk.png";
 	
-	public boolean checked = false;
-
+	public boolean checked;
+	public boolean moved;
 	public King(boolean white, Shell shell) {
 		super(white);
 		if (white) {
@@ -24,7 +24,8 @@ public class King extends Piece {
 			setImage(new Image(shell.getDisplay(), "images/" + blackPiece));
 		}
 		this.name = "KING";
-
+		this.checked = false;
+		this.moved = false;
 	}
 
 	@Override

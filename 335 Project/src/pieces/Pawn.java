@@ -15,7 +15,7 @@ public class Pawn extends Piece {
 	String blackPiece = "bp.png";
 	int points = 1;
 
-	boolean firstMove;
+	public boolean firstMove;
 	boolean enPassantable = false; // if this is true, en passant may be done on this pawn
 	public boolean didEnPassant = false;
 
@@ -30,7 +30,6 @@ public class Pawn extends Piece {
 		this.name = "PAWN";
 
 	}
-
 	public void removeEnPassantMove() {
 		this.didEnPassant = false;
 
