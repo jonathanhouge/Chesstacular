@@ -17,6 +17,7 @@ import game.Tile;
 import game.TimedMode;
 import pieces.Pawn;
 import pieces.Bishop;
+import pieces.King;
 import pieces.Knight;
 import pieces.Piece;
 import pieces.Queen;
@@ -213,7 +214,9 @@ public class UI {
 					Piece possibleSelection;
 					possibleSelection = boardUI.selectPiece(xCoord, yCoord,whitesTurn);
 					if (possibleSelection !=null) {// player has selected new piece
-						if(boardUI.newValidMoveMade(xCoord,yCoord,selectedPiece)) { //castling requires use to click rook
+						if(boardUI.newValidMoveMade(xCoord,yCoord,selectedPiece)) {//castling requires use to click rook 
+							King k = (King) selectedPiece;
+							k.castlingMoveMade = true;
 							makeMove(xCoord,yCoord);
 						}else {
 							boardUI.unhighlightCoordinates(selectedPiece);

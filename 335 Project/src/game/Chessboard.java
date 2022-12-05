@@ -264,9 +264,10 @@ public class Chessboard implements ChessBoardUI {
 	 */
 	public void movePiece(int x, int y, Piece piece) {
 		board[piece.getY()][piece.getX()].setPiece(null);
+		System.out.println("About to update " + piece + " to " + x  + ',' + y);
 		piece.updateLocation(x, y); // necessary so that pawn enPassant/castling is updated
 		if (board[y][x].getPiece() != null)
-			board[y][x].getPiece().updateLocation(1000, 1000); // changing location of previous piece to 1000 for robot class
+			board[y][x].getPiece().killPiece(); // killing previous piece for robot class
 		board[y][x].setPiece(piece);
 	
 	}
@@ -286,6 +287,7 @@ public class Chessboard implements ChessBoardUI {
 		//System.out.println("CHESSBOARD.JAVA - validCheckMove - " + piece);
 		Pawn p = null;
 		boolean booleanToSave = false;
+		boolean extra2 = false;
 		Rook r = null;
 		King k = null;
 		if(piece instanceof Pawn) {
@@ -298,6 +300,9 @@ public class Chessboard implements ChessBoardUI {
 		}else if(piece instanceof King) { // TODO determine if this is necessary
 			k = (King) piece;
 			booleanToSave = k.moved;
+			extra2 = k.castlingMoveMade;
+			System.out.println("CHESSBOARD.JAVA - initial KING bool: " + k.moved);
+
 		}
 		int oldX = piece.getX();
 		int oldY = piece.getY();
@@ -317,8 +322,13 @@ public class Chessboard implements ChessBoardUI {
 			System.out.println("CHESSBOARD.JAVA - after bool: " + r.moved);
 
 		}else if(piece instanceof King) {
+			System.out.println("CHESSBOARD.JAVA - Beginning to restore KING moved bool to - " + booleanToSave);
 			k.moved = booleanToSave;
+			k.castlingMoveMade = extra2;
+
 			board[oldY][oldX].setPiece(k); // prevent's king's moved from being overwritten
+			System.out.println("CHESSBOARD.JAVA - Beginning to restore KING bool to - " + extra2);
+
 		}
 		board[y][x].setPiece(oldPiece); 
 		determineKingCheckStatus(getWhite);
@@ -463,7 +473,7 @@ public class Chessboard implements ChessBoardUI {
 				}else {
 					System.out.println("CHESSBOARD.JAVA - CHECKCASTLEMOVEMADE - this block should never be reached: " + k);
 				}
-				
+				k.castlingMoveMade = false;
 			}
 		}
 	}

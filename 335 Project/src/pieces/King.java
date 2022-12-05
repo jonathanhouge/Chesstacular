@@ -38,25 +38,27 @@ public class King extends Piece {
 		if (yDistance <= 1 && xDistance <= 1) {
 			return true;
 		}else if (!moved && yDistance == 0 && (xDistance == 3 || xDistance == 4)) {
-			System.out.println("KING - setting castlingMoveMade to true: " + castlingMoveMade);
-			castlingMoveMade = true;
+			System.out.println("KING - setting castlingMoveMade to true!!!");
 			return true;
 		}
 		return false;
 	}
-
+	@Override
+    public void updateLocation(int x, int y) {
+    	System.out.println("King update location called! CastlingMoveMade is equal to: " + this.castlingMoveMade);
+    	super.updateLocation(x,y);
+    	this.moved = true;
+    }
 	@Override
 	public boolean hasNoCollisions(int x, int y, Tile[][] tiles) {
 		if (tiles[y][x].getPiece() != null && tiles[y][x].getPiece().isWhite() == this.isWhite()) {
 			if((x==7 && y ==7 ) || (x==0 && y==7)||(x==7 && y==0) || (x==0 && y==0)) {//TODO add remaining coords
-				System.out.println("KING - hasNoCollisions - returning castlingMoveMade: " + castlingMoveMade);
-				return castlingMoveMade;
+				return true;
 			}
 			return false;
 		}
 		return true;
 	}
-
 	public void inCheck() {
 		this.checked = true;
 	}
@@ -83,19 +85,19 @@ public class King extends Piece {
 			}
 		}
 		if (!moved && !checked) {
-			System.out.println("KING.JAVA - king not moved and not in check");
+			//System.out.println("KING.JAVA - king not moved and not in check");
 			if (this.isWhite()) {
 				if (hasFriendlyRook(7,7,tiles)) {//right rook LOOKS GOOD
 					Rook r = (Rook) tiles[7][7].getPiece();
 					if(!r.moved) {
-						System.out.println("KING.JAVA - king and right rook not moved");
+						//System.out.println("KING.JAVA - king and right rook not moved");
 						List<Coordinate> positions = new ArrayList<>();
 						positions.add(new Coordinate(5,7));
 						positions.add(new Coordinate(6,7));
 						positions.add(new Coordinate(7,7));
 						boolean underAttack = underAttack(positions,tiles);
 						if(!underAttack && !tiles[7][5].hasPiece() && !tiles[7][6].hasPiece()) {
-							System.out.println("KING.JAVA - castle added!");
+							//System.out.println("KING.JAVA - castle added!");
 							coordinates.add(new Coordinate(7,7));
 						}
 					}
@@ -103,7 +105,7 @@ public class King extends Piece {
 				if (hasFriendlyRook(0,7,tiles)) {//left rook
 					Rook r = (Rook) tiles[7][0].getPiece();
 					if(!r.moved) {
-						System.out.println("KING.JAVA - king and left rook not moved");
+						//System.out.println("KING.JAVA - king and left rook not moved");
 						List<Coordinate> positions = new ArrayList<>();
 						positions.add(new Coordinate(0,7));
 						positions.add(new Coordinate(1,7));
@@ -111,10 +113,10 @@ public class King extends Piece {
 						positions.add(new Coordinate(3,7));
 						boolean underAttack = underAttack(positions,tiles);
 						if(!underAttack && !tiles[7][1].hasPiece() && !tiles[7][2].hasPiece()&& !tiles[7][3].hasPiece()) {
-							System.out.println("KING.JAVA - castle added!");
+							//System.out.println("KING.JAVA - castle added!");
 							coordinates.add(new Coordinate(0,7));
 						}else {
-							System.out.println("Either under attack or has piece");
+							//System.out.println("Either under attack or has piece");
 						}
 					}
 				}
@@ -122,14 +124,14 @@ public class King extends Piece {
 				if (hasFriendlyRook(7,0,tiles)) {//right rook
 					Rook r = (Rook) tiles[0][7].getPiece();
 					if(!r.moved) {
-						System.out.println("KING.JAVA - king and rook not moved");
+						//System.out.println("KING.JAVA - king and rook not moved");
 						List<Coordinate> positions = new ArrayList<>();
 						positions.add(new Coordinate(5,0));
 						positions.add(new Coordinate(6,0));
 						positions.add(new Coordinate(7,0));
 						boolean underAttack = underAttack(positions,tiles);
 						if(!underAttack && !tiles[0][5].hasPiece() && !tiles[0][6].hasPiece()) {
-							System.out.println("KING.JAVA - castle added!");
+							//System.out.println("KING.JAVA - castle added!");
 							coordinates.add(new Coordinate(7,0));
 						}
 					}
@@ -137,7 +139,7 @@ public class King extends Piece {
 				if (hasFriendlyRook(0,0,tiles)) {//left rook
 					Rook r = (Rook) tiles[0][0].getPiece();
 					if(!r.moved) {
-						System.out.println("KING.JAVA - king and rook not moved");
+						//System.out.println("KING.JAVA - king and rook not moved");
 						List<Coordinate> positions = new ArrayList<>();
 						positions.add(new Coordinate(0,0));
 						positions.add(new Coordinate(1,0));
@@ -145,7 +147,7 @@ public class King extends Piece {
 						positions.add(new Coordinate(3,0));
 						boolean underAttack = underAttack(positions,tiles);
 						if(!underAttack && !tiles[0][1].hasPiece() && !tiles[0][2].hasPiece()&& !tiles[0][3].hasPiece()) {
-							System.out.println("KING.JAVA - castle added!");
+							//System.out.println("KING.JAVA - castle added!");
 							coordinates.add(new Coordinate(0,0));
 						}
 					}
