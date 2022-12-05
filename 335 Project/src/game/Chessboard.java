@@ -442,7 +442,7 @@ public class Chessboard implements ChessBoardUI {
 	 */
 	public void updateBoard(int xCoord, int yCoord, Piece selectedPiece) {
 		//System.out.println("Chessboard.java - Moving..." + selectedPiece);
-		this.movePiece(xCoord,yCoord,selectedPiece);
+		this.movePieceFinal(xCoord,yCoord,selectedPiece);
 		//System.out.println("Chessboard.java - Piece updated! " + selectedPiece);
 		this.checkEnPassantMoveMade(selectedPiece);
 		this.checkPromotion(selectedPiece);
@@ -450,6 +450,14 @@ public class Chessboard implements ChessBoardUI {
 			System.out.println("King in check!");
 			this.determineCheckMate(selectedPiece);
 		};
+	}
+
+	private void movePieceFinal(int x, int y, Piece piece) {
+		board[piece.getY()][piece.getX()].setPiece(null);
+		piece.updateLocation(x, y); // necessary so that pawn enPassant is updated
+		if (board[y][x].getPiece() != null)
+			board[y][x].getPiece().updateLocation(1000, 1000); // changing location of previous piece to 1000 for robot class
+		board[y][x].setPiece(piece);
 	}
 
 	/**
