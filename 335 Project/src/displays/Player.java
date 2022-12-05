@@ -1,3 +1,4 @@
+package displays;
 /* The Player class. Created by client by filling out the options from 
  * PlayerCreateDisplay.
  * 

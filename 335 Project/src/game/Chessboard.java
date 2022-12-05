@@ -1,7 +1,10 @@
+/* Chess Board.
+ * 
+ * Authors: Jonathan Houge & Julius Ramirez & Khojiakbar Yokubjonov
+ */
+
 package game;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
@@ -9,8 +12,10 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
+import displays.QueenPromotionDisplay;
 import pieces.Bishop;
 import pieces.King;
 import pieces.Knight;
@@ -22,8 +27,11 @@ import pieces.Rook;
 public class Chessboard implements ChessBoardUI {
 	Canvas canvas;
 	Shell shell;
+	Display display;
+	
 	int SQUARE_WIDTH = 80;
 	Tile[][] board;
+	boolean promotion = false;
 	String verticalCoords[] = new String[] { "8", "7", "6", "5", "4", "3", "2", "1" };
 	String horizontalCoords[] = new String[] { "A", "B", "C", "D", "E", "F", "G", "H" };
 	int BOARD_COORD_OFFSET = 100;
@@ -34,9 +42,13 @@ public class Chessboard implements ChessBoardUI {
 	Color BG = new Color(255, 255, 255);
 	Color SIDE = new Color(204, 136, 0);
 	Color HIGHLIGHTED = new Color(110, 211, 255);
-	public Chessboard(Canvas canvas, Shell shell) {
+	Color OUTLINE;
+	
+	public Chessboard(Canvas canvas, Shell shell, Display display) {
 		this.canvas = canvas;
 		this.shell = shell;
+		this.display = display;
+		this.OUTLINE = display.getSystemColor(SWT.COLOR_BLACK);
 	}
 	
 	public Tile[][] getBoard(){return board;}
@@ -93,9 +105,9 @@ public class Chessboard implements ChessBoardUI {
 				// create the tiles with the proper color
 
 				if (boardColor) {
-					board[y][x] = new Tile(w, x * SQUARE_WIDTH + 50, y * SQUARE_WIDTH, SQUARE_WIDTH); } 
+					board[y][x] = new Tile(w, OUTLINE, x * SQUARE_WIDTH + 50, y * SQUARE_WIDTH, SQUARE_WIDTH); } 
 				else {
-					board[y][x] = new Tile(b, x * SQUARE_WIDTH + 50, y * SQUARE_WIDTH, SQUARE_WIDTH); }
+					board[y][x] = new Tile(b, OUTLINE, x * SQUARE_WIDTH + 50, y * SQUARE_WIDTH, SQUARE_WIDTH); }
 
 
 				// alternating tile colors
@@ -357,10 +369,7 @@ public class Chessboard implements ChessBoardUI {
 	 * @param yCoord any integer between 0-7 inclusive.
 	 */
 	public void removePiece(int xCoord, int yCoord) {
-		this.board[yCoord][xCoord].setPiece(null);
-
-	}
-
+		this.board[yCoord][xCoord].setPiece(null); }
 	
 	/**
 	 * This method checks if an en passant move has been made so that the board may
@@ -412,8 +421,8 @@ public class Chessboard implements ChessBoardUI {
 	 * @param movedPiece, the piece that was moved this turn. Used to determine next player's color,
 	 * could be changed
 	 */
-	private void determineCheckMate(Piece movedPiece) {
-		// TODO implemen this fully, also maybe only call if piece is in check?
+	private boolean determineCheckMate(Piece movedPiece) {
+		// TODO implement this fully, also maybe only call if piece is in check?
 		for(int row = 0; row <= 7; row++) {
 			for(int col = 0;col <= 7; col++) {
 				if(board[row][col].getPiece()!= null) { 
@@ -428,7 +437,7 @@ public class Chessboard implements ChessBoardUI {
 							System.out.println(friendlyPiece + ": " + coord);
 							if(validMoveMade(coord.getX(),coord.getY(),friendlyPiece, friendlyPiece.isWhite())) {
 								System.out.println("Chessboard.java - validMove possible, checkmate not met");
-								return;
+								return false;
 							}
 						}
 					}
@@ -437,7 +446,7 @@ public class Chessboard implements ChessBoardUI {
 		}
 		//If this part is reached no validMoveMade returned true, thus game over!
 		System.out.println("Chessboard.java - The opponent can not make any valid moves! Game over!");
-		return;
+		return true;
 	}
 
 	/**
@@ -449,10 +458,21 @@ public class Chessboard implements ChessBoardUI {
 		if(selectedPiece instanceof Pawn) {
 			Pawn pawn = (Pawn) selectedPiece;
 			if (pawn.promotion()) {
-				System.out.println("The pawn may now be promoted! Implement later, for now setting to queen.");
-				Queen queen = new Queen(selectedPiece.isWhite(),shell);
-				queen.updateLocation(pawn.getX(), pawn.getX());
-				board[selectedPiece.getY()][selectedPiece.getX()].setPiece(queen);
+				System.out.println("The pawn may now be promoted!");
+				String decision = new QueenPromotionDisplay().start(display);
+				
+				Object piece = new Queen(selectedPiece.isWhite(), shell);
+				if (decision.equals("Rook")) {
+					piece = new Rook(selectedPiece.isWhite(), shell); }
+				else if (decision.equals("Knight")) {
+					piece = new Knight(selectedPiece.isWhite(), shell); }
+				else if (decision.equals("Bishop")) {
+					piece = new Bishop(selectedPiece.isWhite(), shell); }
+				
+				((Piece) piece).updateLocation(pawn.getX(), pawn.getX());
+				board[selectedPiece.getY()][selectedPiece.getX()].setPiece((Piece) piece);
+				
+				this.promotion = true;
 			}
 		}
 	}
@@ -464,8 +484,15 @@ public class Chessboard implements ChessBoardUI {
 		}
 	}
 
-	public void unhighlightCoordinates(Piece selectedPiece) {
-		selectedCoordinates = null;		
+	public void unhighlightCoordinates(Piece selectedPiece) { selectedCoordinates = null; }
+	
+	public Tile getTile(int x, int y) { return board[y][x]; }
+	public boolean getPromotion() {
+		if (this.promotion) {
+			this.promotion = false;
+			return true; }
+		
+		return false;
 	}
 	
 	public void printBoard() {

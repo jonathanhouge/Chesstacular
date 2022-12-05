@@ -1,3 +1,4 @@
+package displays;
 /* The Display for Player Creation.
  * Prompts the client to enter their name, pick their tank, and choose their color.
  * This is accomplished using SWT widgets and Arraylists. After submitting the information, 
@@ -143,7 +144,7 @@ public class PlayerCreateDisplay {
 		bot.setFont(button); bot.setForeground(color);
 		selectListenCreation(bot, decision); }
 	
-	// selection listener - for the radio buttons & submit button
+	// selection listener - for the radio buttons & submit button [utilized by other displays to save code]
 	protected static void selectListenCreation(Button button, ArrayList<String> decision) {
 		button.addSelectionListener(new SelectionAdapter()  {
 			@Override

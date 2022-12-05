@@ -7,6 +7,8 @@
 import java.net.Socket;
 import java.util.ArrayList;
 
+import displays.Player;
+import displays.PlayerCreateDisplay;
 import game.AlgorithmAI;
 import game.RandomAI;
 import game.Robot;
