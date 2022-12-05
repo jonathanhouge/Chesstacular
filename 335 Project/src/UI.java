@@ -153,8 +153,11 @@ public class UI {
 
 		canvas.addMouseListener(new MouseListener() {
 			public void mouseDown(MouseEvent e) {
-				if (!yourTurn || yourTimer.isTimerOver()) // thinking here?
-					return;
+				if (!yourTurn){// thinking here?
+					if(yourTimer != null) {
+						if(yourTimer.isTimerOver()){return;}
+					}
+					return;}
 				//Gather data, convert graphical coordinates into chessboard coordinates
 				int coordinates[] = boardUI.getBoardIndex(e.x,e.y);
 				if(coordinates == null) {
@@ -236,16 +239,19 @@ public class UI {
 					if(isOpponentConnected) {
 						if(isJustConnected) {
 							System.out.println("adding OPPONENT'S TIME ... ");
-							if(opponentsTimer == null) {return;}
-							opponentsTimer.setTimeLimit(opponentsPreferedTime);
-							opponentsTimer.setPlayer(opponent);
+							if(!opponentsPreferedTime.contains("M")&& !opponentsPreferedTime.contains("S")) {
+								opponentsTimer = new TimedMode(shell, upperComposite);
+								opponentsTimer.setTimeLimit(opponentsPreferedTime);
+								opponentsTimer.setPlayer(opponent);
+							}
+							
 							isJustConnected = false;
 							}
 						
 						
 						if(yourTurn && yourTimer != null) {
 							yourTimer.update();}
-						else if(opponentsTimer != null) {opponentsTimer.update();}
+						else if(!yourTurn && opponentsTimer != null) {opponentsTimer.update();}
 						
 					}
 					
@@ -279,7 +285,7 @@ public class UI {
 		defineComposites();
 		
 		defineYourTimer(this.client.getPlayer().getPreferredTime());
-		defineOpponentsTimer("00:00");
+//		defineOpponentsTimer("00:00");
 		
 		if (client != null) {
 			shell.setText("Chess: " + client.getPlayer().getName() + " (" + client.getPlayer().getColor() + ")"); }
