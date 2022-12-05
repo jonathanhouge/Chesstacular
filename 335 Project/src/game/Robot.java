@@ -156,7 +156,4 @@ public class Robot {
 		return this.color;
 	}
 	
-	public void move() {
-		
-	}
 }

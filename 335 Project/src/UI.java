@@ -118,14 +118,6 @@ public class UI {
 		
 		canvas.addPaintListener(e -> {
 			if (initialized == false) { // create the tiles and initial starting positions
-				
-//				boolean white;
-//				
-//				if (client.getPlayer().getColor().equals("White")) { 
-//					white = true; }
-//				
-//				else { 
-//					white = false; }
 				boardUI.createBoardData(e.gc);
 				   
 				if(!loadOldGame) {
@@ -133,24 +125,28 @@ public class UI {
 //					boardUI.printBoard();
 					if (robot != null)
 					robot.populatePiecesList(boardUI.getBoard());
-				}else {
+					}else {
 					gameStatus.setFileName(fileName);
 					boolean[] playerTurnData = gameStatus.loadGame(boardUI.getBoard());
-				}
-				
-
-				initialized = true; }
+					}
 			
-			if (initialized) { boardUI.draw(e.gc); 
+				initialized = true; 
+				if (robot != null && !yourTurn) {
+					robot.movePiece();
+					yourTurn = true;
+				}
+				}
+			
+			if (initialized) { 
+				boardUI.draw(e.gc); 
 				if(whitesTurn) {
 					System.out.println("It is currently whites turn!");
 				}else {
 					System.out.println("It is currently blacks turn!");
 				}
+				
 			}
-//			boardUI.printBoard();
-//			if (robot != null)
-//				robot.printPieces(boardUI.getBoard());
+			
 		}
 		
 		);	
