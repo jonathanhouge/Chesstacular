@@ -76,6 +76,15 @@ public class PlayerCreateDisplay {
 		Text file = new Text(load, SWT.BORDER); file.setLayoutData(widgetData);
 		file.setText("Enter .txt file"); file.setTextLimit(16);
 		
+		
+		// if the user prefers a timed mode;
+		Group timedMode = new Group(shell, SWT.NONE);
+		timedMode.setLayout(widgetLayout);
+		Label timeL = new Label(timedMode, SWT.NONE);
+		timeL.setText("Play in timed mode?"); timeL.setFont(labelFont); timeL.setForeground(color);
+		Text time = new Text(timedMode, SWT.BORDER); time.setLayoutData(widgetData);
+		time.setText("MM:SS"); time.setTextLimit(6);
+				
 		// play button - will use the current selections to create a new Player
 		ArrayList<String> decision = new ArrayList<String>();
 		Button start = new Button(shell, SWT.PUSH); start.setText("Let's play!");
@@ -88,11 +97,12 @@ public class PlayerCreateDisplay {
 		
 		// gathers the data the client picked to create their player
 		String playerName = name.getText();
+		String preferredTime = time.getText();
 		String fileName = file.getText(); display.dispose();
 		String preferredColor = decision2.get(decision2.size() - 1);
 		String opponent = decision3.get(decision3.size() - 1);
 
-		Player player = new Player(playerName, preferredColor, opponent, fileName);
+		Player player = new Player(playerName, preferredColor, opponent, fileName, preferredTime);
 		return player; } // player successfully created!
 
 	// radio button for picking piece color

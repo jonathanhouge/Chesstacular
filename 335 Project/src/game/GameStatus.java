@@ -98,7 +98,8 @@ public class GameStatus {
 			      public void handleEvent(Event event) {
 			    	if(fileName.equals(".txt") || fileName.equals("")) {return;}
 //			        shell.dispose();
-			        shell.close();
+			        shell.dispose();
+			        parent.dispose();
 			      }
 			    });
 

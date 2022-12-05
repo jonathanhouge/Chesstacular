@@ -49,14 +49,14 @@ public class Client {
 		}
 		else {
 			// play locally
-	        UI ui = new UI(null, null, null, null, player.getFileName());
+	        UI ui = new UI(player);
 	        ui.start();
 		}
 		
     }
 	
 	public Client(Robot opponent) {
-		UI ui = new UI(this, opponent, player.getFileName());
+		UI ui = new UI(this, opponent);
         ui.start();
 	}
 	
@@ -75,7 +75,7 @@ public class Client {
 			close();
 		}
 		
-		out.write(player.getName() + "-" + player.getColor()); // sends username to client manager
+		out.write(player.getName() + "-" + player.getColor() + "-" + player.getPreferredTime()); // sends username to client manager
 		out.newLine();
 		out.flush();
 		String msgFromOthers = in.readLine();
@@ -88,7 +88,12 @@ public class Client {
 		player.setID(ID);
 		System.out.println(color.equals("White"));
 		player.setColor(color);	
-        UI ui = new UI(this, in, out, socket, player.getFileName());
+		String username = list[3];
+		player.setUsername(username);
+		String time = list[4]; // minutes
+		time += (":" + list[5]); // seconds
+		player.setTime(time);
+        UI ui = new UI(this, in, out, socket);
         ui.start();
         
 		

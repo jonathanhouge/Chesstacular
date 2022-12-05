@@ -13,6 +13,7 @@ import game.Chessboard;
 import game.GameStatus;
 import game.Robot;
 import game.Tile;
+import game.TimedMode;
 import pieces.Pawn;
 import pieces.Piece;
 
@@ -54,7 +55,18 @@ public class UI {
 	protected MenuItem fileMenuHeader,fileSaveItem,fileExitItem;
 	boolean loadOldGame;
 	private String fileName;
+	private Composite upperComposite;
+	private Composite middleComposite;
+	private Composite lowerComposite;
+	private TimedMode yourTimer;
+	private TimedMode opponentsTimer;
+	public boolean isOpponentConnected;
+	String opponent;
+	String username;
+	String opponentsPreferedTime;
 	private Robot robot;
+	Player player;
+	boolean isLocalGame = false;
 	/*
 	 * Constructor that assigns values
 	 * client: client object
@@ -62,12 +74,14 @@ public class UI {
 	 * out: output stream
 	 * socket: Socket object
 	 */
-	public UI(Client client, BufferedReader in, BufferedWriter out, Socket socket, String fileName) {
+	public UI(Client client, BufferedReader in, BufferedWriter out, Socket socket) {
 		this.in = in;
 		this.out = out;
 		this.socket = socket;
 		this.client = client;
-		this.fileName = fileName;
+		this.player = this.client.getPlayer();
+		this.fileName = this.player.getFileName();
+		this.username = this.player.getName();
 		if (in == null || client.getPlayer().getColor().equals("White")) {
 			this.whitesTurn = true; //Newly added field
 			this.yourTurn = true;
@@ -76,13 +90,18 @@ public class UI {
 			this.whitesTurn = false;
 			this.yourTurn = false;
 		}
+		isOpponentConnected = false;
 	}
 	
-	public UI(Client client, Robot robot, String fileName) {
+	
+
+	public UI(Client client, Robot robot) {
 		this.robot = robot;
-		this.fileName = fileName;
 		this.client = client;
-		if (client.getPlayer().getColor().equals("White")) {
+		this.player = this.client.getPlayer();
+		this.fileName = this.player.getFileName();
+		this.username = this.player.getName();
+		if (this.player.getColor().equals("White")) {
 			this.whitesTurn = true; //Newly added field
 			this.yourTurn = true;
 		}
@@ -90,7 +109,23 @@ public class UI {
 			this.whitesTurn = false;
 			this.yourTurn = false;
 		}
+		isOpponentConnected = true;
 	}
+
+
+
+	public UI(Player player) {
+		this.player = player;
+		this.fileName = player.getFileName();
+		this.username = player.getName();
+		this.whitesTurn = true; //Newly added field
+		this.yourTurn = true;
+		isOpponentConnected = true;
+		this.isLocalGame = true;
+		
+	}
+
+
 
 	/*
 	 * Starts running the UI
@@ -152,8 +187,11 @@ public class UI {
 
 		canvas.addMouseListener(new MouseListener() {
 			public void mouseDown(MouseEvent e) {
-				if (!yourTurn) // thinking here?{
-					return;
+				if (!yourTurn) {// thinking here?{
+					if(yourTimer != null) {
+						if(yourTimer.isTimerOver()){return;}
+					}
+					return;}
 				//Gather data, convert graphical coordinates into chessboard coordinates
 				int coordinates[] = boardUI.getBoardIndex(e.x,e.y);
 				if(coordinates == null) {
@@ -231,8 +269,46 @@ public class UI {
 			Runnable runnable = new Runner();
 			display.asyncExec(runnable); }
 		shell.open(); 
+		boolean isJustConnected = true;
+		long start = System.currentTimeMillis();
 		while (!shell.isDisposed()) 
 			if (!display.readAndDispatch())
+				if (!display.readAndDispatch()) {
+					long end = System.currentTimeMillis();
+					int diff = (int) ((end-start)/1000);
+					if(diff==1) { // the timers start when both players are connected
+						
+						if(isOpponentConnected) {
+							if(isJustConnected) {
+								System.out.println("adding OPPONENT'S TIME ... ");
+								if(opponentsPreferedTime != null) {
+									if(!opponentsPreferedTime.contains("M")&& !opponentsPreferedTime.contains("S")) {
+										opponentsTimer = new TimedMode(shell, upperComposite);
+										opponentsTimer.setTimeLimit(opponentsPreferedTime);
+										opponentsTimer.setPlayer(opponent);
+									}
+								}
+								
+				
+								isJustConnected = false;
+								}
+							
+							
+							if(yourTurn && yourTimer != null) {
+								yourTimer.update();}
+							else if(!yourTurn && opponentsTimer != null) {opponentsTimer.update();}
+							
+						}
+						
+						
+						start = end;
+					}
+				
+						
+						
+						
+						
+						}
 				display.sleep();
 
 		display.dispose();		
@@ -243,16 +319,20 @@ public class UI {
 		display = new Display();
 		
 		shell = new Shell(display);
+		shell.setSize(640+BOARD_COORD_OFFSET + SHELL_WIDTH_OFFSET, 800+BOARD_COORD_OFFSET/2 + SHELL_HEIGHT_OFFSET);
+		
+		shell.setLayout(new GridLayout());
+		defineComposites();
+		
+		defineYourTimer(this.player.getPreferredTime());
 		if (client != null) {
 			shell.setText("Chess: " + client.getPlayer().getName() + " (" + client.getPlayer().getColor() + ")"); }
 		else {
 			shell.setText("Chess"); }
-		shell.setLayout(new FillLayout());
-		shell.setSize(640+BOARD_COORD_OFFSET + SHELL_WIDTH_OFFSET, 700+BOARD_COORD_OFFSET/2 + SHELL_HEIGHT_OFFSET);
 		
-		canvas = new Canvas(shell, SWT.BACKGROUND);
+		canvas = new Canvas(middleComposite, SWT.FOCUSED);
 		canvas.setBackground(shell.getDisplay().getSystemColor(SWT.COLOR_WHITE));
-		canvas.setSize(640+BOARD_COORD_OFFSET, 640+BOARD_COORD_OFFSET/2 + SHELL_HEIGHT_OFFSET);
+		canvas.setSize(640+BOARD_COORD_OFFSET, 600+BOARD_COORD_OFFSET/2 + SHELL_HEIGHT_OFFSET);
 //		canvas.setBounds(0, 0, 640, 640);
 		
 		createMenuBar();
@@ -260,6 +340,48 @@ public class UI {
 		boardUI = new Chessboard(canvas, shell);	
 		if (this.robot != null)
 			robot.setBoard(boardUI);
+	}
+	
+public void setConnected() {this.isOpponentConnected = true;}
+
+	
+	private void defineYourTimer(String time) {
+		// TODO Auto-generated method stub
+		if(time.contains("M") || time.contains("S") || isLocalGame) {return;}
+		yourTimer = new TimedMode(shell, lowerComposite);
+		yourTimer.setPlayer(username);
+		yourTimer.setTimeLimit(time);
+		
+		
+	}
+	
+	private void defineOpponentsTimer(String time) {
+		// TODO Auto-generated method stub
+		if(time.contains("M") || time.contains("S")) {return;}
+		opponentsTimer = new TimedMode(shell, upperComposite);
+		
+		
+		
+	}
+
+	private void defineComposites() {
+		// TODO Auto-generated method stub
+		RowLayout rowLayout = new RowLayout();
+		rowLayout.type = SWT.HORIZONTAL;
+		rowLayout.marginLeft = 0;
+		rowLayout.marginRight = 0;
+		
+		
+		upperComposite = new Composite(shell, SWT.NO_FOCUS);
+		upperComposite.setLayoutData(opponentsTimer);
+		upperComposite.setLayout(rowLayout);
+		
+		middleComposite = new Composite(shell, SWT.NO_FOCUS);
+		middleComposite.setLayoutData(canvas);
+		
+		lowerComposite = new Composite(shell, SWT.NO_FOCUS);
+		lowerComposite.setLayoutData(yourTimer);
+		lowerComposite.setLayout(rowLayout);
 	}
 	
 	
@@ -356,8 +478,8 @@ public class UI {
 				{
 					try {
 						msgFromOpponent = in.readLine();
+						String[] list = msgFromOpponent.split("[:-]");
 						if (msgFromOpponent.contains("MOVE")){
-							String[] list = msgFromOpponent.split("[:-]");
 							int xBefore = Integer.parseInt(list[1]);
 							int yBefore = Integer.parseInt(list[2]);
 							int xAfter = Integer.parseInt(list[3]);
@@ -371,7 +493,12 @@ public class UI {
 							selectedPiece.SetNotSelected();
 							selectedPiece = null;
 							System.out.println(msgFromOpponent);
-						}
+						}else if(msgFromOpponent.contains("PLAYER")) {
+							System.out.println(msgFromOpponent);
+							opponent = list[3];
+							opponentsPreferedTime = list[4];
+							opponentsPreferedTime += (":" + list[5]);
+							isOpponentConnected = true;}
 					}
 							
 					 catch(IOException e) {
