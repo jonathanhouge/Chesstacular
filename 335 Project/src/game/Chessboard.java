@@ -120,8 +120,8 @@ public class Chessboard implements ChessBoardUI {
 	 * Used for the new game only.
 	 */
 	public void setAllPieces() {
-		for (int x = 0; x < 8; x++) {
-			for (int y = 0; y < 8; y++) {
+		for (int y = 0; y < 8; y++) {
+			for (int x = 0; x < 8; x++) {
 				
 				// set the piece using a helper function
 				board[y][x].setPiece(makePiece(x, y));
@@ -146,8 +146,8 @@ public class Chessboard implements ChessBoardUI {
 			else if (x == 0 || x == 7) { return (new Rook(pieceColor, shell)); } 
 			else if (x == 1 || x == 6) { return (new Knight(pieceColor, shell)); } 
 			else if (x == 2 || x == 5) { return (new Bishop(pieceColor, shell)); } 
-			else if (x == 3) { return (new King(pieceColor, shell)); } 
-			else if (x == 4) { return (new Queen(pieceColor, shell)); } } 
+			else if (x == 4) { return (new King(pieceColor, shell)); } 
+			else if (x == 3) { return (new Queen(pieceColor, shell)); } } 
 		else if (y == 1) { return (new Pawn(pieceColor, shell)); } // black pawns
 
 		pieceColor = !pieceColor;
@@ -158,8 +158,8 @@ public class Chessboard implements ChessBoardUI {
 			else if (x == 0 || x == 7) { return (new Rook(pieceColor, shell)); } 
 			else if (x == 1 || x == 6) { return (new Knight(pieceColor, shell)); }
 			else if (x == 2 || x == 5) { return (new Bishop(pieceColor, shell)); }
-			else if (x == 3) { return (new King(pieceColor, shell)); } 
-			else if (x == 4) { return (new Queen(pieceColor, shell)); } }
+			else if (x == 4) { return (new King(pieceColor, shell)); } 
+			else if (x == 3) { return (new Queen(pieceColor, shell)); } }
 
 		return null; // tile is given no piece
 	}
@@ -279,6 +279,7 @@ public class Chessboard implements ChessBoardUI {
 	 * @return
 	 */
 	public boolean validCheckMove(int x, int y, Piece piece, boolean getWhite) {
+		System.out.println("CHESSBOARD.JAVA - validCheckMove - " + piece);
 		Pawn p = null;
 		boolean firstMove = false;
 		Rook r = null;
@@ -289,6 +290,7 @@ public class Chessboard implements ChessBoardUI {
 		}else if(piece instanceof Rook) {
 			r = (Rook) piece;
 			firstMove = r.moved;
+			System.out.println("CHESSBOARD.JAVA - initial bool: " + firstMove);
 		}else if(piece instanceof King) { // TODO determine if this is necessary
 			k = (King) piece;
 			firstMove = k.moved;
@@ -305,14 +307,16 @@ public class Chessboard implements ChessBoardUI {
 			if(piece instanceof Pawn) {
 				p.firstMove = firstMove;
 				board[oldY][oldX].setPiece(p); // prevent's pawn's firstMove being overwritten
-
 			}else if(piece instanceof Rook) {
 				r.moved = firstMove;
 				board[oldY][oldX].setPiece(r); // prevent's rooks moved from being overwritten
+				System.out.println("CHESSBOARD.JAVA - after bool: " + r.moved);
+
 			}else if(piece instanceof King) {
 				k.moved = firstMove;
 				board[oldY][oldX].setPiece(k); // prevent's king's moved from being overwritten
 			}
+			board[y][x].setPiece(oldPiece); 
 			return true;
 		}
 		//System.out.println("Invalid check move because king in check");
@@ -323,14 +327,13 @@ public class Chessboard implements ChessBoardUI {
 		}else if(piece instanceof Rook) {
 			r.moved = firstMove;
 			board[oldY][oldX].setPiece(r); // prevent's rooks moved from being overwritten
+			System.out.println("CHESSBOARD.JAVA - after bool: " + r.moved);
 		}else if(piece instanceof King) {
 			k.moved = firstMove;
 			board[oldY][oldX].setPiece(k); // prevent's king's moved from being overwritten
 		}
 		board[y][x].setPiece(oldPiece);
-
 		return false;
-		//return true;
 	}
 
 	/**
@@ -344,7 +347,7 @@ public class Chessboard implements ChessBoardUI {
 		for (int row = 0; row < 8; row++) {
 			for (int col = 0; col < 8; col++) {
 				if (board[row][col].getPiece() != null
-						&& board[row][col].getPiece().validMove(king.getX(), king.getY(), board)) {
+						&& !(board[row][col].getPiece() instanceof King) && board[row][col].getPiece().validMove(king.getX(), king.getY(), board)) {
 					king.inCheck();
 					System.out.println("Oh no! The " + king + " is in check because of the " +board[row][col].getPiece());
 					board[king.getY()][king.getX()].setPiece(king);
@@ -516,6 +519,14 @@ public class Chessboard implements ChessBoardUI {
 		for(Coordinate c:selectedCoordinates) {
 			System.out.println(c);
 		}
+		for(int i = 0;i<selectedCoordinates.size();i++) {
+			Coordinate c = selectedCoordinates.get(i);
+			if(!validMoveMade(c.x,c.y,selectedPiece,selectedPiece.isWhite())) {
+				selectedCoordinates.remove(i);
+				i--;
+				System.out.println();
+			}
+		}
 	}
 
 	public void unhighlightCoordinates(Piece selectedPiece) { selectedCoordinates = null; }
@@ -528,7 +539,12 @@ public class Chessboard implements ChessBoardUI {
 		
 		return false;
 	}
-	
+	public boolean hasEnemyPiece(int x, int y, boolean color) {
+		return board[y][x].hasPiece() && board[y][x].getPiece().isWhite() != color;
+	}
+	public boolean hasFriendlyPiece(int x, int y, boolean color) {
+		return board[y][x].hasPiece() && board[y][x].getPiece().isWhite() == color;
+	}
 	public void printBoard() {
 		for (int row = 0; row < 8; row++) {
 			

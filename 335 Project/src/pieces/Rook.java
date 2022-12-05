@@ -41,6 +41,12 @@ public class Rook extends Piece {
         }
         return false;
     }
+    @Override
+    public void updateLocation(int x, int y) {
+    	System.out.println("Rook update location called! Moving to " + x +","+ y);
+    	super.updateLocation(x,y);
+    	this.moved = true;
+    }
 
     /**
      * {@inheritDoc} Additionally, it also checks to see if the piece collides with
