@@ -159,6 +159,8 @@ public class UI {
 					}else {
 					gameStatus.setFileName(fileName);
 					boolean[] playerTurnData = gameStatus.loadGame(boardUI.getBoard());
+					if (robot != null)
+						robot.populatePiecesList(boardUI.getBoard());
 					}
 			
 				initialized = true; 
