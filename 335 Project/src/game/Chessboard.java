@@ -267,6 +267,20 @@ public class Chessboard implements ChessBoardUI {
 	 * @return
 	 */
 	public boolean validCheckMove(int x, int y, Piece piece, boolean getWhite) {
+		Pawn p = null;
+		boolean firstMove = false;
+		Rook r = null;
+		King k = null;
+		if(piece instanceof Pawn) {
+			p = (Pawn) piece;
+			firstMove = p.firstMove;
+		}else if(piece instanceof Rook) {
+			r = (Rook) piece;
+			firstMove = r.moved;
+		}else if(piece instanceof King) { // TODO determine if this is necessary
+			k = (King) piece;
+			firstMove = k.moved;
+		}
 		int oldX = piece.getX();
 		int oldY = piece.getY();
 		Piece oldPiece = board[y][x].getPiece(); // This is to ensure that if a piece is taken due to movePiece(), it gets restored.
@@ -276,11 +290,31 @@ public class Chessboard implements ChessBoardUI {
 		if (!newKing.checked) {
 			//System.out.println("Valid check move because king not in check");
 			this.movePiece(oldX, oldY, piece);
-			board[y][x].setPiece(oldPiece);
+			if(piece instanceof Pawn) {
+				p.firstMove = firstMove;
+				board[oldY][oldX].setPiece(p); // prevent's pawn's firstMove being overwritten
+
+			}else if(piece instanceof Rook) {
+				r.moved = firstMove;
+				board[oldY][oldX].setPiece(r); // prevent's rooks moved from being overwritten
+			}else if(piece instanceof King) {
+				k.moved = firstMove;
+				board[oldY][oldX].setPiece(k); // prevent's king's moved from being overwritten
+			}
 			return true;
 		}
 		//System.out.println("Invalid check move because king in check");
 		this.movePiece(oldX, oldY, piece);
+		if(piece instanceof Pawn) {
+			p.firstMove = firstMove;
+			board[oldY][oldX].setPiece(p); // prevent's pawn's firstMove being overwritten
+		}else if(piece instanceof Rook) {
+			r.moved = firstMove;
+			board[oldY][oldX].setPiece(r); // prevent's rooks moved from being overwritten
+		}else if(piece instanceof King) {
+			k.moved = firstMove;
+			board[oldY][oldX].setPiece(k); // prevent's king's moved from being overwritten
+		}
 		board[y][x].setPiece(oldPiece);
 
 		return false;

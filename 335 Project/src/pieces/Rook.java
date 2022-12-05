@@ -15,7 +15,7 @@ public class Rook extends Piece {
     String blackPiece = "br.png";
     int points = 5;
 
-    boolean moved = false;
+    public boolean moved;
 
     public Rook(boolean white, Shell shell) {
         super(white);
@@ -25,7 +25,7 @@ public class Rook extends Piece {
             setImage(new Image(shell.getDisplay(), "images/" + blackPiece));
         }
         this.name = "ROOK";
-
+        this.moved = false;
     }
 
     @Override

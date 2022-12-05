@@ -26,6 +26,7 @@ public class Queen extends Piece {
 		}
 		this.name = "QUEEN";
 		this.rook = new Rook(white, shell);
+		this.rook.moved = true;
 		this.bishop = new Bishop(white, shell);
 	}
 
