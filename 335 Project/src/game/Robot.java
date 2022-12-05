@@ -50,7 +50,6 @@ public class Robot {
 				Tile t = board[row][col];
 				if (t.getPiece() != null && t.getPiece().getColor().equals(this.color)) {
 					pieces.add(t.getPiece());
-//					System.out.print(t);
 				}
 			}
 		}
@@ -59,7 +58,7 @@ public class Robot {
 	public void updatePieces() {
 		List<Piece> list = new ArrayList<>();
 		for (Piece p: pieces) 
-			if (p.getX() == 1000)
+			if (p.isDead())
 				list.add(p);
 		for (Piece p: list)
 			pieces.remove(p);
@@ -77,17 +76,15 @@ public class Robot {
 	
 	public boolean makeMove(Piece piece) {
 		Random rand = new Random();
-		int iteration = rand.nextInt(6);
-		if (iteration == 1)
+		int iteration = rand.nextInt(4);
+		if (iteration == 0)
 			return iteration1(piece);
-		else if(iteration ==2)
+		else if(iteration ==1)
 			return iteration2(piece);
-		else if(iteration ==3)
+		else if(iteration ==2)
 			return iteration3(piece);
-		else if(iteration ==4)
-			return iteration4(piece);
-		return false;
-			
+		else
+			return iteration4(piece);			
 	}
 	
 	public boolean iteration1(Piece piece) {

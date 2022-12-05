@@ -262,7 +262,7 @@ public class Chessboard implements ChessBoardUI {
 		board[piece.getY()][piece.getX()].setPiece(null);
 		piece.updateLocation(x, y); // necessary so that pawn enPassant is updated
 		if (board[y][x].getPiece() != null)
-			board[y][x].getPiece().updateLocation(1000, 1000); // changing location of previous piece to 1000 for robot class
+			board[y][x].getPiece().killPiece(); // killing previous piece for robot class
 		board[y][x].setPiece(piece);
 	
 	}
