@@ -16,7 +16,7 @@ public class Pawn extends Piece {
 	int points = 1;
 
 	public boolean firstMove;
-	boolean enPassantable = false; // if this is true, en passant may be done on this pawn
+	public boolean enPassantable = false; // if this is true, en passant may be done on this pawn
 	public boolean didEnPassant = false;
 
 	public Pawn(boolean white, Shell shell) {
@@ -30,6 +30,7 @@ public class Pawn extends Piece {
 		this.name = "PAWN";
 
 	}
+
 	public void removeEnPassantMove() {
 		System.out.println("Pawn.java - removing didEnPassant");
 		this.didEnPassant = false;
@@ -42,6 +43,7 @@ public class Pawn extends Piece {
 		int xDistance = Math.abs(this.getX() - x);
 		super.updateLocation(x, y);
 		if (!firstMove && yDistance == 1) {
+			System.out.println(this + "is not en passantable anymore!");
 			enPassantable = false;
 		} else {
 			firstMove = false;
@@ -68,12 +70,11 @@ public class Pawn extends Piece {
 			return hasNoCollisions(x, y, tiles);
 		} else { // check to see if player takes opponents piece
 			if (xDistance == 1 && yDistance == 1) {
-				// check if moving onto own piece OR moving onto en passant spot
-				if (tiles[y][x].getPiece() != null && tiles[y][x].getPiece().isWhite() != this.isWhite()) {
+				// check if moving onto enemy piece OR moving onto en passant spot
+				if (hasEnemyPiece(x, y, tiles)) {
 					return true;
-				} else if (tiles[y][x].getPiece() == null) { // en passant block
+				} else if (!tiles[y][x].hasPiece()) { // en passant block
 					if (validEnPassantMove(x, y, tiles)) {
-						System.out.println("Pawn.java - settin didEnPassant to true!");
 						didEnPassant = true;
 						return true;
 					}
@@ -99,14 +100,12 @@ public class Pawn extends Piece {
 	 */
 	private boolean validEnPassantMove(int x, int y, Tile[][] tiles) {
 		if (this.isWhite()) {
-			if (tiles[y + 1][x].getPiece() != null && tiles[y + 1][x].getPiece() instanceof Pawn
-					&& tiles[y + 1][x].getPiece().isWhite() != this.isWhite()) {
+			if (hasEnemyPiece(x, y + 1, tiles) && tiles[y + 1][x].getPiece() instanceof Pawn) {
 				Pawn opponent = (Pawn) tiles[y + 1][x].getPiece();
 				return opponent.enPassantable;
 			}
 		} else {
-			if (tiles[y - 1][x].getPiece() != null && tiles[y - 1][x].getPiece() instanceof Pawn
-					&& tiles[y - 1][x].getPiece().isWhite() != this.isWhite()) {
+			if (hasEnemyPiece(x, y - 1, tiles) && tiles[y - 1][x].getPiece() instanceof Pawn) {
 				Pawn opponent = (Pawn) tiles[y - 1][x].getPiece();
 				return opponent.enPassantable;
 			}
@@ -154,7 +153,7 @@ public class Pawn extends Piece {
 		} else if (yDistance == 2 && !firstMove) {
 			return false;
 		}
-		if (this.isWhite()) { // TODO determine if white will always be moving up
+		if (this.isWhite()) {
 			if (y > this.getY()) {
 				return false; // false due to downward movement
 			}
@@ -189,39 +188,12 @@ public class Pawn extends Piece {
 					coordinates.add(new Coordinate(getX(), getY() - 2));
 				}
 			}
-			if (getY() - 1 >= 0) {// Diagonal moves
-				if (getX() - 1 >= 0) {
-					if (tiles[getY() - 1][getX() - 1].hasPiece()) {
-						if (tiles[getY() - 1][getX() - 1].getPiece().isWhite() != this.isWhite()) {
-							coordinates.add(new Coordinate(getX() - 1, getY() - 1));
-						}
-					} else {
-						if (tiles[getY()][getX() - 1].hasPiece()
-								&& tiles[getY()][getX() - 1].getPiece().isWhite() != this.isWhite()
-								&& tiles[getY()][getX() - 1].getPiece() instanceof Pawn) {
-							Pawn p = (Pawn) tiles[getY()][getX() - 1].getPiece();
-							if (p.enPassantable) {
-								coordinates.add(new Coordinate(getX() - 1, getY() - 1));
-							}
-						}
-					}
+			if (getY() - 1 >= 0) {		// Diagonal moves
+				if (getX() - 1 >= 0) {	// UP-LEFT\
+					diagonalHelper(getX() - 1, getY() - 1, tiles,coordinates);
 				}
-				if (getX() + 1 <= 7) {
-					if (tiles[getY() - 1][getX() + 1].hasPiece()) {
-						if (tiles[getY() - 1][getX() + 1].getPiece().isWhite() != this.isWhite()) {
-							coordinates.add(new Coordinate(getX() + 1, getY() - 1));
-						}
-					} else {
-						if (tiles[getY()][getX() + 1].hasPiece()
-								&& tiles[getY()][getX() + 1].getPiece().isWhite() != this.isWhite()
-								&& tiles[getY()][getX() + 1].getPiece() instanceof Pawn) {
-							Pawn p = (Pawn) tiles[getY()][getX() + 1].getPiece();
-							if (p.enPassantable) {
-								coordinates.add(new Coordinate(getX() + 1, getY() - 1));
-							}
-
-						}
-					}
+				if (getX() + 1 <= 7) { // UP-RIGHT
+					diagonalHelper(getX() + 1,getY() - 1,tiles,coordinates);
 				}
 			}
 		} else {
@@ -232,43 +204,37 @@ public class Pawn extends Piece {
 				}
 			}
 			if (getY() + 1 <= 7) { // Diagonal moves
-				if (getX() - 1 >= 0) {
-					if (tiles[getY() + 1][getX() - 1].hasPiece()) {
-						if (tiles[getY() + 1][getX() - 1].getPiece().isWhite() != this.isWhite()) {
-							coordinates.add(new Coordinate(getX() - 1, getY() + 1));
-						}
-					} else {
-						if (tiles[getY()][getX() - 1].hasPiece()
-								&& tiles[getY()][getX() - 1].getPiece().isWhite() != this.isWhite()
-								&& tiles[getY()][getX() - 1].getPiece() instanceof Pawn) {
-							Pawn p = (Pawn) tiles[getY()][getX() - 1].getPiece();
-							if (p.enPassantable) {
-								coordinates.add(new Coordinate(getX() - 1, getY() + 1));
-
-							}
-						}
-					}
+				if (getX() - 1 >= 0) {	//DOWN-LEFT
+					diagonalHelper(getX() - 1,getY() + 1,tiles,coordinates);
 				}
-				if (getX() + 1 <= 7) {
-					if (tiles[getY() + 1][getX() + 1].hasPiece()) {
-						if (tiles[getY() + 1][getX() + 1].getPiece().isWhite() != this.isWhite()) {
-							coordinates.add(new Coordinate(getX() + 1, getY() + 1));
-						}
-					} else {
-						if (tiles[getY()][getX() + 1].hasPiece()
-								&& tiles[getY()][getX() + 1].getPiece().isWhite() != this.isWhite()
-								&& tiles[getY()][getX() + 1].getPiece() instanceof Pawn) {
-							Pawn p = (Pawn) tiles[getY()][getX() + 1].getPiece();
-							if (p.enPassantable) {
-								coordinates.add(new Coordinate(getX() + 1, getY() + 1));
-							}
-						}
-					}
+				if (getX() + 1 <= 7) {	//DOWN-RIGHT\
+					diagonalHelper(getX() + 1,getY() + 1,tiles,coordinates);
 				}
 			}
 		}
-
 		return coordinates;
 	}
-
+	
+	/**
+	 * 
+	 * @param x The x to be moved to
+	 * @param y	The y to be moved
+	 * @param tiles
+	 * @param coordinates
+	 */
+	private void diagonalHelper(int x, int y, Tile[][]tiles,List<Coordinate> coordinates) {
+		if (hasEnemyPiece(x, y, tiles)) {
+			coordinates.add(new Coordinate(x, y));
+		} else if (!tiles[y][x].hasPiece()) {
+			if (hasEnemyPiece(x, getY(), tiles) && tiles[getY()][x].getPiece() instanceof Pawn) {
+				Pawn p = (Pawn) tiles[getY()][x].getPiece();
+				if (p.enPassantable) {
+					System.out.println("Pawn IS en passantable");
+					coordinates.add(new Coordinate(x, y));
+				}else {
+					System.out.println("Pawn NOT en passantable");
+				}
+			}
+		}
+	}
 }

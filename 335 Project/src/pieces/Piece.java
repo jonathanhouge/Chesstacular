@@ -210,25 +210,32 @@ public abstract class Piece {
 			return "Black";
 	}
 	
-	/*
+	/**
 	 * Returns if piece is killed off
 	 */
 	public boolean isDead() {
 		return this.dead;
 	}
 	
-	/*
-	 * Kill this piece
+	/**
+	 * Kill this piece so that it may not be moved by the AI
 	 */
 	public void killPiece() {
 		this.dead = true;
 	}
 	
-	/*
+	/**
 	 * Returns name of the piece
 	 */
 	public String getName() {
 		return this.name;
 	}
 	public abstract List<Coordinate> generateMoves(Tile[][] tiles);
+	
+	public boolean hasEnemyPiece(int x, int y, Tile[][]tiles) {
+		return tiles[y][x].hasPiece() && tiles[y][x].getPiece().isWhite() != this.white;
+	}
+	public boolean hasFriendlyPiece(int x, int y, Tile[][]tiles) {
+		return tiles[y][x].hasPiece() && tiles[y][x].getPiece().isWhite() == this.white;
+	}
 }

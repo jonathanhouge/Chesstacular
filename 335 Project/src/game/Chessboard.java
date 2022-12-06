@@ -287,6 +287,8 @@ public class Chessboard implements ChessBoardUI {
 		if(piece instanceof Pawn) {
 			p = (Pawn) piece;
 			booleanToSave = p.firstMove;
+			extra2 = p.enPassantable;
+			System.out.println("Saving Pawns firstMove value: " + booleanToSave);
 		}else if(piece instanceof Rook) {
 			r = (Rook) piece;
 			booleanToSave = r.moved;
@@ -307,7 +309,9 @@ public class Chessboard implements ChessBoardUI {
 		this.movePiece(oldX, oldY, piece);
 		if(piece instanceof Pawn) {
 			p.firstMove = booleanToSave;
+			p.enPassantable=extra2 ;
 			board[oldY][oldX].setPiece(p); 
+			System.out.println("Restoring Pawns firstMove value, the value is: " + p.firstMove);
 		}else if(piece instanceof Rook) {
 			r.moved = booleanToSave;
 			board[oldY][oldX].setPiece(r);
@@ -507,9 +511,7 @@ public class Chessboard implements ChessBoardUI {
 		if(selectedPiece instanceof Pawn) {
 			Pawn pawn = (Pawn) selectedPiece;
 			if (pawn.promotion()) {
-				//System.out.println("The pawn may now be promoted!");
 				String decision = new QueenPromotionDisplay().start(display);
-				
 				Object piece = new Queen(selectedPiece.isWhite(), shell);
 				if (decision.equals("Rook")) {
 					piece = new Rook(selectedPiece.isWhite(), shell); }
@@ -533,7 +535,7 @@ public class Chessboard implements ChessBoardUI {
 	private void filterCheckMoves(Piece piece,List<Coordinate> coordinates) {
 		for(int i = 0;i<selectedCoordinates.size();i++) {
 			Coordinate c = selectedCoordinates.get(i);
-			if(!validMoveMade(c.x,c.y,piece,piece.isWhite())) {
+			if(!validCheckMove(c.x,c.y,piece,piece.isWhite())) {
 				selectedCoordinates.remove(i);
 				i--;
 			}
@@ -549,12 +551,7 @@ public class Chessboard implements ChessBoardUI {
 			return true; }
 		return false;
 	}
-	public boolean hasEnemyPiece(int x, int y, boolean color) {
-		return board[y][x].hasPiece() && board[y][x].getPiece().isWhite() != color;
-	}
-	public boolean hasFriendlyPiece(int x, int y, boolean color) {
-		return board[y][x].hasPiece() && board[y][x].getPiece().isWhite() == color;
-	}
+
 	public void printBoard() {
 		for (int row = 0; row < 8; row++) {
 			
