@@ -54,7 +54,7 @@ public class QueenPromotionDisplay {
 		// play button - will use the current selections to create a new Player
 		ArrayList<String> submit = new ArrayList<String>();
 		Button start = new Button(shell, SWT.PUSH); start.setText("Promote!");
-		PlayerCreateDisplay.selectListenCreation(start, submit);
+		selectListener.selectListenCreation(start, submit);
 		
 		shell.pack(); shell.open();
 		while (submit.size() == 0) { // while the promotion button hasn't been clicked
@@ -76,18 +76,18 @@ public class QueenPromotionDisplay {
 		//-- buttons themselves - default select the first option
 		Button rook = new Button(colors, SWT.RADIO); rook.setText("Rook");
 		rook.setFont(button); rook.setForeground(color);
-		PlayerCreateDisplay.selectListenCreation(rook, decision);
+		selectListener.selectListenCreation(rook, decision);
 				
 		Button knight = new Button(colors, SWT.RADIO); knight.setText("Knight");
 		knight.setFont(button); knight.setForeground(color);
-		PlayerCreateDisplay.selectListenCreation(knight, decision);
+		selectListener.selectListenCreation(knight, decision);
 		
 		Button bishop = new Button(colors, SWT.RADIO); bishop.setText("Bishop");
 		bishop.setFont(button); bishop.setForeground(color);
-		PlayerCreateDisplay.selectListenCreation(bishop, decision);
+		selectListener.selectListenCreation(bishop, decision);
 		
 		Button queen = new Button(colors, SWT.RADIO); queen.setText("Queen");
 		queen.setSelection(true); queen.setFont(button); queen.setForeground(color);
-		PlayerCreateDisplay.selectListenCreation(queen, decision);
+		selectListener.selectListenCreation(queen, decision);
 	}
 }

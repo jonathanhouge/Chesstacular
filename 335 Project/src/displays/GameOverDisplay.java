@@ -46,12 +46,12 @@ public class GameOverDisplay {
 		// play again button - starts up the ui again, a new game occurs
 		ArrayList<String> playGame = new ArrayList<String>();
 		Button again = new Button(shell, SWT.PUSH); again.setText("Play again!");
-		PlayerCreateDisplay.selectListenCreation(again, playGame);
+		selectListener.selectListenCreation(again, playGame);
 		
 		// cancel button - ends the client
 		ArrayList<String> cancelGame = new ArrayList<String>();
 		Button cancel = new Button(shell, SWT.PUSH); cancel.setText("Cancel");
-		PlayerCreateDisplay.selectListenCreation(cancel, cancelGame);
+		selectListener.selectListenCreation(cancel, cancelGame);
 		
 		shell.pack(); shell.open();
 		while (playGame.size() == 0 && cancelGame.size() == 0) { // while an option hasn't been picked

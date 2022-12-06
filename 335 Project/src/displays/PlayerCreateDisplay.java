@@ -1,11 +1,12 @@
-package displays;
-/* The Display for Player Creation.
+/** The Display for Player Creation.
  * Prompts the client to enter their name, pick their tank, and choose their color.
  * This is accomplished using SWT widgets and Arraylists. After submitting the information, 
  * a new Player object is created and the server is told of the successful player creation.
  * 
- * AUTHOR: Jonathan Houge
+ * @author Jonathan Houge
  */
+
+package displays;
 
 import java.util.ArrayList;
 
@@ -20,8 +21,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionAdapter;
 
 public class PlayerCreateDisplay {
 
@@ -89,7 +88,7 @@ public class PlayerCreateDisplay {
 		// play button - will use the current selections to create a new Player
 		ArrayList<String> decision = new ArrayList<String>();
 		Button start = new Button(shell, SWT.PUSH); start.setText("Let's play!");
-		selectListenCreation(start, decision);
+		selectListener.selectListenCreation(start, decision);
 		
 		shell.pack(); shell.open();
 		while (decision.size() == 0) { // while the play button hasn't been clicked
@@ -117,11 +116,11 @@ public class PlayerCreateDisplay {
 		//-- buttons themselves - default select the first option
 		Button white = new Button(colors, SWT.RADIO); white.setText("White");
 		white.setSelection(true); white.setFont(button); white.setForeground(color);
-		selectListenCreation(white, decision);
+		selectListener.selectListenCreation(white, decision);
 				
 		Button black = new Button(colors, SWT.RADIO); black.setText("Black");
 		black.setFont(button); black.setForeground(color);
-		selectListenCreation(black, decision); }
+		selectListener.selectListenCreation(black, decision); }
 		
 	// radio button for picking the type of game
 	private static void typeButtons(Shell shell, ArrayList<String> decision, GridLayout layout, Font title, Font button, Color color) {
@@ -134,21 +133,13 @@ public class PlayerCreateDisplay {
 		//-- buttons themselves - default select the second option
 		Button locally = new Button(type, SWT.RADIO); locally.setText("Local");
 		locally.setFont(button); locally.setForeground(color);
-		selectListenCreation(locally, decision);
+		selectListener.selectListenCreation(locally, decision);
 						
 		Button remotely = new Button(type, SWT.RADIO); remotely.setText("Remote");
 		remotely.setSelection(true); remotely.setFont(button); remotely.setForeground(color);
-		selectListenCreation(remotely, decision);
+		selectListener.selectListenCreation(remotely, decision);
 
 		Button bot = new Button(type, SWT.RADIO); bot.setText("Robot");
 		bot.setFont(button); bot.setForeground(color);
-		selectListenCreation(bot, decision); }
-	
-	// selection listener - for the radio buttons & submit button [utilized by other displays to save code]
-	protected static void selectListenCreation(Button button, ArrayList<String> decision) {
-		button.addSelectionListener(new SelectionAdapter()  {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				Button source =  (Button) e.getSource();
-				decision.add(source.getText()); } }); }
+		selectListener.selectListenCreation(bot, decision); }
 }
