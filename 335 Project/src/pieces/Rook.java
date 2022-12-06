@@ -40,7 +40,7 @@ public class Rook extends Piece {
             }
         }
         return false;
-    }
+    }//test
     @Override
     public void updateLocation(int x, int y) {
     	System.out.println("Rook update location called! Moving to " + x +","+ y);
