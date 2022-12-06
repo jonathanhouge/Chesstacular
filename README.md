@@ -27,7 +27,7 @@
 ## Wow Factors
 * Saving and loading multiple games: Has a directory `Saved Games` that stores previous games
 * Built-in `Robot` implementation
-* Timed game mode for `Remote` & `Robot` mode
+* Timed game mode for `Remote` & `Robot` play
 
 
 
