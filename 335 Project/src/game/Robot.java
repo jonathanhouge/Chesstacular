@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 
+import pieces.King;
 import pieces.Piece;
 
 public class Robot {
@@ -68,7 +69,13 @@ public class Robot {
 			for (int col = 0; col < 8; col ++) {
 				Tile t = board[row][col];
 				if (t.getPiece() != null && t.getPiece().getColor().equals(this.color)) {
-					pieces.add(t.getPiece());
+					if(t.getPiece() instanceof King) {
+						King k = (King) t.getPiece();
+						k.moved = true;
+						pieces.add(k);
+					}else {
+						pieces.add(t.getPiece());
+					}
 				}
 			}
 		}
