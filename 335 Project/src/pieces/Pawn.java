@@ -32,7 +32,7 @@ public class Pawn extends Piece {
 	}
 
 	public void removeEnPassantMove() {
-		System.out.println("Pawn.java - removing didEnPassant");
+		//System.out.println("Pawn.java - removing didEnPassant");
 		this.didEnPassant = false;
 
 	}
@@ -43,7 +43,7 @@ public class Pawn extends Piece {
 		int xDistance = Math.abs(this.getX() - x);
 		super.updateLocation(x, y);
 		if (!firstMove && yDistance == 1) {
-			System.out.println(this + "is not en passantable anymore!");
+			//System.out.println(this + "is not en passantable anymore!");
 			enPassantable = false;
 		} else {
 			firstMove = false;

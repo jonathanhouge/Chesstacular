@@ -69,7 +69,8 @@ public class Client {
         boolean again = true;
 		while (again) {
 			ui = new UI(this, opponent);
-			again = ui.start(); }
+			again = ui.start();
+			opponent = new Robot(opponent.getColor()); }
 	}
 	
 	

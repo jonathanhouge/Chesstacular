@@ -45,7 +45,7 @@ public class King extends Piece {
 	}
 	@Override
     public void updateLocation(int x, int y) {
-    	System.out.println("King update location called! CastlingMoveMade is equal to: " + this.castlingMoveMade);
+    	//System.out.println("King update location called! CastlingMoveMade is equal to: " + this.castlingMoveMade);
     	super.updateLocation(x,y);
     	this.moved = true;
     }
