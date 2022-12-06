@@ -8,6 +8,7 @@ import org.eclipse.swt.events.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
+import displays.GameOverDisplay;
 import displays.Player;
 import game.Chessboard;
 import game.Coordinate;
@@ -66,6 +67,8 @@ public class UI {
 	private Robot robot;
 	Player player;
 	boolean isLocalGame = false;
+	int gameOver = 0;
+	
 	/*
 	 * Constructor that assigns values
 	 * client: client object
@@ -129,8 +132,9 @@ public class UI {
 	/*
 	 * Starts running the UI
 	 */
-	public void start() {
+	public boolean start() {
 		setup();
+		
 		gameStatus = new GameStatus(shell);
 		loadOldGame = false;
 		validateFileName();
@@ -191,7 +195,7 @@ public class UI {
 
 				if (!yourTurn) {// thinking here?{
 					if(yourTimer != null) {
-						if(yourTimer.isTimerOver()){return;}
+						if(yourTimer.isTimerOver()){ gameOver = 1; return; } // set gameOver int here [currently white wins]
 					}
 					return;}
 
@@ -242,7 +246,7 @@ public class UI {
 				int xCoordBefore = selectedPiece.getX();
 				int yCoordBefore = selectedPiece.getY();
 				boardUI.unhighlightCoordinates(selectedPiece);
-				boardUI.updateBoard(xCoord,yCoord,selectedPiece);
+				gameOver = boardUI.updateBoard(xCoord,yCoord,selectedPiece);
 				if (in != null) {
 					try {
 						
@@ -285,10 +289,11 @@ public class UI {
 		if (in != null) {
 			Runnable runnable = new Runner();
 			display.asyncExec(runnable); }
+		
 		shell.open(); 
 		boolean isJustConnected = true;
 		long start = System.currentTimeMillis();
-		while (!shell.isDisposed()) 
+		while (!shell.isDisposed() && gameOver == 0) 
 			if (!display.readAndDispatch())
 				if (!display.readAndDispatch()) {
 					long end = System.currentTimeMillis();
@@ -326,9 +331,20 @@ public class UI {
 						
 						
 						}
-				display.sleep();
-
-		display.dispose();		
+		
+		display.sleep();
+		
+		boolean again = false;
+		if (gameOver != 0) {
+			again = new GameOverDisplay().start(display, gameOver); }
+		
+		display.dispose();
+		
+		if (again) {
+			return true;
+		}
+		
+		return false;
 	}
 	
 
@@ -354,7 +370,7 @@ public class UI {
 		
 		createMenuBar();
 		shell.setMenuBar(menuBar);
-		boardUI = new Chessboard(canvas, shell, display);	
+		boardUI = new Chessboard(canvas, shell, display);
 		if (this.robot != null)
 			robot.setBoard(boardUI);
 	}
@@ -523,9 +539,9 @@ public void setConnected() {this.isOpponentConnected = true;}
 								else if (piecePromotion.equals("BISHOP")) {
 									boardUI.getTile(xAfter, yAfter).setPiece(new Bishop(!whitesTurn, shell)); }
 								
-								boardUI.updateBoard(xAfter,yAfter,boardUI.getTile(xAfter, yAfter).getPiece()); }
+								gameOver = boardUI.updateBoard(xAfter,yAfter,boardUI.getTile(xAfter, yAfter).getPiece()); }
 							else {
-								boardUI.updateBoard(xAfter,yAfter,selectedPiece); }
+								gameOver = boardUI.updateBoard(xAfter,yAfter,selectedPiece); }
 							
 //							whitesTurn = !whitesTurn;
 							yourTurn = !yourTurn;

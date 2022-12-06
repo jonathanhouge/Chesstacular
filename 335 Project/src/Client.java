@@ -50,8 +50,11 @@ public class Client {
 		}
 		else {
 			// play locally
-	        UI ui = new UI(player);
-	        ui.start();
+	        UI ui;
+	        boolean again = true;
+			while (again) {
+				ui = new UI(player);
+				again = ui.start(); }
 		}
 		
     }
@@ -62,8 +65,11 @@ public class Client {
 	 * opponent: robot object
 	 */
 	public Client(Robot opponent) {
-		UI ui = new UI(this, opponent);
-        ui.start();
+		UI ui;
+        boolean again = true;
+		while (again) {
+			ui = new UI(this, opponent);
+			again = ui.start(); }
 	}
 	
 	
@@ -101,8 +107,12 @@ public class Client {
 		time += (":" + list[5]); // seconds
 		player.setTime(time);
 		// CREATES UI OBJECT AND STARTS GAME
-        UI ui = new UI(this, in, out, socket);
-        ui.start();
+		UI ui;
+        boolean again = true;
+		while (again) {
+			ui = new UI(this, in, out, socket);
+			again = ui.start(); }
+
         
 		
 
