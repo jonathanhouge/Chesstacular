@@ -15,7 +15,14 @@ import org.eclipse.swt.events.SelectionAdapter;
 
 public class selectListener {
 
-	// selection listener - for the radio buttons & submit button [utilized by other displays to save code]
+	/** 
+	 * Selection listener for radio buttons and submit buttons.
+	 * 
+	 * Utilized by every display (other than the chessboard) in an effort to reduce code.
+	 * 
+	 * @param button: the button that the listener is being applied to
+	 * @param decision: the arraylist that'll keep track of button results
+	 */
 	public static void selectListenCreation(Button button, ArrayList<String> decision) {
 		button.addSelectionListener(new SelectionAdapter()  {
 			@Override

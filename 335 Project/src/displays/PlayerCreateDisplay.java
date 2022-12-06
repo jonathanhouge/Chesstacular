@@ -1,4 +1,5 @@
-/** The Display for Player Creation.
+/** 
+ * The Display for Player Creation.
  * Prompts the client to enter their name, pick their color, pick their opponent, and enter
  * the optional fields of savedGame.txt and/or the time constraint they wish to place upon
  * themselves (WARNING: this only works with 'Robot' and 'Remote' opponent modes).
@@ -28,7 +29,8 @@ import org.eclipse.swt.layout.GridLayout;
 
 public class PlayerCreateDisplay {
 
-	/** The start method creates and runs the display itself. It utilizes 
+	/** 
+	 * The start method creates and runs the display itself. It utilizes 
 	 * functions to create the different kinds of radio buttons and creates
 	 * textual widgets right then and there. The display stays open until
 	 * the user clicks the "Let's Play!" button. In then collects the 
@@ -118,7 +120,8 @@ public class PlayerCreateDisplay {
 		Player player = new Player(playerName, preferredColor, opponent, fileName, preferredTime);
 		return player; } // player successfully created!
 
-	/** Radio button for picking piece color. Makes the buttons 'White' 
+	/** 
+	 * Radio button for picking piece color. Makes the buttons 'White' 
 	 * and 'Black' in their own group, using the given layout,
 	 * fonts, and color. Adds a selection listener to each button.
 	 * 
@@ -145,7 +148,8 @@ public class PlayerCreateDisplay {
 		black.setFont(button); black.setForeground(color);
 		selectListener.selectListenCreation(black, decision); }
 		
-	/** Radio button for picking the type of game. Makes the buttons 'Local', 
+	/** 
+	 * Radio button for picking the type of game. Makes the buttons 'Local', 
 	 * 'Remote', and 'Robot' in their own group, using the given layout,
 	 * fonts, and color. Adds a selection listener to each button.
 	 * 

@@ -1,4 +1,5 @@
-/** The Display for game over.
+/** 
+ * The Display for game over.
  * Prompts the client to decide whether or not they want to play another game.
  * 
  * Since every display utilizes selection listeners, a separate class with the method 
