@@ -401,7 +401,8 @@ public class Chessboard implements ChessBoardUI {
 	 * @param yCoord any integer between 0-7 inclusive.
 	 * @param selectedPiece the piece that is to be moved to xCoord, yCoord
 	 */
-	public void updateBoard(int xCoord, int yCoord, Piece selectedPiece) {
+	public int updateBoard(int xCoord, int yCoord, Piece selectedPiece) {
+		int gameOver = 0;
 		//System.out.println("Chessboard.java - Moving..." + selectedPiece);
 		this.movePiece(xCoord,yCoord,selectedPiece);
 		//System.out.println("Chessboard.java - Piece updated! " + selectedPiece);
@@ -410,8 +411,9 @@ public class Chessboard implements ChessBoardUI {
 		this.checkPromotion(selectedPiece);
 		if(this.determineKingCheckStatus(!selectedPiece.isWhite())) {
 			System.out.println("King in check!");
-			this.determineCheckMate(selectedPiece);
+			gameOver = this.determineCheckMate(selectedPiece);
 		};
+		return gameOver;
 	}
 	/**
 	 * This method checks if an en passant move has been made so that the board may
@@ -473,7 +475,7 @@ public class Chessboard implements ChessBoardUI {
 	 * @param movedPiece, the piece that was moved this turn. Used to determine next player's color,
 	 * could be changed
 	 */
-	private boolean determineCheckMate(Piece movedPiece) {
+	private int determineCheckMate(Piece movedPiece) {
 		for(int row = 0; row <= 7; row++) {
 			for(int col = 0;col <= 7; col++) {
 				if(board[row][col].getPiece()!= null) { 
@@ -486,7 +488,7 @@ public class Chessboard implements ChessBoardUI {
 							System.out.println(friendlyPiece + ": " + coord);
 							if(validMoveMade(coord.getX(),coord.getY(),friendlyPiece, friendlyPiece.isWhite())) {
 								System.out.println("Chessboard.java - validMove possible, checkmate not met");
-								return false;
+								return 0;
 							}
 						}
 					}
@@ -495,7 +497,9 @@ public class Chessboard implements ChessBoardUI {
 		}
 		//If this part is reached no validMoveMade returned true, thus game over!
 		System.out.println("Chessboard.java - The opponent can not make any valid moves! Game over!");
-		return true;
+		
+		if (movedPiece.getColor() == "White") { return 1; }
+		else { return 2; }
 	}
 
 	/**
