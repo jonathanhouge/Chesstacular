@@ -259,7 +259,7 @@ public class Chessboard implements ChessBoardUI {
 	 */
 	public void movePiece(int x, int y, Piece piece) {
 		board[piece.getY()][piece.getX()].setPiece(null);
-		System.out.println("About to update " + piece + " to " + x  + ',' + y);
+		System.out.println("MOVING" + piece + " to " + x  + ',' + y);
 		piece.updateLocation(x, y); // necessary so that pawn enPassant/castling is updated
 		if (board[y][x].getPiece() != null)
 			board[y][x].getPiece().killPiece(); // killing previous piece for robot class
@@ -283,6 +283,7 @@ public class Chessboard implements ChessBoardUI {
 		boolean booleanToSave = false;
 		boolean extra2 = false;
 		boolean extra3 = false;
+		boolean isDead = false;
 		Rook r = null;
 		King k = null;
 		// Saving variables that would be overwritten due to move being made
@@ -291,7 +292,6 @@ public class Chessboard implements ChessBoardUI {
 			booleanToSave = p.firstMove;
 			extra2 = p.enPassantable;
 			extra3 = p.didEnPassant;
-			System.out.println("Saving Pawns firstMove value: " + booleanToSave);
 		}else if(piece instanceof Rook) {
 			r = (Rook) piece;
 			booleanToSave = r.moved;
@@ -303,6 +303,9 @@ public class Chessboard implements ChessBoardUI {
 		int oldX = piece.getX();
 		int oldY = piece.getY();
 		Piece oldPiece = board[y][x].getPiece(); 
+		if(oldPiece != null) {
+			isDead = oldPiece.getAliveStatus();
+		}
 		// Simulate a move
 		this.movePiece(x, y, piece);
 		determineKingCheckStatus(getWhite);
@@ -315,7 +318,6 @@ public class Chessboard implements ChessBoardUI {
 			p.enPassantable=extra2;
 			p.didEnPassant = extra3; // May not be necessary but saving in case
 			board[oldY][oldX].setPiece(p); 
-			System.out.println("Restoring Pawns firstMove value, the value is: " + p.firstMove);
 		}else if(piece instanceof Rook) {
 			r.moved = booleanToSave;
 			board[oldY][oldX].setPiece(r);
@@ -323,6 +325,9 @@ public class Chessboard implements ChessBoardUI {
 			k.moved = booleanToSave;
 			k.castlingMoveMade = extra2;
 			board[oldY][oldX].setPiece(k); // prevent's king's moved from being overwritten
+		}
+		if(oldPiece != null) {
+			oldPiece.setAliveStatus(isDead);
 		}
 		board[y][x].setPiece(oldPiece); 
 		determineKingCheckStatus(getWhite);

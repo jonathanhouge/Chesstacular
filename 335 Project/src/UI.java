@@ -569,7 +569,7 @@ public class UI {
 							
 							String piecePromotion = "no";
 							if (msgFromOpponent.contains("PROMOTION")) {
-								System.out.println("HELLO");
+								//System.out.println("HELLO");
 								piecePromotion = list[6]; }
 							
 							selectedPiece = boardUI.selectPiece(xBefore, yBefore, !whitesTurn);
