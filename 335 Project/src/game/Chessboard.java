@@ -335,7 +335,7 @@ public class Chessboard implements ChessBoardUI {
 	 * 
 	 * @param getWhite, true if player is white, false if not
 	 */
-	private boolean determineKingCheckStatus(boolean getWhite) {
+	public boolean determineKingCheckStatus(boolean getWhite) { // made public for robot
 		King king = getKing(getWhite);
 		for (int row = 0; row < 8; row++) {
 			for (int col = 0; col < 8; col++) {
