@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-import displays.QueenPromotionDisplay;
+import displays.PawnPromotionDisplay;
 import pieces.Bishop;
 import pieces.King;
 import pieces.Knight;
@@ -526,7 +526,7 @@ public class Chessboard implements ChessBoardUI {
 		if(selectedPiece instanceof Pawn) {
 			Pawn pawn = (Pawn) selectedPiece;
 			if (pawn.promotion()) {
-				String decision = new QueenPromotionDisplay().start(display);
+				String decision = new PawnPromotionDisplay().start(display);
 				Object piece = new Queen(selectedPiece.isWhite(), shell);
 				if (decision.equals("Rook")) {
 					piece = new Rook(selectedPiece.isWhite(), shell); }
