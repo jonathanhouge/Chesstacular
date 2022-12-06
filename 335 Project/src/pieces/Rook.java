@@ -10,136 +10,149 @@ import game.Coordinate;
 import game.Tile;
 
 public class Rook extends Piece {
+	// Image names
+	String whitePiece = "wr.png";
+	String blackPiece = "br.png";
+	int points = 5;
+	/**
+	 * True if the rook has ever been moved, false if not.
+	 */
+	public boolean moved;
 
-    String whitePiece = "wr.png";
-    String blackPiece = "br.png";
-    int points = 5;
+	/**
+	 * Subclass constructor of {@link Piece#Piece(boolean)}. The {@link Rook#moved} field is initialized to
+	 * false.
+	 * 
+	 * @param white true if the piece is white, false if not
+	 * @param shell the graphical shell. Used to set the image of the piece.
+	 */
+	public Rook(boolean white, Shell shell) {
+		super(white);
+		if (white) {
+			setImage(new Image(shell.getDisplay(), "images/" + whitePiece));
+		} else {
+			setImage(new Image(shell.getDisplay(), "images/" + blackPiece));
+		}
+		this.name = "ROOK";
+		this.moved = false;
+	}
 
-    public boolean moved;
+	@Override
+	public boolean standardMove(int x, int y) {
+		if (this.getX() == x) { // possible horizontal movement
+			if (0 <= y && y < 8) {
+				return true;
+			}
+		} else if (this.getY() == y) { // possible vertical movement
+			if (0 <= x && x < 8) {
+				return true;
+			}
+		}
+		return false;
+	}
 
-    public Rook(boolean white, Shell shell) {
-        super(white);
-        if (white) {
-            setImage(new Image(shell.getDisplay(), "images/" + whitePiece));
-        } else {
-            setImage(new Image(shell.getDisplay(), "images/" + blackPiece));
-        }
-        this.name = "ROOK";
-        this.moved = false;
-    }
+	/**
+	 * {@inheritDoc} Additionally, it sets the moved field to true.
+	 */
+	@Override
+	public void updateLocation(int x, int y) {
+		super.updateLocation(x, y);
+		this.moved = true;
+	}
 
-    @Override
-    public boolean standardMove(int x, int y) {
-        if (this.getX() == x) { // possible horizontal movement
-            if (0 <= y && y < 8) {
-                return true;
-            }
-        } else if (this.getY() == y) { // possible vertical movement
-            if (0 <= x && x < 8) {
-                return true;
-            }
-        }
-        return false;
-    }//test
-    @Override
-    public void updateLocation(int x, int y) {
-    	System.out.println("Rook update location called! Moving to " + x +","+ y);
-    	super.updateLocation(x,y);
-    	this.moved = true;
-    }
-
-    /**
-     * {@inheritDoc} Additionally, it also checks to see if the piece collides with
-     * another piece while attempting to move to the new x/y coordinate.
-     */
-    @Override
-    public boolean hasNoCollisions(int x, int y, Tile[][] tiles) {
-        // first, check to see if the desired spot will collide with players own piece
-        if (tiles[y][x].getPiece() != null && tiles[y][x].getPiece().isWhite() == this.isWhite()) {
-            return false;
-        }
-
-        // finally, check to see nothing is in the path of the movement
-        if (x < this.getX()) { // left
-            for (int i = x + 1; i < this.getX(); i++) {
-                if (tiles[y][i].hasPiece()) {
-                    return false;
-                }
-            }
-        } else if (x > this.getX()) {// right
-            for (int i = x - 1; i > this.getX(); i--) {
-                if (tiles[y][i].hasPiece()) {
-                    return false;
-                }
-            }
-        } else if (y < this.getY()) { // down
-            for (int i = y + 1; i < this.getY(); i++) {
-                if (tiles[i][x].hasPiece()) {
-                    return false;
-                }
-            }
-        } else if(y > this.getY()) { // up
-            for (int i = y - 1; i > this.getY(); i--) {
-                if (tiles[i][x].hasPiece()) {
-                    return false;
-                }
-            }
-        }else {
-            return false;
-        }
-        return true;
-    }
+	/**
+	 * {@inheritDoc} Additionally, it also checks to see if the piece collides with
+	 * another piece while attempting to move to the new x/y coordinate.
+	 */
+	@Override
+	public boolean hasNoCollisions(int x, int y, Tile[][] tiles) {
+		// First, check to see if the desired spot will collide with players own piece
+		if (tiles[y][x].getPiece() != null && tiles[y][x].getPiece().isWhite() == this.isWhite()) {
+			return false;
+		}
+		// Finally, check to see nothing is in the path of the movement
+		if (x < this.getX()) { // left movement
+			for (int i = x + 1; i < this.getX(); i++) {
+				if (tiles[y][i].hasPiece()) {
+					return false;
+				}
+			}
+		} else if (x > this.getX()) {// right movement
+			for (int i = x - 1; i > this.getX(); i--) {
+				if (tiles[y][i].hasPiece()) {
+					return false;
+				}
+			}
+		} else if (y < this.getY()) { // movement down
+			for (int i = y + 1; i < this.getY(); i++) {
+				if (tiles[i][x].hasPiece()) {
+					return false;
+				}
+			}
+		} else if (y > this.getY()) { // movement up
+			for (int i = y - 1; i > this.getY(); i--) {
+				if (tiles[i][x].hasPiece()) {
+					return false;
+				}
+			}
+		} else {
+			// This block would normally never be reached but due to the Queen object's
+			// movement utilizing a Rook object, this block must be included.
+			return false;
+		}
+		return true;
+	}
 
 	@Override
 	public List<Coordinate> generateMoves(Tile[][] tiles) {
-		 List<Coordinate> coordinates = new ArrayList<>();
-		//UP
+		List<Coordinate> coordinates = new ArrayList<>();
+		// Up movement
 		int y = getY() - 1;
-		while(y >= 0) {
-			if(!tiles[y][getX()].hasPiece()) {
-				coordinates.add(new Coordinate(getX(),y));
-			}else {
-				if(tiles[y][getX()].getPiece().isWhite() != this.isWhite()) {
-					coordinates.add(new Coordinate(getX(),y));
+		while (y >= 0) {
+			if (!tiles[y][getX()].hasPiece()) {
+				coordinates.add(new Coordinate(getX(), y));
+			} else {
+				if (hasEnemyPiece(getX(), y, tiles)) {
+					coordinates.add(new Coordinate(getX(), y));
 				}
 				break;
 			}
 			y--;
 		}
-		//DOWN
+		// Down movement
 		y = getY() + 1;
-		while(y <=7) {
-			if(!tiles[y][getX()].hasPiece()) {
-				coordinates.add(new Coordinate(getX(),y));
-			}else {
-				if(tiles[y][getX()].getPiece().isWhite() != this.isWhite()) {
-					coordinates.add(new Coordinate(getX(),y));
+		while (y <= 7) {
+			if (!tiles[y][getX()].hasPiece()) {
+				coordinates.add(new Coordinate(getX(), y));
+			} else {
+				if (hasEnemyPiece(getX(), y, tiles)) {
+					coordinates.add(new Coordinate(getX(), y));
 				}
 				break;
 			}
 			y++;
 		}
-		//RIGHT
+		// Right movement
 		int x = getX() + 1;
-		while(x <= 7) {
-			if(!tiles[getY()][x].hasPiece()) {
-				coordinates.add(new Coordinate(x,getY()));
-			}else {
-				if(tiles[getY()][x].getPiece().isWhite() != this.isWhite()) {
-					coordinates.add(new Coordinate(x,getY()));
+		while (x <= 7) {
+			if (!tiles[getY()][x].hasPiece()) {
+				coordinates.add(new Coordinate(x, getY()));
+			} else {
+				if (hasEnemyPiece(x, getY(), tiles)) {
+					coordinates.add(new Coordinate(x, getY()));
 				}
 				break;
 			}
 			x++;
 		}
-		//LEFT
+		// Left movement
 		x = getX() - 1;
-		while(x >= 0) {
-			if(!tiles[getY()][x].hasPiece()) {
-				coordinates.add(new Coordinate(x,getY()));
-			}else {
-				if(tiles[getY()][x].getPiece().isWhite() != this.isWhite()) {
-					coordinates.add(new Coordinate(x,getY()));
+		while (x >= 0) {
+			if (!tiles[getY()][x].hasPiece()) {
+				coordinates.add(new Coordinate(x, getY()));
+			} else {
+				if (hasEnemyPiece(x, getY(), tiles)) {
+					coordinates.add(new Coordinate(x, getY()));
 				}
 				break;
 			}

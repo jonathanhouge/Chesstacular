@@ -17,14 +17,12 @@ public class Bishop extends Piece {
 
 	public Bishop(boolean white, Shell shell) {
 		super(white);
-
 		if (white) {
 			setImage(new Image(shell.getDisplay(), "images/" + whitePiece));
 		} else {
 			setImage(new Image(shell.getDisplay(), "images/" + blackPiece));
 		}
 		this.name = "BISHOP";
-
 	}
 
 	@Override
@@ -135,6 +133,9 @@ public class Bishop extends Piece {
 		// DOWN-LEFT
 		y = getY() + 1;
 		x = getX() - 1;
+//		for(int x = getX()-1,y = getY()+1;x>=0 && x <= 7 && y >= 0 && y <= 7;x--,y++) {
+//			
+//		}
 		while (true) {
 			if(x < 0 || y < 0 || x > 7 || y >7) {
 				break;
@@ -152,5 +153,5 @@ public class Bishop extends Piece {
 		}
 		return coordinates;
 	}
-
+	//private void generateMovesHelper() {}
 }

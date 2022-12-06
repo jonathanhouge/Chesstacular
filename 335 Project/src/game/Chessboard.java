@@ -280,7 +280,7 @@ public class Chessboard implements ChessBoardUI {
 	 */
 	public boolean validCheckMove(int x, int y, Piece piece, boolean getWhite) {
 		Pawn p = null;
-		boolean booleanToSave = false;
+		boolean extra1 = false;
 		boolean extra2 = false;
 		boolean extra3 = false;
 		boolean isDead = false;
@@ -289,22 +289,22 @@ public class Chessboard implements ChessBoardUI {
 		// Saving variables that would be overwritten due to move being made
 		if(piece instanceof Pawn) {
 			p = (Pawn) piece;
-			booleanToSave = p.firstMove;
+			extra1 = p.firstMove;
 			extra2 = p.enPassantable;
 			extra3 = p.didEnPassant;
 		}else if(piece instanceof Rook) {
 			r = (Rook) piece;
-			booleanToSave = r.moved;
+			extra1 = r.moved;
 		}else if(piece instanceof King) { 
 			k = (King) piece;
-			booleanToSave = k.moved;
+			extra1 = k.moved;
 			extra2 = k.castlingMoveMade;
 		}
 		int oldX = piece.getX();
 		int oldY = piece.getY();
 		Piece oldPiece = board[y][x].getPiece(); 
 		if(oldPiece != null) {
-			isDead = oldPiece.getAliveStatus();
+			isDead = oldPiece.isDead();
 		}
 		// Simulate a move
 		this.movePiece(x, y, piece);
@@ -314,20 +314,20 @@ public class Chessboard implements ChessBoardUI {
 		// Restoring board to previous state
 		this.movePiece(oldX, oldY, piece);
 		if(piece instanceof Pawn) {
-			p.firstMove = booleanToSave;
+			p.firstMove = extra1;
 			p.enPassantable=extra2;
 			p.didEnPassant = extra3; // May not be necessary but saving in case
 			board[oldY][oldX].setPiece(p); 
 		}else if(piece instanceof Rook) {
-			r.moved = booleanToSave;
+			r.moved = extra1;
 			board[oldY][oldX].setPiece(r);
 		}else if(piece instanceof King) {
-			k.moved = booleanToSave;
+			k.moved = extra1;
 			k.castlingMoveMade = extra2;
-			board[oldY][oldX].setPiece(k); // prevent's king's moved from being overwritten
+			board[oldY][oldX].setPiece(k);
 		}
 		if(oldPiece != null) {
-			oldPiece.setAliveStatus(isDead);
+			oldPiece.setDeadStatus(isDead);
 		}
 		board[y][x].setPiece(oldPiece); 
 		determineKingCheckStatus(getWhite);
