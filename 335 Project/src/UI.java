@@ -176,7 +176,7 @@ public class UI {
 				}
 				}
 			
-			if (initialized) { 
+			if (initialized) {
 				boardUI.draw(e.gc); 
 				if(whitesTurn) {
 					System.out.println("It is currently whites turn!");
@@ -192,12 +192,11 @@ public class UI {
 
 		canvas.addMouseListener(new MouseListener() {
 			public void mouseDown(MouseEvent e) {
-
+				if(checkTimers()) // returns true if either of players run out of time
+					return;
 				if (!yourTurn) {// thinking here?{
-					if(yourTimer != null) {
-						if(yourTimer.isTimerOver()){ gameOver = 1; return; } // set gameOver int here [currently white wins]
-					}
 					return;}
+				
 
 				//Gather data, convert graphical coordinates into chessboard coordinates
 				int coordinates[] = boardUI.getBoardIndex(e.x,e.y);
@@ -294,12 +293,10 @@ public class UI {
 		boolean isJustConnected = true;
 		long start = System.currentTimeMillis();
 		while (!shell.isDisposed() && gameOver == 0) 
-			if (!display.readAndDispatch())
 				if (!display.readAndDispatch()) {
 					long end = System.currentTimeMillis();
 					int diff = (int) ((end-start)/1000);
 					if(diff==1) { // the timers start when both players are connected
-						
 						if(isOpponentConnected) {
 							if(isJustConnected) {
 								System.out.println("adding OPPONENT'S TIME ... ");
@@ -310,12 +307,10 @@ public class UI {
 										opponentsTimer.setPlayer(opponent);
 									}
 								}
-								
-				
 								isJustConnected = false;
 								}
 							
-							
+							checkTimers();
 							if(yourTurn && yourTimer != null) {
 								yourTimer.update();}
 							else if(!yourTurn && opponentsTimer != null) {opponentsTimer.update();}
@@ -375,7 +370,24 @@ public class UI {
 			robot.setBoard(boardUI);
 	}
 	
-public void setConnected() {this.isOpponentConnected = true;}
+	public void setConnected() {this.isOpponentConnected = true;}
+	
+	
+	private boolean checkTimers() {
+		if(yourTimer != null) {
+			if(yourTimer.isTimerOver()){
+				if(player.getColor().equals("White")) {gameOver = 2; return true; }
+				else {gameOver = 1; return true;}
+			}
+		}
+		if(opponentsTimer != null){
+			if(opponentsTimer.isTimerOver()) {
+				if(player.getColor().equals("White")) {gameOver = 1; return true; }
+				else {gameOver = 2; return true;}
+			}
+			
+		}return false;
+	}
 
 	
 	private void defineYourTimer(String time) {
