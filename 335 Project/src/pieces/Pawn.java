@@ -31,6 +31,7 @@ public class Pawn extends Piece {
 
 	}
 	public void removeEnPassantMove() {
+		System.out.println("Pawn.java - removing didEnPassant");
 		this.didEnPassant = false;
 
 	}
@@ -38,6 +39,7 @@ public class Pawn extends Piece {
 	@Override
 	public void updateLocation(int x, int y) {
 		int yDistance = Math.abs(this.getY() - y);
+		int xDistance = Math.abs(this.getX() - x);
 		super.updateLocation(x, y);
 		if (!firstMove && yDistance == 1) {
 			enPassantable = false;
@@ -71,6 +73,7 @@ public class Pawn extends Piece {
 					return true;
 				} else if (tiles[y][x].getPiece() == null) { // en passant block
 					if (validEnPassantMove(x, y, tiles)) {
+						System.out.println("Pawn.java - settin didEnPassant to true!");
 						didEnPassant = true;
 						return true;
 					}

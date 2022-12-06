@@ -64,10 +64,8 @@ public class Chessboard implements ChessBoardUI {
 	private void drawing(int x, int y, GC gc) {
 		Tile t = board[x][y];
 		Piece p = t.getPiece();
-		//System.out.println("CHESSBOARD - DRAWING: " + x + " " + y);
 		if(p != null) {
 			if(p.isSelected()) {
-				//System.out.println("I am selected\n");
 				t.draw(gc, SELECTED); }
 			else if(selectedCoordinates!= null && selectedCoordinates.contains(new Coordinate(y,x))){
 				t.draw(gc, HIGHLIGHTED);
@@ -170,20 +168,16 @@ public class Chessboard implements ChessBoardUI {
 	
 	public int[] getBoardIndex(float x, float y) {
 		x -= BOARD_COORD_OFFSET / 2;
-//		System.out.println(x + ":" + y);
 		float indexX = x / SQUARE_WIDTH;
 		float indexY = y / SQUARE_WIDTH;
-//		System.out.println(indexX + ":" + indexY);
 
 		int indX = (int) indexX;
 		int indY = (int) indexY;
-//		System.out.println(indexY+":"+indexY);
 
 		if (indX < 0 || indX > 7 || indY < 0 || indY > 7 || indexX < 0) {
 			System.out.println("Clicking outside the board!");
 			return null;
 		}
-		//System.out.println(horizontalCoords[indX] + verticalCoords[indY]);
 		return new int[] { indX, indY };
 	}
 
@@ -284,51 +278,43 @@ public class Chessboard implements ChessBoardUI {
 	 * @return
 	 */
 	public boolean validCheckMove(int x, int y, Piece piece, boolean getWhite) {
-		//System.out.println("CHESSBOARD.JAVA - validCheckMove - " + piece);
 		Pawn p = null;
 		boolean booleanToSave = false;
 		boolean extra2 = false;
 		Rook r = null;
 		King k = null;
+		// Saving variables that would be overwritten due to move being made
 		if(piece instanceof Pawn) {
 			p = (Pawn) piece;
 			booleanToSave = p.firstMove;
 		}else if(piece instanceof Rook) {
 			r = (Rook) piece;
 			booleanToSave = r.moved;
-			System.out.println("CHESSBOARD.JAVA - initial bool: " + booleanToSave);
-		}else if(piece instanceof King) { // TODO determine if this is necessary
+		}else if(piece instanceof King) { 
 			k = (King) piece;
 			booleanToSave = k.moved;
 			extra2 = k.castlingMoveMade;
-			System.out.println("CHESSBOARD.JAVA - initial KING bool: " + k.moved);
-
 		}
 		int oldX = piece.getX();
 		int oldY = piece.getY();
-		Piece oldPiece = board[y][x].getPiece(); // This is to ensure that if a piece is taken due to movePiece(), it gets restored.
+		Piece oldPiece = board[y][x].getPiece(); 
+		// Simulate a move
 		this.movePiece(x, y, piece);
 		determineKingCheckStatus(getWhite);
 		King newKing = getKing(getWhite);
 		boolean checked = newKing.checked;
-		//System.out.println("Chessboard - validCheckMove - checked val is " + checked);
+		// Restoring board to previous state
 		this.movePiece(oldX, oldY, piece);
 		if(piece instanceof Pawn) {
 			p.firstMove = booleanToSave;
-			board[oldY][oldX].setPiece(p); // prevent's pawn's firstMove being overwritten
+			board[oldY][oldX].setPiece(p); 
 		}else if(piece instanceof Rook) {
 			r.moved = booleanToSave;
-			board[oldY][oldX].setPiece(r); // prevent's rooks moved from being overwritten
-			System.out.println("CHESSBOARD.JAVA - after bool: " + r.moved);
-
+			board[oldY][oldX].setPiece(r);
 		}else if(piece instanceof King) {
-			System.out.println("CHESSBOARD.JAVA - Beginning to restore KING moved bool to - " + booleanToSave);
 			k.moved = booleanToSave;
 			k.castlingMoveMade = extra2;
-
 			board[oldY][oldX].setPiece(k); // prevent's king's moved from being overwritten
-			System.out.println("CHESSBOARD.JAVA - Beginning to restore KING bool to - " + extra2);
-
 		}
 		board[y][x].setPiece(oldPiece); 
 		determineKingCheckStatus(getWhite);
@@ -445,6 +431,7 @@ public class Chessboard implements ChessBoardUI {
 				}else {
 					y--;
 				}
+				this.removePiece(selectedPiece.getX(),y);
 				pawn.removeEnPassantMove();
 			}
 		}
@@ -544,7 +531,6 @@ public class Chessboard implements ChessBoardUI {
 		filterCheckMoves(selectedPiece,selectedCoordinates);
 	}
 	private void filterCheckMoves(Piece piece,List<Coordinate> coordinates) {
-		//System.out.println("COORDINATES FOR " + piece + " BEFORE: " + coordinates);
 		for(int i = 0;i<selectedCoordinates.size();i++) {
 			Coordinate c = selectedCoordinates.get(i);
 			if(!validMoveMade(c.x,c.y,piece,piece.isWhite())) {
@@ -552,10 +538,7 @@ public class Chessboard implements ChessBoardUI {
 				i--;
 			}
 		}
-		
 		//TODO filter out castling if king ends up in check
-		//System.out.println("COORDINATES AFTER " + piece + " BEFORE: " + coordinates);
-
 	}
 	public void unhighlightCoordinates(Piece selectedPiece) { selectedCoordinates = null; }
 	
@@ -564,7 +547,6 @@ public class Chessboard implements ChessBoardUI {
 		if (this.promotion) {
 			this.promotion = false;
 			return true; }
-		
 		return false;
 	}
 	public boolean hasEnemyPiece(int x, int y, boolean color) {
