@@ -1,5 +1,5 @@
-/*
- * Name: Ali Sartaz Khan & Jonathan Houge & Khojiakbar Yokubjonov & Julius Ramirez
+/**
+ * @authors Ali Sartaz Khan & Jonathan Houge & Khojiakbar Yokubjonov & Julius Ramirez
  * Course: CSc 335
  * Description: Creates the UI for the client
  */
@@ -69,12 +69,12 @@ public class UI {
 	boolean isLocalGame = false;
 	int gameOver = 0;
 	
-	/*
+	/**
 	 * Constructor that assigns values
-	 * client: client object
-	 * in: input stream
-	 * out: output stream
-	 * socket: Socket object
+	 * @param client: client object
+	 * @param in: input stream
+	 * @param out: output stream
+	 * @param socket: Socket object
 	 */
 	public UI(Client client, BufferedReader in, BufferedWriter out, Socket socket) {
 		this.in = in;
@@ -96,11 +96,11 @@ public class UI {
 	}
 	
 	
-	/*
+	/**
 	 * Constructor when Client plays against a robot
 	 * 
-	 * client: Client Object
-	 * robot: Robot opponent
+	 * @param client: Client Object
+	 * @param robot: Robot opponent
 	 */
 	public UI(Client client, Robot robot) {
 		this.robot = robot;
@@ -121,10 +121,10 @@ public class UI {
 
 
 	
-	/*
+	/**
 	 * Constructor when Client plays local game
 	 * 
-	 * player: Player object from client
+	 * @param player: Player object from client
 	 */
 	public UI(Player player) {
 		this.player = player;
@@ -139,8 +139,9 @@ public class UI {
 
 
 
-	/*
+	/**
 	 * Starts running the UI by setting up all the displays
+	 * @return true or false
 	 */
 	public boolean start() {
 		setup();
@@ -201,10 +202,10 @@ public class UI {
 		);	
 
 		canvas.addMouseListener(new MouseListener() {
-			/*
+			/**
 			 * Called upon when mouse is pressed
 			 * 
-			 * e: Mouse Event
+			 * @param mouse event
 			 */
 			public void mouseDown(MouseEvent e) {
 				if(checkTimers()) // returns true if either of players run out of time
@@ -256,11 +257,11 @@ public class UI {
 				}
 				
 			} 
-			/*
+			/**
 			 * Make piece move to a certain coordinate
 			 * 
-			 * xCoord: X coordinate
-			 * yCoord: Y coordinate
+			 * @param xCoord: X coordinate
+			 * @param yCoord: Y coordinate
 			 */
 			public void makeMove(int xCoord,int yCoord) {
 				int xCoordBefore = selectedPiece.getX();
@@ -364,7 +365,7 @@ public class UI {
 	}
 	
 
-	/*
+	/**
 	 * Setup all GUI components
 	 */
 	void setup() {
@@ -395,9 +396,15 @@ public class UI {
 	}
 	
 
+	/**
+	 * Set connected to true
+	 */
 	public void setConnected() {this.isOpponentConnected = true;}
 	
-	
+	/**
+	 * Checks if timers are over
+	 * @return true or false 
+	 */
 	private boolean checkTimers() {
 		if(yourTimer != null) {
 			if(yourTimer.isTimerOver()){
@@ -415,10 +422,10 @@ public class UI {
 	}
 
 	
-	/*
+	/**
 	 * Define your own timer for the game
 	 * 
-	 * time: Time String
+	 * @param time: Time String
 	 */
 	private void defineYourTimer(String time) {
 		// TODO Auto-generated method stub
@@ -431,10 +438,10 @@ public class UI {
 	}
 	
 	
-	/*
+	/**
 	 * Define opponent's timer
 	 * 
-	 * time: Time String
+	 * @param time: Time String
 	 */
 	private void defineOpponentsTimer(String time) {
 		// TODO Auto-generated method stub
@@ -446,7 +453,7 @@ public class UI {
 	}
 
 	
-	/*
+	/**
 	 * Composites created
 	 */
 	private void defineComposites() {
@@ -484,10 +491,9 @@ public class UI {
 			 loadOldGame = false;
 			 System.out.println("Sorry, the entered file could not be found!");
 		 }
-		
-		
 	}
-	/*
+	
+	/**
 	 * establishes the menu bar at the top of shell
 	 * 
 	 */
@@ -497,7 +503,7 @@ public class UI {
 		
 	}
 	
-	/*
+	/**
 	 * creates the file menu
 	 */
 	protected void createFileMenu() {
@@ -511,7 +517,7 @@ public class UI {
 		
 	}
 	
-	/*
+	/**
 	 * file save menu.
 	 */
 	protected void createFileSaveItem() {
@@ -529,7 +535,7 @@ public class UI {
 		});
 	}
 	
-	/*
+	/**
 	 * file exit option. when selected, exits the program
 	 */
 	protected void createFileExitItem() {
@@ -552,12 +558,12 @@ public class UI {
 	
 	
 	
-	/*
+	/**
 	 * Runner class
 	 */
 	class Runner implements Runnable
 	{
-		/*
+		/**
 		 * Run method
 		 */
 		public void run() 

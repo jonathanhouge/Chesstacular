@@ -155,18 +155,18 @@ public class ClientManager implements Runnable {
         // -- getters & setters
 
         /**
-         * String representation of this object
+         * @return String representation of this object
          */
         public String toString() { return username; }
         
         
         /**
-         * Returns the color of this client
+         * @return the color of this client
          */
         public String getColor() { return this.color; }
         
         /**
-         * Returns client id
+         * @return client id
          */
         public int getID() { return this.ID; }
 
