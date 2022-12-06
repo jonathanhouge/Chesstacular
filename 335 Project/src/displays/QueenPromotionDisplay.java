@@ -1,6 +1,9 @@
 /** The Display for Pawn Promotion.
  * Prompts the client to pick 
  * 
+ * Since every display utilizes selection listeners, a separate class with the method 
+ * 'selectListenCreation()' is used to add a selection listener.
+ * 
  * @author Jonathan Houge
  */
 
