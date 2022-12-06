@@ -20,6 +20,7 @@ public class Robot {
 	private String color;
 	private Chessboard boardUI;
 	List<Piece> pieces;
+	Piece king;
 	boolean whitesTurn;
 	int count;
 	
@@ -53,15 +54,25 @@ public class Robot {
 	public void movePiece() {
 		updatePieces();
 		Random random = new Random();
-		int i = random.nextInt(pieces.size());
-		Piece selectedPiece = pieces.get(i);
-		
-		if (count > 100) {
-			return;
+		if (boardUI.determineKingCheckStatus(king.isWhite())) {
+			System.out.println("King in check");
+			for (int i =0; i< pieces.size();i++) {
+				Piece selectedPiece = pieces.get(i);
+				if (makeMove(selectedPiece))
+					break;
+			}
 		}
-
-		if (!makeMove(selectedPiece))
-			movePiece();
+		else {	
+			int i = random.nextInt(pieces.size());
+			Piece selectedPiece = pieces.get(i);
+			
+			if (count > 100) {
+				return;
+			}
+	
+			if (!makeMove(selectedPiece))
+				movePiece();
+		}
 		
 	}
 	
@@ -77,6 +88,7 @@ public class Robot {
 				if (t.getPiece() != null && t.getPiece().getColor().equals(this.color)) {
 					if(t.getPiece() instanceof King) {
 						King k = (King) t.getPiece();
+						king = k;
 						k.moved = true;
 						pieces.add(k);
 					}else {
