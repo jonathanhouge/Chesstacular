@@ -132,12 +132,8 @@ public class UI {
 	/*
 	 * Starts running the UI
 	 */
-	public void start() {
-		if (gameOver != 0) {
-			whitesTurn = true;
-			gameOver = 0;
-			canvas.redraw(); }
-		else { setup(); }
+	public boolean start() {
+		setup();
 		
 		gameStatus = new GameStatus(shell);
 		loadOldGame = false;
@@ -199,7 +195,7 @@ public class UI {
 
 				if (!yourTurn) {// thinking here?{
 					if(yourTimer != null) {
-						if(yourTimer.isTimerOver()){ return; } // set gameOver boolean here
+						if(yourTimer.isTimerOver()){ gameOver = 1; return; } // set gameOver int here [currently white wins]
 					}
 					return;}
 
@@ -342,12 +338,13 @@ public class UI {
 		if (gameOver != 0) {
 			again = new GameOverDisplay().start(display, gameOver); }
 		
+		display.dispose();
+		
 		if (again) {
-			initialized = false;
-			this.start();
+			return true;
 		}
-		else {
-			display.dispose(); }
+		
+		return false;
 	}
 	
 
@@ -373,7 +370,7 @@ public class UI {
 		
 		createMenuBar();
 		shell.setMenuBar(menuBar);
-		boardUI = new Chessboard(canvas, shell, display);	
+		boardUI = new Chessboard(canvas, shell, display);
 		if (this.robot != null)
 			robot.setBoard(boardUI);
 	}

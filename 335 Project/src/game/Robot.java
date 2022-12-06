@@ -20,6 +20,7 @@ public class Robot {
 	private Chessboard boardUI;
 	List<Piece> pieces;
 	boolean whitesTurn;
+	int count;
 	
 	/*
 	 * Constructor takes in color of robot
@@ -27,7 +28,7 @@ public class Robot {
 	 * color: robot color
 	 */
 	public Robot(String color) {
-		this.color = color;
+		this.color = color; this.count = 0;
 		if (color.equals("White"))
 			whitesTurn = true;
 		else
@@ -53,6 +54,11 @@ public class Robot {
 		Random random = new Random();
 		int i = random.nextInt(pieces.size());
 		Piece selectedPiece = pieces.get(i);
+		
+		if (count > 100) {
+			return;
+		}
+
 		if (!makeMove(selectedPiece))
 			movePiece();
 		
@@ -109,7 +115,8 @@ public class Robot {
 	 * 
 	 * piece: piece that will move
 	 */
-	public boolean makeMove(Piece piece) {
+	public boolean makeMove(Piece piece) {		
+		count++;
 		Random rand = new Random();
 		int iteration = rand.nextInt(4);
 		if (iteration == 0)
@@ -133,6 +140,7 @@ public class Robot {
 			for (int col = 0; col < 8; col++) {
 				if (boardUI.validMoveMade(col,row,piece,whitesTurn)) {
 					boardUI.updateBoard(col,row,piece);
+					count = 0;
 					return true;
 				}
 			}
@@ -150,6 +158,7 @@ public class Robot {
 			for (int col = 0; col < 8; col++) {
 				if (boardUI.validMoveMade(col,row,piece,whitesTurn)) {
 					boardUI.updateBoard(col,row,piece);
+					count = 0;
 					return true;
 				}
 			}
@@ -158,6 +167,7 @@ public class Robot {
 			for (int col = 0; col < 8; col++) {
 				if (boardUI.validMoveMade(col,row,piece,whitesTurn)) {
 					boardUI.updateBoard(col,row,piece);
+					count = 0;
 					return true;
 				}
 			}
@@ -175,6 +185,7 @@ public class Robot {
 			for (int col = 7; col >= 0; col --) {
 				if (boardUI.validMoveMade(col,row,piece,whitesTurn)) {
 					boardUI.updateBoard(col,row,piece);
+					count = 0;
 					return true;
 				}
 			}
@@ -191,6 +202,7 @@ public class Robot {
 			for (int col = 0; col < 8; col++) {
 				if (boardUI.validMoveMade(col,row,piece,whitesTurn)) {
 					boardUI.updateBoard(col,row,piece);
+					count = 0;
 					return true;
 				}
 			}
@@ -199,6 +211,7 @@ public class Robot {
 			for (int col = 0; col < 8; col++) {
 				if (boardUI.validMoveMade(col,row,piece,whitesTurn)) {
 					boardUI.updateBoard(col,row,piece);
+					count = 0;
 					return true;
 				}
 			}

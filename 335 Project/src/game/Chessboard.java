@@ -32,6 +32,7 @@ public class Chessboard implements ChessBoardUI {
 	int SQUARE_WIDTH = 80;
 	Tile[][] board;
 	boolean promotion = false;
+	public boolean endGame = false;
 	String verticalCoords[] = new String[] { "8", "7", "6", "5", "4", "3", "2", "1" };
 	String horizontalCoords[] = new String[] { "A", "B", "C", "D", "E", "F", "G", "H" };
 	int BOARD_COORD_OFFSET = 100;
@@ -471,11 +472,12 @@ public class Chessboard implements ChessBoardUI {
 
 	/**
 	 * This method determines if the game is over.
+	 * [made public for robot]
 	 * 
 	 * @param movedPiece, the piece that was moved this turn. Used to determine next player's color,
 	 * could be changed
 	 */
-	private int determineCheckMate(Piece movedPiece) {
+	public int determineCheckMate(Piece movedPiece) {
 		for(int row = 0; row <= 7; row++) {
 			for(int col = 0;col <= 7; col++) {
 				if(board[row][col].getPiece()!= null) { 
@@ -498,6 +500,7 @@ public class Chessboard implements ChessBoardUI {
 		//If this part is reached no validMoveMade returned true, thus game over!
 		System.out.println("Chessboard.java - The opponent can not make any valid moves! Game over!");
 		
+		this.endGame = true;
 		if (movedPiece.getColor() == "White") { return 1; }
 		else { return 2; }
 	}
