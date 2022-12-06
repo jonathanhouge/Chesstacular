@@ -281,6 +281,7 @@ public class Chessboard implements ChessBoardUI {
 		Pawn p = null;
 		boolean booleanToSave = false;
 		boolean extra2 = false;
+		boolean extra3 = false;
 		Rook r = null;
 		King k = null;
 		// Saving variables that would be overwritten due to move being made
@@ -288,6 +289,7 @@ public class Chessboard implements ChessBoardUI {
 			p = (Pawn) piece;
 			booleanToSave = p.firstMove;
 			extra2 = p.enPassantable;
+			extra3 = p.didEnPassant;
 			System.out.println("Saving Pawns firstMove value: " + booleanToSave);
 		}else if(piece instanceof Rook) {
 			r = (Rook) piece;
@@ -309,7 +311,8 @@ public class Chessboard implements ChessBoardUI {
 		this.movePiece(oldX, oldY, piece);
 		if(piece instanceof Pawn) {
 			p.firstMove = booleanToSave;
-			p.enPassantable=extra2 ;
+			p.enPassantable=extra2;
+			p.didEnPassant = extra3; // May not be necessary but saving in case
 			board[oldY][oldX].setPiece(p); 
 			System.out.println("Restoring Pawns firstMove value, the value is: " + p.firstMove);
 		}else if(piece instanceof Rook) {

@@ -218,7 +218,7 @@ public class Pawn extends Piece {
 	/**
 	 * 
 	 * @param x The x to be moved to
-	 * @param y	The y to be moved
+	 * @param y	The y to be moved to
 	 * @param tiles
 	 * @param coordinates
 	 */
