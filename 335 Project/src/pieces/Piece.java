@@ -223,13 +223,20 @@ public abstract class Piece {
 	public void killPiece() {
 		this.dead = true;
 	}
-	
+	public boolean getAliveStatus() {
+		return dead;
+		
+	}
+	public void setAliveStatus(boolean status) {
+		this.dead = status;
+	}
 	/**
 	 * Returns name of the piece
 	 */
 	public String getName() {
 		return this.name;
 	}
+	
 	public abstract List<Coordinate> generateMoves(Tile[][] tiles);
 	
 	public boolean hasEnemyPiece(int x, int y, Tile[][]tiles) {
