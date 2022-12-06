@@ -1,7 +1,7 @@
-/* The Display for game over.
+/** The Display for game over.
  * Prompts the client to decide whether or not they want to play another game.
  * 
- * AUTHOR: Jonathan Houge
+ * @author Jonathan Houge
  */
 
 package displays;
@@ -11,13 +11,10 @@ import java.util.ArrayList;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 
 public class GameOverDisplay {
 
@@ -39,7 +36,7 @@ public class GameOverDisplay {
 		if (winner == 1) { title.setText("Game Over! White won."); }
 		else { title.setText("Game Over! Black won. "); }
 		title.setFont(new Font(display, "Courier", 18, SWT.NONE));
-		title.setForeground(display.getSystemColor(SWT.COLOR_YELLOW));
+		title.setForeground(display.getSystemColor(SWT.COLOR_WHITE));
 		
 		//-- the widgets
 		

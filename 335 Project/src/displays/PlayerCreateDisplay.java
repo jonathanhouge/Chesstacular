@@ -1,7 +1,9 @@
 /** The Display for Player Creation.
- * Prompts the client to enter their name, pick their tank, and choose their color.
+ * Prompts the client to enter their name, pick their color, pick their opponent, and enter
+ * the optional fields of savedGame.txt and/or the time constraint they wish to place upon
+ * themselves (WARNING: this only works with 'Robot' and 'Remote' opponent modes).
  * This is accomplished using SWT widgets and Arraylists. After submitting the information, 
- * a new Player object is created and the server is told of the successful player creation.
+ * a new Player object is created and the client is given the Player object.
  * 
  * @author Jonathan Houge
  */
@@ -24,7 +26,14 @@ import org.eclipse.swt.layout.GridLayout;
 
 public class PlayerCreateDisplay {
 
-	// start returns the player made by the client
+	/** The start method creates and runs the display itself. It utilizes 
+	 * functions to create the different kinds of radio buttons and creates
+	 * textual widgets right then and there. The display stays open until
+	 * the user clicks the "Let's Play!" button. In then collects the 
+	 * entered information, creates the Player object, and returns it.
+	 * 
+	 * @return Player: a Player object created from the user's inputted settings
+	 */
 	public Player start() {
 		
 		//-- create and set up the display & create variables for the display's widgets 

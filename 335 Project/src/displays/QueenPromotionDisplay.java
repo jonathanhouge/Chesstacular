@@ -1,10 +1,10 @@
-package displays;
-
-/* The Display for Pawn Promotion.
+/** The Display for Pawn Promotion.
  * Prompts the client to pick 
  * 
- * AUTHOR: Jonathan Houge
+ * @author Jonathan Houge
  */
+
+package displays;
 
 import java.util.ArrayList;
 
@@ -16,8 +16,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.layout.GridLayout;
 
 public class QueenPromotionDisplay {
 
@@ -43,7 +43,7 @@ public class QueenPromotionDisplay {
 		Text title = new Text(shell, SWT.READ_ONLY);
 		title.setText("Choose Pawn Promotion");
 		title.setFont(new Font(display, "Courier", 18, SWT.NONE));
-		title.setForeground(display.getSystemColor(SWT.COLOR_YELLOW));
+		title.setForeground(color);
 		
 		//-- the widgets
 		
