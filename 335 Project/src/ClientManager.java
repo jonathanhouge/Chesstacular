@@ -1,7 +1,7 @@
-/*
- * Name: Ali Sartaz Khan
- * Course: CSc 335
- * Description: Creates the Client handler for the server to input and output data
+/**
+ *  Creates the Client handler for the server to input and output data
+ *  
+ *  @authors Ali Sartaz Khan
  */
 
 import java.io.BufferedReader;
@@ -13,8 +13,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 
-public class ClientManager implements Runnable 
-    {   
+public class ClientManager implements Runnable {   
         public static ArrayList<ClientManager> users = new ArrayList<>();
         private Socket socket;
         BufferedWriter out;
@@ -25,10 +24,12 @@ public class ClientManager implements Runnable
         int ID;
         String preferredTime;
         
-        /*
-         * Constructor takes in socket and creates new input and output streams
-         * socket: socket
-         */
+        
+    	/**
+    	 * Constructor takes in socket and creates new input and output streams
+    	 * 
+    	 * @param socket: socket
+    	 */
         public ClientManager(Socket socket) {
         	try {
             	this.socket = socket; 
@@ -48,36 +49,31 @@ public class ClientManager implements Runnable
 	        	broadcastIdToYourself();
 	        	broadcastToOthers("PLAYER:" + ID + "-" +color + "-" + username + "-" + preferredTime);
 	        	othersBroadcastToYou();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-        	
+			} 
+        	catch (IOException e) {
+				e.printStackTrace(); }
         }
 
-        /*
-         * Run method
-         */
+    	/**
+    	 * Run method
+    	 */
         public void run() {
 //        	sq.add(out);
             String msgFromUser = "";
-            while (socket.isConnected())
-            {
+            while (socket.isConnected()) {
             	try {
             		msgFromUser = in.readLine(); //AVOID THE FIRST IN
 	            	System.out.println(msgFromUser);
 	            	broadcastToOthers(msgFromUser);
-            	} catch(Exception e) {
-                    close();  
-                } 
-
+            	} 
+            	catch(Exception e) { close(); } 
             }
         } 
         
-        
-        /*
-         * Sets valid of the the client by comparing colors with both users, where user 1 gets preference
+        /**
+    	 * Sets valid of the the client by comparing colors with both users, where user 1 gets preference
          * on which color to choose.
-         */
+    	 */
         public void setValidColor() {
         	for (ClientManager user: users) {
 				try {
@@ -91,35 +87,27 @@ public class ClientManager implements Runnable
 							else
 								this.setColor("White");
 							System.out.println("After: User1-" + user.getColor() + " User2-"+this.getColor());
-
-							
 						}
 					}
-						
-				}catch (Exception e) {
-					close();
 				}
+				catch (Exception e) { close(); }
         	}
         }
-        
-        
-        /*
-         * Method to broadcast string from others to yourself 
-         */
+
+        /**
+    	 * Method to broadcast string from others to yourself 
+    	 */
         public void broadcastIdToYourself() {
 				try {
 					this.out.write("ID:" + this.ID +"-"+this.color + "-" + this.username + "-" + this.preferredTime);
 					this.out.newLine();
 					this.out.flush();
-				}catch (Exception e) {
-					close();
 				}
-				
+				catch (Exception e) { close(); }
     	}
         
         
-        
-        /*
+        /**
          * Method to broadcast string from others to yourself 
          */
         public void othersBroadcastToYou() {
@@ -130,16 +118,15 @@ public class ClientManager implements Runnable
 								+user.username + "-" + user.preferredTime);
 						this.out.newLine();
 						this.out.flush();}
-				}catch (Exception e) {
-					close();
 				}
-				
+				catch (Exception e) { close(); }
     		}
         }
         
-        /*
-         * Method to broadcast string from you to others:
-         * msgToOThers: string to broadcast 
+        /**
+         * Method to broadcast string from you to others
+         * 
+         * @param msgToOthers: string to broadcast 
          */
         public void broadcastToOthers(String msgToOthers) {
     		for (ClientManager user: users) {
@@ -149,15 +136,12 @@ public class ClientManager implements Runnable
 						user.out.write(msgToOthers);
 						user.out.newLine();
 						user.out.flush();}
-				}catch (Exception e) {
-					close();
 				}
-				
+				catch (Exception e) { close(); }
     		}
-    		}
+    	}
         
-        
-        /*
+        /**
          * Closes server
          */
         public void close() {
@@ -168,35 +152,29 @@ public class ClientManager implements Runnable
          	System.exit(0);
      	}
         
-        
-        /*
-         * String representation of This object
+        // -- getters & setters
+
+        /**
+         * String representation of this object
          */
-        public String toString() {
-        	return username;
-        }
-    	 
-        /*
+        public String toString() { return username; }
+        
+        
+        /**
          * Returns the color of this client
          */
-        public String getColor() {
-        	return this.color;
-        }
+        public String getColor() { return this.color; }
         
-        
-        /*
-         * Returns client ID
+        /**
+         * Returns client id
          */
-        public int getID() {
-        	return this.ID;
-        }
-        
-        /*
+        public int getID() { return this.ID; }
+
+        /**
          * Sets color for the client
          * 
+         * @param color: color to set client
          */
-        public void setColor(String color) {
-        	this.color = color;
-        }
-            
-    }
+        public void setColor(String color) { this.color = color; }
+
+}
