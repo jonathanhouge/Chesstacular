@@ -96,7 +96,12 @@ public class UI {
 	}
 	
 	
-
+	/*
+	 * Constructor when Client plays against a robot
+	 * 
+	 * client: Client Object
+	 * robot: Robot opponent
+	 */
 	public UI(Client client, Robot robot) {
 		this.robot = robot;
 		this.client = client;
@@ -115,7 +120,12 @@ public class UI {
 	}
 
 
-
+	
+	/*
+	 * Constructor when Client plays local game
+	 * 
+	 * player: Player object from client
+	 */
 	public UI(Player player) {
 		this.player = player;
 		this.fileName = player.getFileName();
@@ -130,7 +140,7 @@ public class UI {
 
 
 	/*
-	 * Starts running the UI
+	 * Starts running the UI by setting up all the displays
 	 */
 	public boolean start() {
 		setup();
@@ -191,6 +201,11 @@ public class UI {
 		);	
 
 		canvas.addMouseListener(new MouseListener() {
+			/*
+			 * Called upon when mouse is pressed
+			 * 
+			 * e: Mouse Event
+			 */
 			public void mouseDown(MouseEvent e) {
 
 				if (!yourTurn) {// thinking here?{
@@ -242,6 +257,12 @@ public class UI {
 				}
 				
 			} 
+			/*
+			 * Make piece move to a certain coordinate
+			 * 
+			 * xCoord: X coordinate
+			 * yCoord: Y coordinate
+			 */
 			public void makeMove(int xCoord,int yCoord) {
 				int xCoordBefore = selectedPiece.getX();
 				int yCoordBefore = selectedPiece.getY();
@@ -348,6 +369,9 @@ public class UI {
 	}
 	
 
+	/*
+	 * Setup all GUI components
+	 */
 	void setup() {
 		display = new Display();
 		
@@ -375,9 +399,18 @@ public class UI {
 			robot.setBoard(boardUI);
 	}
 	
-public void setConnected() {this.isOpponentConnected = true;}
+
+	/*
+	 * Set connected status with opponent
+	 */
+	public void setConnected() {this.isOpponentConnected = true;}
 
 	
+	/*
+	 * Define your own timer for the game
+	 * 
+	 * time: Time String
+	 */
 	private void defineYourTimer(String time) {
 		// TODO Auto-generated method stub
 		if(time.contains("M") || time.contains("S") || isLocalGame) {return;}
@@ -388,6 +421,12 @@ public void setConnected() {this.isOpponentConnected = true;}
 		
 	}
 	
+	
+	/*
+	 * Define opponent's timer
+	 * 
+	 * time: Time String
+	 */
 	private void defineOpponentsTimer(String time) {
 		// TODO Auto-generated method stub
 		if(time.contains("M") || time.contains("S")) {return;}
@@ -397,6 +436,10 @@ public void setConnected() {this.isOpponentConnected = true;}
 		
 	}
 
+	
+	/*
+	 * Composites created
+	 */
 	private void defineComposites() {
 		// TODO Auto-generated method stub
 		RowLayout rowLayout = new RowLayout();
@@ -500,9 +543,14 @@ public void setConnected() {this.isOpponentConnected = true;}
 	
 	
 	
-	
+	/*
+	 * Runner class
+	 */
 	class Runner implements Runnable
 	{
+		/*
+		 * Run method
+		 */
 		public void run() 
 		{
 			String msgFromOpponent;
