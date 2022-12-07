@@ -29,18 +29,52 @@ import pieces.Rook;
  * @author Jonathan Houge & Julius Ramirez & Khojiakbar Yokubjonov
  */
 public class Chessboard implements ChessboardUI {
+	/**
+	 * The UI Shell object
+	 */
 	private Shell shell;
+	/**
+	 * The UI Display object
+	 */
 	private Display display;
-
+	/**
+	 * A 2D array containing {@link game.Tile} objects which represent a 7X7
+	 * chessboard.
+	 */
 	private Tile[][] board;
+	/**
+	 * The size of a graphical square tile.
+	 */
 	private int SQUARE_WIDTH = 80;
+	/**
+	 * The left x offset, or in other words the space that the vertical coordinate
+	 * identifiers occupy
+	 */
 	private int BOARD_COORD_OFFSET = 100;
+	/**
+	 * An array containing Strings which represent the order of the vertical
+	 * coordinates
+	 */
 	private String verticalCoords[] = new String[] { "8", "7", "6", "5", "4", "3", "2", "1" };
+	/**
+	 * An array containing Strings which represent the order of the horizontal
+	 * coordinates
+	 */
 	private String horizontalCoords[] = new String[] { "A", "B", "C", "D", "E", "F", "G", "H" };
-
+	/**
+	 * A boolean which represents if this Chessboard object has made a promotion
+	 * move. If set to true, it gets handled by the server so the opponent doesn't
+	 * pick the promotion piece, and is then promptly set to false.
+	 */
 	private boolean promotion = false;
+	/**
+	 * A List of Coordinate objects which represent the tiles the selected piece can
+	 * move to. It's worth noting that the selected piece Piece object is not
+	 * actually saved however.
+	 */
 	private List<Coordinate> selectedCoordinates;
 
+	// UI Fields
 	Color SELECTED = new Color(51, 204, 51);
 	Color BG = new Color(255, 255, 255);
 	Color SIDE = new Color(204, 136, 0);
@@ -159,7 +193,6 @@ public class Chessboard implements ChessboardUI {
 		return null; // tile is given no piece
 	}
 
-	@Override
 	/**
 	 * The for loop to draw the board. The helper function 'Drawing' holds onto all
 	 * of the conditionals needed in the process.
@@ -168,6 +201,7 @@ public class Chessboard implements ChessboardUI {
 	 * @param y:  column in board
 	 * @param gc: event gc, let's us draw on the canvas
 	 */
+	@Override
 	public void draw(GC gc) {
 		for (int x = 0; x < 8; x++) {
 			for (int y = 0; y < 8; y++) {
@@ -251,10 +285,15 @@ public class Chessboard implements ChessboardUI {
 	// -- getters
 
 	/**
-	 * accepts the pixel coordinates and converts them to valid index on the board
+	 * Accepts the pixel coordinates, converts them to a valid index on the board,
+	 * and returns an array containing those coordinates.
 	 * 
-	 * @param x,y - the pixel coordinates on the canvas
-	 * @return
+	 * @param x a float that represents the y coordinate on the canvas where the
+	 *          user clicked.
+	 * @param y a float that represents the y coordinate on the canvas where the
+	 *          user clicked.
+	 * @return an Integer array of length two where index 0 is x and index 1 is the
+	 *         y board coordinate.
 	 */
 	public int[] getBoardIndex(float x, float y) {
 		x -= BOARD_COORD_OFFSET / 2;
@@ -272,7 +311,7 @@ public class Chessboard implements ChessboardUI {
 	}
 
 	/**
-	 * board getter. returns the board.
+	 * Board getter, returns the board.
 	 * 
 	 * @return board: the list of tiles that make up the board.
 	 */
@@ -287,8 +326,8 @@ public class Chessboard implements ChessboardUI {
 	 * check and checkmate calculations.
 	 * <P>
 	 * It could be improved by removing the need to iterate through the entire board
-	 * every time by saving the king's location or saving it as a field that has 
-	 * aliasing.
+	 * every time by saving the king's location or saving it as a field that has a
+	 * reference to the King object.
 	 *
 	 * @param getWhite, true if obtaining white king, false if obtaining black king.
 	 * @return the desired King piece.
@@ -312,7 +351,7 @@ public class Chessboard implements ChessboardUI {
 		// This should never be reached.
 		System.out.println("Chessboard.java - no king found, exiting...");
 		System.exit(403);
-		return null; 
+		return null;
 	}
 
 	/**
@@ -699,10 +738,10 @@ public class Chessboard implements ChessboardUI {
 	}
 
 	/**
-	 * This method is used to determine if promotion has occurred on the board. It is
-	 * used so that an opponent is not able to pick the enemies piece. If a player
-	 * is playing with a robot however, they are able to choose what piece the robot
-	 * gets.
+	 * This method is used to determine if promotion has occurred on the board. It
+	 * is used so that an opponent is not able to pick the enemies piece. If a
+	 * player is playing with a robot however, they are able to choose what piece
+	 * the robot gets.
 	 * 
 	 * @return true if promotion has occurred, false if not.
 	 */

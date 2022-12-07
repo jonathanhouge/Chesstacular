@@ -30,7 +30,7 @@ public class Client {
 		//-- if statements determine who client has decided to play chess with
 		
 		if (player.getOpponent() == "Remote") { // remotely, need to connect to the server
-			Socket socket = new Socket("localhost", 600);
+			Socket socket = new Socket("192.168.0.27", 600);
 			new Client(socket); }
 		
 		//-- if we're going against someone locally or a robot, no need for a server

@@ -158,8 +158,6 @@ public class UI {
 				System.out.println("Closing the shell!");
 				String fileToSaveGame = gameStatus.promptsFileWhileExiting();
 				gameStatus.saveGame(boardUI.getBoard(), yourTurn, whitesTurn);
-			
-				
 			}
 			
 		});
@@ -210,21 +208,20 @@ public class UI {
 			public void mouseDown(MouseEvent e) {
 				if(checkTimers()) // returns true if either of players run out of time
 					return;
-				if (!yourTurn) {// thinking here?{
+				if (!yourTurn) {// player has clicked but it's not their turn, thus return.
 					return;}
 				
-
 				//Gather data, convert graphical coordinates into chessboard coordinates
 				int coordinates[] = boardUI.getBoardIndex(e.x,e.y);
 				if(coordinates == null) {
-					return;
+					return; // This would occur if the user clicked out of bounds.
 				}
 				int xCoord = coordinates[0];
 				int yCoord = coordinates[1];
 				//Select a piece OR move piece
 				if(selectedPiece == null) { // Selecting piece for first time
 					selectedPiece = boardUI.selectPiece(xCoord, yCoord, whitesTurn);
-					if(selectedPiece != null) {
+					if(selectedPiece != null) { 
 						selectedPiece.setSelected();
 						boardUI.highlightCoordinates(selectedPiece);
 						canvas.redraw();
@@ -235,22 +232,21 @@ public class UI {
 					if (possibleSelection !=null) {// player has selected new piece
 						if(boardUI.validMoveMade(xCoord,yCoord,selectedPiece,whitesTurn)) { //castling requires user to click rook 
 							King k = (King) selectedPiece;
-							k.castlingMoveMade = true;
+							k.castlingMoveMade = true; // set castlingMoveMade to true so that updateBoard works correctly.
 							makeMove(xCoord,yCoord);
-						}else {
+						}else { // Select a brand new piece
 							boardUI.unhighlightCoordinates();
 							selectedPiece.SetNotSelected();
 							selectedPiece = possibleSelection;
 							selectedPiece.setSelected();
 							boardUI.highlightCoordinates(selectedPiece);
-							//System.out.println("UI - SELECTED NEW PIECE: " + selectedPiece);
 							canvas.redraw();
 						}
-					}else {// player may have moved onto empty space or onto enemy
+					}else {// player may have moved onto empty space or onto enemy, check if it is valid.
 						if(boardUI.validMoveMade(xCoord,yCoord,selectedPiece,whitesTurn)) {
 							makeMove(xCoord,yCoord);
 						}else {
-							System.out.println("UI - INVALID MOVE MADE!");
+							System.out.println("UI.java - INVALID MOVE MADE!");
 						}
 					}
 					
@@ -258,19 +254,19 @@ public class UI {
 				
 			} 
 			/**
-			 * Make piece move to a certain coordinate
+			 * Make piece move to a certain coordinate and update the board/game state accordingly.
 			 * 
-			 * @param xCoord: X coordinate
-			 * @param yCoord: Y coordinate
+			 * @param xCoord X coordinate to move to, 0-7 inclusive.
+			 * @param yCoord Y coordinate to move to, 0-7 inclusive.
 			 */
 			public void makeMove(int xCoord,int yCoord) {
+				// Save before so that it may be written out to the server.
 				int xCoordBefore = selectedPiece.getX();
 				int yCoordBefore = selectedPiece.getY();
-				boardUI.unhighlightCoordinates();
+				boardUI.unhighlightCoordinates(); // Remove selected pieces highlights
 				gameOver = boardUI.updateBoard(xCoord,yCoord,selectedPiece);
-				if (in != null) {
+				if (in != null) { // remote play
 					try {
-						
 						if (boardUI.getPromotion()) {
 							String promotedPiece = boardUI.getTile(xCoord, yCoord).getPiece().getName();
 							out.write("MOVE:"+xCoordBefore+"-"+yCoordBefore+"-"+xCoord+"-"+yCoord+"-PROMOTION:"+promotedPiece); }
@@ -284,15 +280,14 @@ public class UI {
 					} 
 					yourTurn = !yourTurn;
 				}
-				else if (robot != null) {
-//					yourTurn = !yourTurn;
-					robot.movePiece();
-					
+				else if (robot != null) { // robot play
+					robot.movePiece();	
 				}
-				else {
+				else { // local play
 					whitesTurn = !whitesTurn; }
-				
 				canvas.redraw();
+				// Set selected field to false so it doesn't highlight then
+				// set UI's selectedPiece field to null
 				selectedPiece.SetNotSelected();
 				selectedPiece = null;
 			}
