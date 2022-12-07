@@ -1,9 +1,8 @@
 /**
- * this class enables the user to save the current game to a text file and also 
+ * @author Khojiakabar Yokubjonov
+ * Description: this class enables the user to save the current game to a text file and also 
  * allows loading an old game.
  * 
- * 
- * @author Khojiakbar Yokubjonov 
  */
 package game;
 
@@ -42,15 +41,18 @@ public class GameStatus {
 	
 	Shell parent;
 	String fileName;
+	/**
+	 * Constructs a GameStatus object
+	 * @param shell - shell of the chess game
+	 */
 	public GameStatus(Shell shell) {
 		this.parent = shell;
 		fileName = "";
 	}
 	
-	/*
+	/**
 	 * Creates a display that prompts the player for a file name
-	 * Returns the file name entered by the player
-	 * 
+	 * @return String, the file name entered by the player
 	 */
 	public String getFileName() {
 		 final Shell shell = new Shell(parent, SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL);
@@ -127,9 +129,9 @@ public class GameStatus {
 		
 	}
 	
-	/*
+	/**
 	 * Prompts the player for a file name to save the game when he/she tries to exit
-	 * Returns the file name entered by the player
+	 * @return String, the file name entered by the player
 	 */
 	public String promptsFileWhileExiting() {
 		final Shell shell = new Shell(parent, SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL);
@@ -205,13 +207,17 @@ public class GameStatus {
 	
 	}
 	
-	/*
+	/**
 	 * Accepts a .txt file containing board data.
 	 * Writes the chess board data to a .txt file specified by the player.
 	 * FILE FORMAT:
 	 * 		COLOR PIECE (X,Y)
 	 * EXAMPLE:
 	 * 		BLACK PAWN (1,1)
+	 * 
+	 * @param board - 8X8 2D board containing the Tiles and Pieces
+	 * @param yourTurn - boolean, the turn of this laptop's owner
+	 * @param whitesTurn - boolean, the white's turn
 	 */
 	public void saveGame(Tile[][]board, boolean yourTurn, boolean whitesTurn) {
 		if(fileName.length() == 0 || !fileName.contains(".txt")) {return;}
@@ -244,13 +250,15 @@ public class GameStatus {
 		
 	}
 	
-	/*
+	/**
 	 * Accepts a .txt file containing board data.
 	 * Loads the pieces to the 2D board based on the file data
 	 * FILE FORMAT:
 	 * 		COLOR PIECE (X,Y)
 	 * EXAMPLE:
 	 * 		BLACK PAWN (1,1)
+	 * @param board - 8X8 2D board containing the Tiles and Pieces
+	 * @return an array of boolean vals which indicate your turn and the white's turn
 	 */
 	public boolean[] loadGame(Tile[][] board) {
 		File gameFile; Scanner reader;
@@ -286,11 +294,18 @@ public class GameStatus {
 		
 	}
 	
+	/**
+	 * Sets the file name
+	 * @param name String, file name
+	 */
 	public void setFileName(String name) {this.fileName = name;}
 
-	/*
+	
+	/**
 	 * Adds a piece to the 2D chess board
 	 * Accepts a 2D board and piece information
+	 * @param board - 8X8 2D board containing the Tiles and Pieces
+	 * @param pieceInfo - String info about the piece
 	 */
 	private void addPieceToBoard(Tile[][] board, String pieceInfo) {
 		String[]  pieceData = pieceInfo.split(" ");
@@ -313,12 +328,11 @@ public class GameStatus {
 	 * "Saved Games" folder is used to store the saved games.
 	 */
 	private void checkForSavedGamesFolder() {
-//		System.out.println("Checking the directory ...");
 		String cwd = System.getProperty("user.dir") + "\\Saved Games";
 		 File dir = new File(cwd);
 		 
 		 if(!dir.exists()) {
-			 System.out.println("Creating Saved Games Folder...");
+			 System.out.println("Creating a Saved Games Folder...");
 			 File savedGames = new File("Saved Games");
 			 savedGames.mkdir();
 		 }
@@ -327,8 +341,15 @@ public class GameStatus {
 
 	
 	/*
+	 * 
+	 */
+	
+	/**
 	 * Creates a chess piece based on the given piece name
 	 * Returns null if it takes an invalid piece name
+	 * @param pName String piece name
+	 * @param color - String color of the piece
+	 * @return the created Piece or null if passed an invalid piece name
 	 */
 	private Piece createPiece(String pName, String color) {
 		// TODO Auto-generated method stub

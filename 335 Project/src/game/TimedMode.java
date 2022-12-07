@@ -1,7 +1,6 @@
 /**
- * Implements a timed mode for the chess game.
- * it can be enabled/disabled by the players.
- * 
+ * Description: Implements a timed mode for the chess game.
+ * 			it can be enabled/disabled by the players.
  * 
  * @author Khojiakbar Yokubjonov
  */
@@ -33,10 +32,12 @@ public class TimedMode {
 	boolean isOutOfTime;
 	int counter = 0;
 	String player;
-
-	/*
+	
+	/**
 	 * Constructs a countdown timer for the player
 	 * Accepts a shell and a composite to draw the timer
+	 * @param shell UI's shell
+	 * @param comp composite to hold the timer on the shell
 	 */
 	public TimedMode(Shell shell, Composite comp) {
 		this.shell = shell;
@@ -59,8 +60,8 @@ public class TimedMode {
 		isOutOfTime = false;
 
 	}
-
-	/*
+	
+	/**
 	 * Updates the countdown timer
 	 */
 	public void update() {
@@ -88,21 +89,23 @@ public class TimedMode {
 		}				
 		
 		counter++;
-
-}
-	/*
+	}
+	
+	/**
 	 * Sets the player's name next to the timer
+	 * @param player the player's name
 	 */
 	public void setPlayer(String player) {
 		nameLabel.setText(player);
 		nameLabel.requestLayout();		
 		}
 
-
-	/*
+	
+	/**
 	 * Sets the time limit for a player.
 	 * Accepts the time limit as String in the format- MM:SS. 
 	 * e.g. 10:30
+	 * @param limit String time limit
 	 */
 	public void setTimeLimit(String limit) {
 
@@ -116,10 +119,12 @@ public class TimedMode {
 
 	}
 
-	/*
+	/**
 	 * Accepts a string time input in the format "MM:SS"
 	 * Returns an array containing the minutes and seconds
 	 * e.g for the input "10:30", it'd return {10, 30}
+	 * @param time String time
+	 * @return array of ints containing the minutes and seconds
 	 */
 	private int[] manageUserTimeInput(String time) {
 		int[] timeLimit = new int[2]; // {minutes, seconds}
@@ -131,8 +136,10 @@ public class TimedMode {
 
 	}
 
-	/*
+	
+	/**
 	 * Returns true if the player is out of time, otherwise false.
+	 * @return boolean value
 	 */
 	public boolean isTimerOver() {
 		return this.isOutOfTime;
