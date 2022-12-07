@@ -1,8 +1,8 @@
-/* Gives the player the option to go up against a computer, whether one utilizing
+/** Gives the player the option to go up against a computer, whether one utilizing
  * random possible moves (the "easy" version) or one utilizing an algorithm 
  * designed to pick the best possible move (the "hard" version).
  * 
- * Authors: Ali Sartaz Khan
+ * @author Ali Sartaz Khan
  */
 
 package game;
@@ -24,10 +24,10 @@ public class Robot {
 	boolean whitesTurn;
 	int count;
 	
-	/*
+	/**
 	 * Constructor takes in color of robot
 	 *
-	 * color: robot color
+	 * @param color: color of robot
 	 */
 	public Robot(String color) {
 		this.color = color; this.count = 0;
@@ -39,17 +39,17 @@ public class Robot {
 		System.out.println("Robot is working and he is "+ this.getColor());
 	}
 	
-	/*
+	/**
 	 * Setting board object
 	 * 
-	 * boardUI: boardUI
+	 * @param boardUI: Chessboard object for UI
 	 */
 	public void setBoard(Chessboard boardUI) {
 		this.boardUI = boardUI;
 	}
 	
-	/*
-	 * Move robot piece
+	/**
+	 * Move robot piece 
 	 */
 	public void movePiece() {
 		updatePieces();
@@ -76,10 +76,10 @@ public class Robot {
 		
 	}
 	
-	/*
+	/** 
 	 * Fill list with all of the robot's pieces
 	 * 
-	 * board: 2D tile array
+	 * @param board: 2D tile array
 	 */
 	public void populatePiecesList(Tile[][] board) {
 		for (int row = 0; row < 8; row++) {
@@ -100,7 +100,7 @@ public class Robot {
 	}
 	
 	
-	/*
+	/**
 	 * Updates the pieces list to check which pieces are killed off
 	 */
 	public void updatePieces() {
@@ -113,10 +113,10 @@ public class Robot {
 	}
 	
 	
-	/*
+	/**
 	 * Prints all the pieces out
 	 * 
-	 * board: 2D tile array
+	 * @param board: 2D tile array
 	 */
 	public void printPieces(Tile[][] board) {
 		updatePieces();
@@ -129,10 +129,11 @@ public class Robot {
 		
 	}
 	
-	/*
+	/**
 	 * Makes a move using one of the 4 iteration patterns
 	 * 
-	 * piece: piece that will move
+	 * @param piece: piece that will move
+	 * @return true or false depending on whether robot can move piece
 	 */
 	public boolean makeMove(Piece piece) {		
 		count++;
@@ -149,10 +150,11 @@ public class Robot {
 	}
 	
 	
-	/*
+	/**
 	 * Iteration pattern 1
 	 * 
-	 * piece: piece that will move
+	 * @param piece: piece that will move
+	 * @return true or false depending on whether robot can move piece
 	 */
 	public boolean iteration1(Piece piece) {
 		for (int row = 0; row < 8; row++) {
@@ -167,10 +169,11 @@ public class Robot {
 		return false;
 	}
 	
-	/*
+	/**
 	 * Iteration pattern 2
 	 * 
-	 * piece: piece that will move
+	 * @param piece: piece that will move
+	 * @return true or false depending on whether robot can move piece
 	 */
 	public boolean iteration2(Piece piece) {
 		for (int row = 0; row < 8; row+=2) {
@@ -194,10 +197,11 @@ public class Robot {
 		return false;
 	}
 	
-	/*
+	/**
 	 * Iteration pattern 3
 	 * 
-	 * piece: piece that will move
+	 * @param piece: piece that will move
+	 * @return true or false depending on whether robot can move piece
 	 */
 	public boolean iteration3(Piece piece) {
 		for (int row = 7; row >= 0; row--) {
@@ -211,10 +215,11 @@ public class Robot {
 		}
 		return false;	}
 	
-	/*
+	/**
 	 * Iteration pattern 4
 	 * 
-	 * piece: piece that will move
+	 * @param piece: piece that will move
+	 * @return true or false depending on whether robot can move piece
 	 */
 	public boolean iteration4(Piece piece) {
 		for (int row = 7; row >=0; row-=2) {
@@ -238,8 +243,8 @@ public class Robot {
 		return false;
 	}
 	
-	/*
-	 * Returns color of the robot
+	/**
+	 * @return color of the robot
 	 */
 	public String getColor() {
 		return this.color;

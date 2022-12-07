@@ -2,7 +2,7 @@
 **By**: `Ali Sartaz Khan`, `Jonathan Houge`, `Julius Ramirez`, and `Khojiakbar Yokubjonov` \
 **Assigned TA:** `Shrey Goel`\
 **Trello Board:** [**Here**](https://trello.com/w/335project) \
-**Video Link:** [**Change Link**]()
+**Video Link:** [**Here**]()
 ## How to run
 * Run `./335 Project/src/Client.java`
 * If `Remote play` enabled: Run `./335 Project/src/Server.java` first

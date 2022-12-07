@@ -1,5 +1,5 @@
-/*
- * Name: Ali Sartaz Khan
+/**
+ * @author Ali Sartaz Khan
  * Course: CSc 335
  * Description: Creates the Server class consisting of client handlers
  */
@@ -35,8 +35,8 @@ public class Server
     	server.start();
     }
     
-    /*
-     * Starts server
+    /**
+     * Starts server class
      */
     public void start() {
     	System.out.println("Server has started");
@@ -54,8 +54,8 @@ public class Server
     	
     }
     
-    /*
-     * Closes server
+    /**
+     * Closes server object
      */
     public void closeServer() {
     	try {

@@ -1,5 +1,5 @@
-/*
- * Name: Ali Sartaz Khan & Jonathan Houge & Khojiakbar Yokubjonov & Julius Ramirez
+/**
+ * @authors Ali Sartaz Khan & Jonathan Houge & Khojiakbar Yokubjonov & Julius Ramirez
  * Course: CSc 335
  * Description: Creates the UI for the client
  */
@@ -69,12 +69,12 @@ public class UI {
 	boolean isLocalGame = false;
 	int gameOver = 0;
 	
-	/*
+	/**
 	 * Constructor that assigns values
-	 * client: client object
-	 * in: input stream
-	 * out: output stream
-	 * socket: Socket object
+	 * @param client: client object
+	 * @param in: input stream
+	 * @param out: output stream
+	 * @param socket: Socket object
 	 */
 	public UI(Client client, BufferedReader in, BufferedWriter out, Socket socket) {
 		this.in = in;
@@ -96,11 +96,11 @@ public class UI {
 	}
 	
 	
-	/*
+	/**
 	 * Constructor when Client plays against a robot
 	 * 
-	 * client: Client Object
-	 * robot: Robot opponent
+	 * @param client: Client Object
+	 * @param robot: Robot opponent
 	 */
 	public UI(Client client, Robot robot) {
 		this.robot = robot;
@@ -121,10 +121,10 @@ public class UI {
 
 
 	
-	/*
+	/**
 	 * Constructor when Client plays local game
 	 * 
-	 * player: Player object from client
+	 * @param player: Player object from client
 	 */
 	public UI(Player player) {
 		this.player = player;
@@ -139,8 +139,9 @@ public class UI {
 
 
 
-	/*
+	/**
 	 * Starts running the UI by setting up all the displays
+	 * @return true or false
 	 */
 	public boolean start() {
 		setup();
@@ -186,7 +187,7 @@ public class UI {
 				}
 				}
 			
-			if (initialized) { 
+			if (initialized) {
 				boardUI.draw(e.gc); 
 				if(whitesTurn) {
 					System.out.println("It is currently whites turn!");
@@ -201,18 +202,17 @@ public class UI {
 		);	
 
 		canvas.addMouseListener(new MouseListener() {
-			/*
+			/**
 			 * Called upon when mouse is pressed
 			 * 
-			 * e: Mouse Event
+			 * @param mouse event
 			 */
 			public void mouseDown(MouseEvent e) {
-
+				if(checkTimers()) // returns true if either of players run out of time
+					return;
 				if (!yourTurn) {// thinking here?{
-					if(yourTimer != null) {
-						if(yourTimer.isTimerOver()){ gameOver = 1; return; } // set gameOver int here [currently white wins]
-					}
 					return;}
+				
 
 				//Gather data, convert graphical coordinates into chessboard coordinates
 				int coordinates[] = boardUI.getBoardIndex(e.x,e.y);
@@ -257,11 +257,11 @@ public class UI {
 				}
 				
 			} 
-			/*
+			/**
 			 * Make piece move to a certain coordinate
 			 * 
-			 * xCoord: X coordinate
-			 * yCoord: Y coordinate
+			 * @param xCoord: X coordinate
+			 * @param yCoord: Y coordinate
 			 */
 			public void makeMove(int xCoord,int yCoord) {
 				int xCoordBefore = selectedPiece.getX();
@@ -315,28 +315,25 @@ public class UI {
 		boolean isJustConnected = true;
 		long start = System.currentTimeMillis();
 		while (!shell.isDisposed() && gameOver == 0) 
-			if (!display.readAndDispatch())
 				if (!display.readAndDispatch()) {
 					long end = System.currentTimeMillis();
+					// keeps track of the time for the game
 					int diff = (int) ((end-start)/1000);
-					if(diff==1) { // the timers start when both players are connected
-						
-						if(isOpponentConnected) {
+					if(diff==1) {
+						if(isOpponentConnected) { // the timers start when both players are connected
 							if(isJustConnected) {
-								System.out.println("adding OPPONENT'S TIME ... ");
 								if(opponentsPreferedTime != null) {
 									if(!opponentsPreferedTime.contains("M")&& !opponentsPreferedTime.contains("S")) {
 										opponentsTimer = new TimedMode(shell, upperComposite);
-										opponentsTimer.setTimeLimit(opponentsPreferedTime);
+										//sets the timer for the opponent
+										opponentsTimer.setTimeLimit(opponentsPreferedTime); 
 										opponentsTimer.setPlayer(opponent);
 									}
 								}
-								
-				
 								isJustConnected = false;
 								}
 							
-							
+							checkTimers();
 							if(yourTurn && yourTimer != null) {
 								yourTimer.update();}
 							else if(!yourTurn && opponentsTimer != null) {opponentsTimer.update();}
@@ -369,7 +366,7 @@ public class UI {
 	}
 	
 
-	/*
+	/**
 	 * Setup all GUI components
 	 */
 	void setup() {
@@ -400,16 +397,36 @@ public class UI {
 	}
 	
 
-	/*
-	 * Set connected status with opponent
+	/**
+	 * Set connected to true
 	 */
 	public void setConnected() {this.isOpponentConnected = true;}
+	
+	/**
+	 * Checks if timers are over
+	 * @return true or false 
+	 */
+	private boolean checkTimers() {
+		if(yourTimer != null) {
+			if(yourTimer.isTimerOver()){
+				if(player.getColor().equals("White")) {gameOver = 2; return true; }
+				else {gameOver = 1; return true;}
+			}
+		}
+		if(opponentsTimer != null){
+			if(opponentsTimer.isTimerOver()) {
+				if(player.getColor().equals("White")) {gameOver = 1; return true; }
+				else {gameOver = 2; return true;}
+			}
+			
+		}return false;
+	}
 
 	
-	/*
+	/**
 	 * Define your own timer for the game
 	 * 
-	 * time: Time String
+	 * @param time: Time String
 	 */
 	private void defineYourTimer(String time) {
 		// TODO Auto-generated method stub
@@ -422,10 +439,10 @@ public class UI {
 	}
 	
 	
-	/*
+	/**
 	 * Define opponent's timer
 	 * 
-	 * time: Time String
+	 * @param time: Time String
 	 */
 	private void defineOpponentsTimer(String time) {
 		// TODO Auto-generated method stub
@@ -437,8 +454,8 @@ public class UI {
 	}
 
 	
-	/*
-	 * Composites created
+	/**
+	 * Defines composites for the shell
 	 */
 	private void defineComposites() {
 		// TODO Auto-generated method stub
@@ -447,14 +464,16 @@ public class UI {
 		rowLayout.marginLeft = 0;
 		rowLayout.marginRight = 0;
 		
-		
+		//composite to hold the opponent's timer
 		upperComposite = new Composite(shell, SWT.NO_FOCUS);
 		upperComposite.setLayoutData(opponentsTimer);
 		upperComposite.setLayout(rowLayout);
 		
+		//composite to hold the canvas
 		middleComposite = new Composite(shell, SWT.NO_FOCUS);
 		middleComposite.setLayoutData(canvas);
 		
+		//composite to hold the player's timer
 		lowerComposite = new Composite(shell, SWT.NO_FOCUS);
 		lowerComposite.setLayoutData(yourTimer);
 		lowerComposite.setLayout(rowLayout);
@@ -475,10 +494,9 @@ public class UI {
 			 loadOldGame = false;
 			 System.out.println("Sorry, the entered file could not be found!");
 		 }
-		
-		
 	}
-	/*
+	
+	/**
 	 * establishes the menu bar at the top of shell
 	 * 
 	 */
@@ -488,7 +506,7 @@ public class UI {
 		
 	}
 	
-	/*
+	/**
 	 * creates the file menu
 	 */
 	protected void createFileMenu() {
@@ -502,7 +520,7 @@ public class UI {
 		
 	}
 	
-	/*
+	/**
 	 * file save menu.
 	 */
 	protected void createFileSaveItem() {
@@ -511,7 +529,9 @@ public class UI {
 		fileSaveItem.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent event) {
 				
+				//promtps the user for a file name to save the game
 				gameStatus.getFileName(); //prompts the player for a file name
+				//saves the game inside the Saved Games folder
 				gameStatus.saveGame(boardUI.getBoard(), yourTurn, whitesTurn); //saves the game status to a .txt file
 			}
 
@@ -520,7 +540,7 @@ public class UI {
 		});
 	}
 	
-	/*
+	/**
 	 * file exit option. when selected, exits the program
 	 */
 	protected void createFileExitItem() {
@@ -543,12 +563,12 @@ public class UI {
 	
 	
 	
-	/*
+	/**
 	 * Runner class
 	 */
 	class Runner implements Runnable
 	{
-		/*
+		/**
 		 * Run method
 		 */
 		public void run() 
@@ -598,7 +618,7 @@ public class UI {
 							selectedPiece = null;
 							//System.out.println(msgFromOpponent);
 						}else if(msgFromOpponent.contains("PLAYER")) {
-							//System.out.println(msgFromOpponent);
+							//takes in the time input by the opponent player
 							opponent = list[3];
 							opponentsPreferedTime = list[4];
 							opponentsPreferedTime += (":" + list[5]);

@@ -1,9 +1,9 @@
 /**
  * this class enables the user to save the current game to a text file and also 
- * allows continuing an old game.
+ * allows loading an old game.
  * 
  * 
- * Khojiakbar Yokubjonov 
+ * @author Khojiakbar Yokubjonov 
  */
 package game;
 
@@ -44,12 +44,12 @@ public class GameStatus {
 	String fileName;
 	public GameStatus(Shell shell) {
 		this.parent = shell;
-		
 		fileName = "";
 	}
 	
 	/*
 	 * Creates a display that prompts the player for a file name
+	 * Returns the file name entered by the player
 	 * 
 	 */
 	public String getFileName() {
@@ -69,7 +69,6 @@ public class GameStatus {
 		    label.setBackground(new Color(255, 221, 153));
 
 		    final Text text = new Text(shell, SWT.SINGLE | SWT.BORDER);
-//		    text.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER,true,true,1,1));
 		    Color buttonColor = new Color(204, 136, 0);
 		    final Button saveButton = new Button(shell, SWT.PUSH);
 		    saveButton.setText("Save and Exit");
@@ -91,13 +90,10 @@ public class GameStatus {
 		    Button cancelButton = new Button(shell, SWT.PUSH);
 		    cancelButton.setText("Cancel");
 		    cancelButton.setBackground(buttonColor);
-//		    saveButton.setSize(cancelButton.getSize());
-		    
 		    
 		    saveButton.addListener(SWT.Selection, new Listener() {
 			      public void handleEvent(Event event) {
 			    	if(fileName.equals(".txt") || fileName.equals("")) {return;}
-//			        shell.dispose();
 			        shell.dispose();
 			        parent.dispose();
 			      }
@@ -131,6 +127,10 @@ public class GameStatus {
 		
 	}
 	
+	/*
+	 * Prompts the player for a file name to save the game when he/she tries to exit
+	 * Returns the file name entered by the player
+	 */
 	public String promptsFileWhileExiting() {
 		final Shell shell = new Shell(parent, SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL);
 	    shell.setText("Do You Wanna Save the Game?");

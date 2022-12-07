@@ -15,7 +15,7 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-import displays.QueenPromotionDisplay;
+import displays.PawnPromotionDisplay;
 import pieces.Bishop;
 import pieces.King;
 import pieces.Knight;
@@ -167,6 +167,12 @@ public class Chessboard implements ChessBoardUI {
 		getBoardIndex(x, y);
 	}
 	
+	
+	/**
+	 * accepts the pixel coordinates and converts them to valid index on the board
+	 * @param x,y  - the pixel coordinates on the canvas
+	 * @return
+	 */
 	public int[] getBoardIndex(float x, float y) {
 		x -= BOARD_COORD_OFFSET / 2;
 		float indexX = x / SQUARE_WIDTH;
@@ -526,7 +532,7 @@ public class Chessboard implements ChessBoardUI {
 		if(selectedPiece instanceof Pawn) {
 			Pawn pawn = (Pawn) selectedPiece;
 			if (pawn.promotion()) {
-				String decision = new QueenPromotionDisplay().start(display);
+				String decision = new PawnPromotionDisplay().start(display);
 				Object piece = new Queen(selectedPiece.isWhite(), shell);
 				if (decision.equals("Rook")) {
 					piece = new Rook(selectedPiece.isWhite(), shell); }
@@ -560,6 +566,7 @@ public class Chessboard implements ChessBoardUI {
 	public void unhighlightCoordinates(Piece selectedPiece) { selectedCoordinates = null; }
 	
 	public Tile getTile(int x, int y) { return board[y][x]; }
+	
 	public boolean getPromotion() {
 		if (this.promotion) {
 			this.promotion = false;
