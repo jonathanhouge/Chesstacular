@@ -29,18 +29,18 @@ import pieces.Rook;
  * @author Jonathan Houge & Julius Ramirez & Khojiakbar Yokubjonov
  */
 public class Chessboard implements ChessboardUI {
-	Canvas canvas;
-	Shell shell;
-	Display display;
+	private Canvas canvas;
+	private Shell shell;
+	private Display display;
 
-	Tile[][] board;
-	int SQUARE_WIDTH = 80;
-	int BOARD_COORD_OFFSET = 100;
-	String verticalCoords[] = new String[] { "8", "7", "6", "5", "4", "3", "2", "1" };
-	String horizontalCoords[] = new String[] { "A", "B", "C", "D", "E", "F", "G", "H" };
+	private Tile[][] board;
+	private int SQUARE_WIDTH = 80;
+	private int BOARD_COORD_OFFSET = 100;
+	private String verticalCoords[] = new String[] { "8", "7", "6", "5", "4", "3", "2", "1" };
+	private String horizontalCoords[] = new String[] { "A", "B", "C", "D", "E", "F", "G", "H" };
 
-	boolean promotion = false;
-	public boolean endGame = false;
+	private boolean promotion = false;
+	private boolean endGame = false;
 
 	private List<Coordinate> selectedCoordinates;
 
@@ -289,9 +289,12 @@ public class Chessboard implements ChessboardUI {
 
 	/**
 	 * This method returns a specific colored king piece so that it may be used for
-	 * check and checkmate calculations. It could be improved by removing the need
-	 * to iterate through the entire board every time.
-	 * 
+	 * check and checkmate calculations.
+	 * <P>
+	 * It could be improved by removing the need to iterate through the entire board
+	 * every time by saving the king's location or saving it as a field that has 
+	 * aliasing.
+	 *
 	 * @param getWhite, true if obtaining white king, false if obtaining black king.
 	 * @return the desired King piece.
 	 */
@@ -311,17 +314,22 @@ public class Chessboard implements ChessboardUI {
 				}
 			}
 		}
-		return null;
+		// This should never be reached.
+		System.out.println("Chessboard.java - no king found, exiting...");
+		System.exit(403);
+		return null; 
 	}
 
 	/**
 	 * This method returns a boolean which indicates if the move to the desired x/y
 	 * coordinate is a legal move that the piece can made.
 	 * <P>
-	 * It can be improved by simply checking if the x/y coordinate is within the {@link #selectedCoordinates} field,
-	 * although this would require changes in the Pawn classes' validMove() method as that method call sets state/move
+	 * It can be improved by simply checking if the x/y coordinate is within the
+	 * {@link #selectedCoordinates} field, although this would require changes in
+	 * the Pawn classes' validMove() method as that method call sets state/move
 	 * specific booleans that would thus no longer be updated.
-	 * @see  pieces.Pawn#validMove(int, int, Tile[][])
+	 * 
+	 * @see pieces.Pawn#validMove(int, int, Tile[][])
 	 * @param x          any integer between 0-7 inclusive
 	 * @param y          any integer between 0-7 inclusive
 	 * 
@@ -334,13 +342,13 @@ public class Chessboard implements ChessboardUI {
 
 	}
 
-
 	/**
 	 * This method updates the piece's coordinates to the new x/y coordinate and
-	 * ensures that the old tiles piece field is set to null. Additionally, updateLocation()
-	 * is called so that state specific fields are updated accordingly. If it moves onto a 
-	 * tile that already has a piece, it set's that piece's dead field to true so that the robot
-	 * won't select that piece to be moved.
+	 * ensures that the old tiles piece field is set to null. Additionally,
+	 * updateLocation() is called so that state specific fields are updated
+	 * accordingly. If it moves onto a tile that already has a piece, it set's that
+	 * piece's dead field to true so that the robot won't select that piece to be
+	 * moved.
 	 * 
 	 * @see pieces.Pawn#updateLocation(int, int)
 	 * @see pieces.King#updateLocation(int, int)
