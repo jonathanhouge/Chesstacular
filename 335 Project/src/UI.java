@@ -233,7 +233,7 @@ public class UI {
 					Piece possibleSelection;
 					possibleSelection = boardUI.selectPiece(xCoord, yCoord,whitesTurn);
 					if (possibleSelection !=null) {// player has selected new piece
-						if(boardUI.newValidMoveMade(xCoord,yCoord,selectedPiece)) {//castling requires use to click rook 
+						if(boardUI.newValidMoveMade(xCoord,yCoord,selectedPiece)) {//castling requires user to click rook 
 							King k = (King) selectedPiece;
 							k.castlingMoveMade = true;
 							makeMove(xCoord,yCoord);
@@ -247,7 +247,7 @@ public class UI {
 							canvas.redraw();
 						}
 					}else {// player may have moved onto empty space or onto enemy
-						if(boardUI.newValidMoveMade(xCoord,yCoord,selectedPiece)) {
+						if(boardUI.validMoveMade(xCoord,yCoord,selectedPiece,whitesTurn)) {
 							makeMove(xCoord,yCoord);
 						}else {
 							System.out.println("UI - INVALID MOVE MADE!");

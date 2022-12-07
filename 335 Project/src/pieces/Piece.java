@@ -1,6 +1,5 @@
 package pieces;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.swt.graphics.GC;
@@ -10,44 +9,64 @@ import game.Coordinate;
 import game.Tile;
 
 /**
- * This abstract class is responsible for outlining what subclasses of Piece can
- * do, along with some methods that are non-specific to piece subclasses.
+ * This abstract class is responsible for outlining general Piece functionality.
  * Subclasses of Piece are: King, Queen, Bishop, Knight, Pawn, and Rook.
  * 
  * @author Julius Ramirez
  */
 
-//TODO ideally, update setLocation to be 0-7 instead of pixel loc
 public abstract class Piece {
+	/**
+	 * A boolean that indicates if the piece is white or not.
+	 */
 	private boolean white;
+	/**
+	 * The x coordinate of this piece, between 0-7 inclusive.
+	 */
 	private int x;
+	/**
+	 * The y coordinate of this piece, between 0-7 inclusive.
+	 */
 	private int y;
+	/**
+	 * An image which represents the piece
+	 */
 	private Image visual;
+	/**
+	 * The graphical spacing of squares on the chessboard graphic
+	 */
 	private static int SQUARE_WIDTH = 80;
+	/**
+	 * The alive status of this piece
+	 */
 	private boolean dead = false;
-
+	/**
+	 * The specific name of this piece in all caps, such as ROOK or QUEEN.
+	 */
 	public String name;
-	int BOARD_COORD_OFFSET = 100;
-	public boolean selected;
+	/**
+	 * The offset of the board from the left, AKA the space that the left coordinate
+	 * identifiers occupy.
+	 */
+	private static int BOARD_COORD_OFFSET = 100;
+	/**
+	 * A boolean indicatin if a player has selected this piece, used to determine
+	 * whether or not to highlight the tile during canvas drawing.
+	 */
+	public boolean selected = false;
 
 	/**
-	 * This method is used to set the SQUARE_WIDTH variable, a variable representing
-	 * how wide each tile on the board is which is necessary for when a piece must
-	 * draw itself onto the UI.
+	 * Creates a new piece, only saving its color. The location of the piece must
+	 * thus be set after its creation. Selected is initialized to false.
 	 * 
-	 * @param width, an integer representing how wide a square is on the board.
+	 * @param white true if the piece is white, false if it is not.
 	 */
-	public static void setWidth(int width) {
-		SQUARE_WIDTH = width;
-	}
-
 	public Piece(boolean white) {
 		this.white = white;
-		this.selected = false;
 	}
 
 	/**
-	 * This method returns a string in the form of COLOR PIECE X Y.
+	 * This method returns a string in the form of: "COLOR PIECE (X,Y)"
 	 * 
 	 * @return a string describing the state of the piece.
 	 */
@@ -59,25 +78,8 @@ public abstract class Piece {
 		} else {
 			color = "BLACK ";
 		}
-		String builder = color + name + " (" + this.x + "," + this.y +")";
+		String builder = color + name + " (" + this.x + "," + this.y + ")";
 		return builder;
-	}
-	
-	
-	/**
-	 * these functions are used to highlight the user selected piece
-	 *  on the chess board;
-	 */
-	
-	public void setSelected() {
-		this.selected = true;
-	}
-	public boolean isSelected() {
-		return this.selected;
-	}
-	
-	public void SetNotSelected() {
-		this.selected = false;
 	}
 
 	/**
@@ -96,19 +98,82 @@ public abstract class Piece {
 	}
 
 	/**
-	 * This method is responsible for drawing a piece onto the UI.
+	 * This method is responsible for drawing a piece onto the UI canvas.
 	 * 
 	 * @param gc the graphical context where the image is to be drawn onto.
 	 */
 	public void draw(GC gc) {
-
-		gc.drawImage(this.visual, this.x * SQUARE_WIDTH + 10+BOARD_COORD_OFFSET/2, this.y * SQUARE_WIDTH + 10);
+		gc.drawImage(this.visual, this.x * SQUARE_WIDTH + 10 + BOARD_COORD_OFFSET / 2, this.y * SQUARE_WIDTH + 10);
 	}
 
 	/**
-	 * This method is used to determine the color of the piece.
+	 * This helper method is used in the generateMove() methods, it returns true if
+	 * the tile has an enemy piece.
 	 * 
-	 * @return true if piece is white, false if black..
+	 * @param x     the x, between 0 and 7 inclusive, to be moved to.
+	 * @param y     the y, between 0 and 7 inclusive, to be moved to.
+	 * @param tiles a 2D list containing Tile objects which contain an accessible
+	 *              Piece field.
+	 * @return true if enemy piece is at x/y, false if it's empty or a friendly
+	 *         piece.
+	 */
+	public boolean hasEnemyPiece(int x, int y, Tile[][] tiles) {
+		return tiles[y][x].hasPiece() && tiles[y][x].getPiece().isWhite() != this.white;
+	}
+
+	/**
+	 * This helper method is used in the generateMove() methods, it returns true if
+	 * the tile has a friendly piece.
+	 * 
+	 * @param x     the x, between 0 and 7 inclusive, to be moved to.
+	 * @param y     the y, between 0 and 7 inclusive, to be moved to.
+	 * @param tiles a 2D list containing Tile objects which contain an accessible
+	 *              Piece field.
+	 * @return true if friendly piece is at x/y, false if it's empty or an enemy
+	 *         piece.
+	 */
+	public boolean hasFriendlyPiece(int x, int y, Tile[][] tiles) {
+		return tiles[y][x].hasPiece() && tiles[y][x].getPiece().isWhite() == this.white;
+	}
+
+	// -- Getters
+
+	/**
+	 * Returns the string color of the piece.
+	 * 
+	 * @return "White" if white, else "Black"
+	 */
+	public String getColor() {
+		if (white)
+			return "White";
+		else
+			return "Black";
+	}
+
+	/**
+	 * Returns the dead fields current status. The dead field is used by the AI.
+	 * 
+	 * @return true if piece is dead, false if not.
+	 */
+	public boolean isDead() {
+		return this.dead;
+	}
+
+	/**
+	 * Returns the name of the piece, used in opponent promotion determination.
+	 * 
+	 * @return the string name of the piece in the form: PIECE
+	 */
+	public String getName() {
+		return this.name;
+	}
+
+	/**
+	 * This method is used to determine the color of the piece, returning the
+	 * piece's white field which is true if the piece is white, false if it is
+	 * black.
+	 * 
+	 * @return true if piece is white, false if black.
 	 */
 	public boolean isWhite() {
 		return this.white;
@@ -117,7 +182,8 @@ public abstract class Piece {
 	/**
 	 * This getter method returns the x value of the piece.
 	 * 
-	 * @return an integer representing the x value of the piece.
+	 * @return an integer between 0 and 7 inclusive representing the x value of the
+	 *         piece.
 	 */
 	public int getX() {
 		return this.x;
@@ -126,46 +192,128 @@ public abstract class Piece {
 	/**
 	 * This getter method returns the y value of the piece.
 	 * 
-	 * @return an integer representing the y value of the piece.
+	 * @return an integer between 0 and 7 inclusive representing the y value of the
+	 *         piece.
 	 */
 	public int getY() {
 		return this.y;
 	}
 
 	/**
-	 * This method updates the location of a given piece.
+	 * This method return a boolean indicating if this piece is selected.
+	 * 
+	 * @return true if this piece is selected, false if not.
+	 */
+	public boolean isSelected() {
+		return this.selected;
+	}
+
+	// -- Setters
+
+	/**
+	 * This method updates the location of a the piece.
 	 * 
 	 * @param x any integer between 0-7 inclusive.
 	 * @param y any integer between 0-7 inclusive.
 	 */
 	public void updateLocation(int x, int y) {
-		this.x =  x;
+		this.x = x;
 		this.y = y;
+	}
+
+	/**
+	 * This method sets the x/y coordinate of the piece. It MUST be given the
+	 * graphical x/y values where the user has clicked. It is the only method that
+	 * interprets x/y in this way and could be improved by following the x/y =
+	 * coordinate convention, which would allow for easier move simulation due to no
+	 * longer needing to save a piece's booleans.
+	 * 
+	 * @param x the x coordinate where the user clicked
+	 * @param y the y coordinate where the user clicked
+	 */
+	public void setLocation(int x, int y) {
+		this.x = (x - BOARD_COORD_OFFSET / 2) / SQUARE_WIDTH;
+		this.y = y / SQUARE_WIDTH;
+	}
+
+	/**
+	 * This method sets the piece as not selected so that when drawing the canvas,
+	 * it does not highlight it anymore.
+	 */
+	public void SetNotSelected() {
+		this.selected = false;
+	}
+
+	/**
+	 * Sets the dead field of the piece accordingly which is used by the AI.
+	 * 
+	 * @param status, true if piece is dead, false if not.
+	 */
+	public void setDeadStatus(boolean status) {
+		this.dead = status;
+	}
+
+	/**
+	 * Sets the dead field to true so that it may not be moved by the AI.
+	 */
+	public void killPiece() {
+		this.dead = true;
+	}
+
+	/**
+	 * This method sets the pieces selected boolean to true so it may be highlighted
+	 * on the canvas.
+	 */
+	public void setSelected() {
+		this.selected = true;
+	}
+
+	/**
+	 * This method is used to set the SQUARE_WIDTH variable, a static variable
+	 * representing how wide each tile on the board is which is necessary for when a
+	 * piece must draw itself onto the UI.
+	 * 
+	 * @param width, an integer representing how wide a square is on the board.
+	 */
+	public static void setWidth(int width) {
+		SQUARE_WIDTH = width;
 	}
 
 	/**
 	 * This method sets the image of the piece so that it is properly represented on
 	 * the chess board.
 	 * 
-	 * @param image an image representing the Piece object.
+	 * @param image an Image object which is a visual representation of the piece.
 	 */
 	public void setImage(Image image) {
 		this.visual = image;
 	}
 
+	// -- Abstract methods
 	/**
 	 * This method returns a boolean depending on if the piece is moved in a way
-	 * that it is intended to move.
+	 * that it is intended to move, both state specific move or as it generally is
+	 * moved.
+	 * <P>
+	 * Due to the creation of generateMoves() this method could be entirely
+	 * scrapped, however special moves such as en passant or castling have their
+	 * fields updated accordingly during this method call and thus removal requires
+	 * more structural changes.
 	 * 
 	 * @param x any integer between 0-7 inclusive.
 	 * @param y any integer between 0-7 inclusive.
-	 * @return true if the piece is moved in a typical way, false if not.
+	 * @return true if the piece is moved in a legal way, false if not.
 	 */
 	public abstract boolean standardMove(int x, int y);
 
 	/**
-	 * This method returns a boolean indicating if the piece collides with a
-	 * friendly piece at the x/y coordinate.
+	 * Returns a boolean indicating if the piece collides with a friendly piece at
+	 * the x/y coordinate. Enemy collisions are allowed.
+	 * <P>
+	 * Due to the creation of generateMoves() this method could be entirely
+	 * scrapped, however special moves such as en passant or castling have their
+	 * fields updated accordingly during this method call and thus removal requires
+	 * more structural changes.
 	 * 
 	 * @param x     any integer between 0-7 inclusive
 	 * @param y     any integer between 0-7 inclusive
@@ -177,72 +325,15 @@ public abstract class Piece {
 	public abstract boolean hasNoCollisions(int x, int y, Tile[][] tiles);
 
 	/**
-	 * This method sets the x/y coordinate of the piece. It MUST be given 
-	 * the graphical x/y values where the user has clicked. It is the only
-	 * method that interprets x/y in this way.
+	 * This method generates most of the valid moves a piece can do in terms of
+	 * standard piece movement and no collisions made. It does NOT filter out
+	 * non-valid check related moves (i.e. moves that keep the king in check/put the
+	 * king in check).
 	 * 
-	 * @param x the x coordinate where the user clicked
-	 * @param y the x coordinate where the user clicked
+	 * @param tiles tiles a 2D list containing Tile objects which contain an
+	 *              accessible Piece field.
+	 * @return a List of Coordinate objects which are spaces where the piece can
+	 *         possibly move.
 	 */
-	public void setLocation(int x, int y) {
-		this.x = (x-BOARD_COORD_OFFSET/2) / getSQUARE_WIDTH();
-		this.y = y / getSQUARE_WIDTH();
-	}
-
-	/**
-	 * Returns the SQUARE_WIDTH variable.
-	 * 
-	 * @return an int representing how wide squares on the board are.
-	 */
-	public static int getSQUARE_WIDTH() {
-		return SQUARE_WIDTH;
-	}
-	
-	/**
-	 * Returns the color of the piece
-	 * 
-	 * @return String representing the color
-	 */
-	public String getColor() {
-		if (white)
-			return "White";
-		else
-			return "Black";
-	}
-	
-	/**
-	 * Returns if piece is killed off
-	 */
-	public boolean isDead() {
-		return this.dead;
-	}
-	
-	/**
-	 * Kill this piece so that it may not be moved by the AI
-	 */
-	public void killPiece() {
-		this.dead = true;
-	}
-	public boolean getAliveStatus() {
-		return dead;
-		
-	}
-	public void setAliveStatus(boolean status) {
-		this.dead = status;
-	}
-	/**
-	 * Returns name of the piece
-	 */
-	public String getName() {
-		return this.name;
-	}
-	
 	public abstract List<Coordinate> generateMoves(Tile[][] tiles);
-	
-	public boolean hasEnemyPiece(int x, int y, Tile[][]tiles) {
-		return tiles[y][x].hasPiece() && tiles[y][x].getPiece().isWhite() != this.white;
-	}
-	public boolean hasFriendlyPiece(int x, int y, Tile[][]tiles) {
-		return tiles[y][x].hasPiece() && tiles[y][x].getPiece().isWhite() == this.white;
-	}
 }

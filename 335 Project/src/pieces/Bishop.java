@@ -9,22 +9,33 @@ import org.eclipse.swt.widgets.Shell;
 import game.Coordinate;
 import game.Tile;
 
+/**
+ * A subclass of Piece, this class contains Bishop specific implementations of
+ * the methods standardMove(), hasNoCollisions(), and generateMoves().
+ * 
+ * @author Julius Ramirez
+ *
+ */
 public class Bishop extends Piece {
 
 	String whitePiece = "wb.png";
 	String blackPiece = "bb.png";
 	int points = 3;
 
+	/**
+	 * Subclass constructor of {@link Piece#Piece(boolean)}.
+	 * 
+	 * @param white true if piece is white, false if black
+	 * @param shell the graphical shell. Used to set the image of the piece.
+	 */
 	public Bishop(boolean white, Shell shell) {
 		super(white);
-
 		if (white) {
 			setImage(new Image(shell.getDisplay(), "images/" + whitePiece));
 		} else {
 			setImage(new Image(shell.getDisplay(), "images/" + blackPiece));
 		}
 		this.name = "BISHOP";
-
 	}
 
 	@Override
@@ -37,6 +48,9 @@ public class Bishop extends Piece {
 	/**
 	 * {@inheritDoc} Additionally, it also checks to see if the piece collides with
 	 * another piece while attempting to move to the new x/y coordinate.
+	 * <P>
+	 * This method implementation can be improved by creating a helper method that
+	 * does the repeated hasPiece() checks within each loop.
 	 */
 	@Override
 	public boolean hasNoCollisions(int x, int y, Tile[][] tiles) {
@@ -78,79 +92,50 @@ public class Bishop extends Piece {
 	@Override
 	public List<Coordinate> generateMoves(Tile[][] tiles) {
 		List<Coordinate> coordinates = new ArrayList<>();
-		// UP-RIGHT
-		int y = getY() - 1;
-		int x = getX() + 1;
-		while (true) {
-			if(x < 0 || y < 0 || x > 7 || y >7) {
-				break;
-			}
+		// Up-Right
+		for (int x = getX() + 1, y = getY() - 1; x >= 0 && x <= 7 && y >= 0 && y <= 7; x++, y--) {
 			if (!tiles[y][x].hasPiece()) {
 				coordinates.add(new Coordinate(x, y));
 			} else {
-				if(tiles[y][x].getPiece().isWhite() != this.isWhite()) {
-					coordinates.add(new Coordinate(x,y));
+				if (hasEnemyPiece(x, y, tiles)) {
+					coordinates.add(new Coordinate(x, y));
 				}
 				break;
 			}
-			y--;
-			x++;
 		}
-		// DOWN-RIGHT
-		y = getY() + 1;
-		x = getX() + 1;
-		while (true) {
-			if(x < 0 || y < 0 || x > 7 || y >7) {
-				break;
-			}
+		// Down-Right
+		for (int x = getX() + 1, y = getY() + 1; x >= 0 && x <= 7 && y >= 0 && y <= 7; x++, y++) {
 			if (!tiles[y][x].hasPiece()) {
 				coordinates.add(new Coordinate(x, y));
 			} else {
-				if(tiles[y][x].getPiece().isWhite() != this.isWhite()) {
-					coordinates.add(new Coordinate(x,y));
+				if (hasEnemyPiece(x, y, tiles)) {
+					coordinates.add(new Coordinate(x, y));
 				}
 				break;
 			}
-			y++;
-			x++;
 		}
-		// UP-LEFT
-		y = getY() - 1;
-		x = getX() - 1;
-		while (true) {
-			if(x < 0 || y < 0 || x > 7 || y >7) {
-				break;
-			}
+		// Up-Left
+		for (int x = getX() - 1, y = getY() - 1; x >= 0 && x <= 7 && y >= 0 && y <= 7; x--, y--) {
 			if (!tiles[y][x].hasPiece()) {
 				coordinates.add(new Coordinate(x, y));
 			} else {
-				if(tiles[y][x].getPiece().isWhite() != this.isWhite()) {
-					coordinates.add(new Coordinate(x,y));
+				if (hasEnemyPiece(x, y, tiles)) {
+					coordinates.add(new Coordinate(x, y));
 				}
 				break;
 			}
-			x--;
-			y--;
 		}
-		// DOWN-LEFT
-		y = getY() + 1;
-		x = getX() - 1;
-		while (true) {
-			if(x < 0 || y < 0 || x > 7 || y >7) {
-				break;
-			}
+		// Down-Left
+		for (int x = getX() - 1, y = getY() + 1; x >= 0 && x <= 7 && y >= 0 && y <= 7; x--, y++) {
 			if (!tiles[y][x].hasPiece()) {
 				coordinates.add(new Coordinate(x, y));
 			} else {
-				if(tiles[y][x].getPiece().isWhite() != this.isWhite()) {
-					coordinates.add(new Coordinate(x,y));
+				if (hasEnemyPiece(x, y, tiles)) {
+					coordinates.add(new Coordinate(x, y));
 				}
 				break;
 			}
-			x--;
-			y++;
 		}
 		return coordinates;
 	}
-
 }
