@@ -161,13 +161,12 @@ public class UI {
 				   
 				if (!loadOldGame) {
 					boardUI.setAllPieces();
-//					boardUI.printBoard();
 					if (robot != null)
 					robot.populatePiecesList(boardUI.getBoard()); }
 				
 				else {
 					gameStatus.setFileName(fileName);
-					boolean[] playerTurnData = gameStatus.loadGame(boardUI.getBoard());
+					gameStatus.loadGame(boardUI.getBoard());
 					if (robot != null)
 						robot.populatePiecesList(boardUI.getBoard()); }
 				
@@ -320,7 +319,6 @@ public class UI {
 								}
 								isJustConnected = false;
 							}
-							
 							checkTimers();
 							if(yourTurn && yourTimer != null) { yourTimer.update(); }
 							else if(!yourTurn && opponentsTimer != null) {opponentsTimer.update();}
@@ -404,24 +402,13 @@ public class UI {
 	 * @param time: Time String
 	 */
 	private void defineYourTimer(String time) {
-		// TODO Auto-generated method stub
 		if (time.contains("M") || time.contains("S") || isLocalGame) { return; }
 		yourTimer = new TimedMode(shell, lowerComposite);
 		yourTimer.setPlayer(username);
 		yourTimer.setTimeLimit(time);
 	}
 	
-	/**
-	 * Define opponent's timer
-	 * 
-	 * @param time: Time String
-	 */
-	private void defineOpponentsTimer(String time) {
-		// TODO Auto-generated method stub
-		if(time.contains("M") || time.contains("S")) {return;}
-		opponentsTimer = new TimedMode(shell, upperComposite);
-	}
-
+	
 	/**
 	 * Defines composites for the shell
 	 */
@@ -454,7 +441,7 @@ public class UI {
 	private void validateFileName(){
 		if(fileName.equals("Enter file name")) {return;}
 		String cwd = System.getProperty("user.dir") + "\\Saved Games\\" + fileName;
-		 File dir = new File(cwd);
+		File dir = new File(cwd);
 		 if(dir.exists()) {
 			 loadOldGame = true;
 		 }else {
@@ -496,7 +483,7 @@ public class UI {
 				//prompts the user for a file name to save the game
 				gameStatus.getFileName(); //prompts the player for a file name
 				//saves the game inside the Saved Games folder
-				gameStatus.saveGame(boardUI.getBoard(), yourTurn, whitesTurn); //saves the game status to a .txt file
+				gameStatus.saveGame(boardUI.getBoard(), yourTurn, whitesTurn);
 			}
 
 			public void widgetDefaultSelected(SelectionEvent event) {}
@@ -510,15 +497,15 @@ public class UI {
 		fileExitItem = new MenuItem(fileMenu, SWT.PUSH);
 		fileExitItem.setText("Exit");
 		fileExitItem.addSelectionListener(new SelectionListener() {
-			public void widgetSelected(SelectionEvent event) {
-				shell.close();
-				display.dispose();
-			}
+		public void widgetSelected(SelectionEvent event) {
+			shell.close();
+			display.dispose();
+		}
 
-			public void widgetDefaultSelected(SelectionEvent event) {
-				shell.close();
-				display.dispose();
-			}
+		public void widgetDefaultSelected(SelectionEvent event) {
+			shell.close();
+			display.dispose();
+		}
 		});
 	}
 	
