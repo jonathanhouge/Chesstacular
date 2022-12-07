@@ -1,8 +1,3 @@
-/* Chess Board.
- * 
- * Authors: Jonathan Houge & Julius Ramirez & Khojiakbar Yokubjonov
- */
-
 package game;
 
 import java.util.List;
@@ -24,18 +19,28 @@ import pieces.Piece;
 import pieces.Queen;
 import pieces.Rook;
 
-public class Chessboard implements ChessBoardUI {
+/** 
+ * Chessboard implementation. Holds onto a list of Tiles that represent the
+ * tiles in the 8x8 board. These tiles hold onto the pieces that occupy them. 
+ * Draws itself by iterating through a this list and calling their draw methods.
+ * Has a multitude of methods for different kinds of moves, standard and 
+ * special cases.
+ * 
+ * @author Jonathan Houge & Julius Ramirez & Khojiakbar Yokubjonov
+ */
+public class Chessboard implements ChessboardUI {
 	Canvas canvas;
 	Shell shell;
 	Display display;
 	
-	int SQUARE_WIDTH = 80;
 	Tile[][] board;
-	boolean promotion = false;
-	public boolean endGame = false;
+	int SQUARE_WIDTH = 80;
+	int BOARD_COORD_OFFSET = 100;
 	String verticalCoords[] = new String[] { "8", "7", "6", "5", "4", "3", "2", "1" };
 	String horizontalCoords[] = new String[] { "A", "B", "C", "D", "E", "F", "G", "H" };
-	int BOARD_COORD_OFFSET = 100;
+	
+	boolean promotion = false;
+	public boolean endGame = false;
 
 	List<Coordinate> selectedCoordinates;
 	
@@ -44,53 +49,30 @@ public class Chessboard implements ChessBoardUI {
 	Color SIDE = new Color(204, 136, 0);
 	Color HIGHLIGHTED = new Color(110, 211, 255);
 	Color OUTLINE;
+	Font boardFont;
 	
+	/** 
+	 * Chessboard constructor. Takes in the needed SWT assets for
+	 * everything that needs to be done. Utilizes the display to
+	 * get the color needed for outlining and the font needed
+	 * for the board coordinates.
+	 * 
+	 * @param canvas: UI's canvas
+	 * @param shell: UI's shell.
+	 * @param display: UI's display
+	 */
 	public Chessboard(Canvas canvas, Shell shell, Display display) {
 		this.canvas = canvas;
 		this.shell = shell;
 		this.display = display;
 		this.OUTLINE = display.getSystemColor(SWT.COLOR_BLACK);
-	}
+		this.boardFont = new Font(canvas.getDisplay(), "Tahoma", 15, SWT.BOLD); }
 	
-	public Tile[][] getBoard(){return board;}
-	public void setBoard(Tile[][]board) {this.board = board;}
-
-	@Override
-	public void draw(GC gc) {
-		for (int x = 0; x < 8; x++) {
-			for (int y = 0; y < 8; y++) {
-				drawing(x, y, gc); } }
-	}
-	
-	private void drawing(int x, int y, GC gc) {
-		Tile t = board[x][y];
-		Piece p = t.getPiece();
-		if(p != null) {
-			if(p.isSelected()) {
-				t.draw(gc, SELECTED); }
-			else if(selectedCoordinates!= null && selectedCoordinates.contains(new Coordinate(y,x))){
-				t.draw(gc, HIGHLIGHTED);
-			}
-			else{
-				t.draw(gc);
-			} }
-		
-		else {
-			if(selectedCoordinates!= null && selectedCoordinates.contains(new Coordinate(y,x))){
-				t.draw(gc, HIGHLIGHTED);
-			}else {
-				t.draw(gc);
-			}}
-		
-		if (x == 0) { addBoardCoords(gc, x, y); }
-		if (y == 7) { addBoardCoords(gc, x, y); }
-	}
-
-	/*
-	 * 'simpleton' function, only ran once for initialization. color boolean
-	 * parameter determines what pieces should be in front of the player.
+	/**
+	 * Creation method, only ran once for initialization. Makes an empty board,
+	 * creating the tiles themselves by utilizing the Tile class.
 	 * 
-	 * it creates an empty board
+	 * @param gc: event gc, let's us draw on the canvas
 	 */
 	public void createBoardData(GC gc) {
 		board = new Tile[8][8]; // list of tiles
@@ -102,13 +84,11 @@ public class Chessboard implements ChessBoardUI {
 			for (int y = 0; y < 8; y++) {
 
 				// create the tiles with the proper color
-
 				if (boardColor) {
 					board[y][x] = new Tile(w, OUTLINE, x * SQUARE_WIDTH + 50, y * SQUARE_WIDTH, SQUARE_WIDTH); } 
 				else {
 					board[y][x] = new Tile(b, OUTLINE, x * SQUARE_WIDTH + 50, y * SQUARE_WIDTH, SQUARE_WIDTH); }
-
-
+				
 				// alternating tile colors
 				boardColor = !boardColor; }
 			boardColor = !boardColor; }
@@ -121,23 +101,21 @@ public class Chessboard implements ChessBoardUI {
 	public void setAllPieces() {
 		for (int y = 0; y < 8; y++) {
 			for (int x = 0; x < 8; x++) {
-				
-				// set the piece using a helper function
-				board[y][x].setPiece(makePiece(x, y));
-			}
-			
-		}
-		
+				board[y][x].setPiece(makePiece(x, y)); // set the piece using a helper function
+			} }
 	}
 
-	/*
-	 * helper function responsible for making the pieces and putting them in their
+	/**
+	 * Helper function responsible for making the pieces and putting them in their
 	 * starting positions.
+	 * 
+	 * @param x: row in board
+	 * @param y: column in board
+	 * @return Piece that was made
 	 */
 	private Piece makePiece(int x, int y) {
 
-		// want the pieces farthest from the player to be the opposite color (opponent's
-		// color)
+		// false == black
 		boolean pieceColor = false;
 
 		if (y == 0) { // black specialty pieces
@@ -149,10 +127,11 @@ public class Chessboard implements ChessBoardUI {
 			else if (x == 3) { return (new Queen(pieceColor, shell)); } } 
 		else if (y == 1) { return (new Pawn(pieceColor, shell)); } // black pawns
 
+		// true == white
 		pieceColor = !pieceColor;
 
-		if (y == 6) { return (new Pawn(pieceColor, shell)); } // your pawns
-		else if (y == 7) { // your specialty pieces
+		if (y == 6) { return (new Pawn(pieceColor, shell)); } // white pawns
+		else if (y == 7) { // white specialty pieces
 			if (x == 0 || x == 7) { return (new Rook(pieceColor, shell)); }
 			else if (x == 0 || x == 7) { return (new Rook(pieceColor, shell)); } 
 			else if (x == 1 || x == 6) { return (new Knight(pieceColor, shell)); }
@@ -163,10 +142,82 @@ public class Chessboard implements ChessBoardUI {
 		return null; // tile is given no piece
 	}
 
-	public void mouseClickUpdate(float x, float y) {
-		getBoardIndex(x, y);
+	@Override
+	/**
+	 * The for loop to draw the board. The helper function 'Drawing' holds
+	 * onto all of the conditionals needed in the process. 
+	 * 
+	 * @param x: row in board
+	 * @param y: column in board
+	 * @param gc: event gc, let's us draw on the canvas
+	 */
+	public void draw(GC gc) {
+		for (int x = 0; x < 8; x++) {
+			for (int y = 0; y < 8; y++) {
+				drawing(x, y, gc); } }
 	}
 	
+	/**
+	 * The helper function 'Drawing'. Need to make sure that tiles
+	 * are drawn the right color: if a piece is currently selected
+	 * the tile is green, a tile is cyan if it's a valid place for 
+	 * the currently selected piece to move, and if neither of these
+	 * are true, the original color stands. Also adds the board
+	 * coordinates on the side (A-H, 1-8). 
+	 * 
+	 * @param x: row in board
+	 * @param y: column in board
+	 * @param gc: event gc, let's us draw on the canvas
+	 */
+	private void drawing(int x, int y, GC gc) {
+		Tile t = board[x][y]; // tile in question
+		Piece p = t.getPiece(); // piece in question
+		
+		if (p != null) { // if there's a piece, could be selected or taken by selected
+			if(p.isSelected()) { t.draw(gc, SELECTED); }
+			
+			else if(selectedCoordinates!= null && selectedCoordinates.contains(new Coordinate(y,x))){
+				t.draw(gc, HIGHLIGHTED); }
+			
+			else{ t.draw(gc); } 
+		}
+		
+		else { // no piece but could be a valid place for currently selected to move to
+			if(selectedCoordinates!= null && selectedCoordinates.contains(new Coordinate(y,x))){
+				t.draw(gc, HIGHLIGHTED); }
+			else { t.draw(gc); }
+		}
+		
+		// adding the board coordinates
+		if (x == 0) { addBoardCoords(gc, x, y); }
+		if (y == 7) { addBoardCoords(gc, x, y); }
+	}
+	
+	/**
+	 * The helper function of 'Drawing'. Makes sure the board coordinates
+	 * of A-H and 1-8 are drawn in the appropriate locations.
+	 * 
+	 * @param x: row in board
+	 * @param y: column in board
+	 * @param gc: event gc, let's us draw on the canvas
+	 */
+	private void addBoardCoords(GC gc, int x, int y) {
+		gc.setFont(boardFont);
+		gc.setBackground(BG);
+		gc.setForeground(SIDE);
+		
+		// 1-8
+		if (x == 0) {
+			String yCoord = verticalCoords[y];
+			gc.drawText(yCoord, x * SQUARE_WIDTH + 20, y * SQUARE_WIDTH + 25); }
+		
+		// A-H
+		if (y == 7) {
+			String xCoord = horizontalCoords[x];
+			gc.drawText(xCoord, x * SQUARE_WIDTH + 60 + 20, (y + 1) * SQUARE_WIDTH + 15); }
+	}
+	
+	//-- getters
 	
 	/**
 	 * accepts the pixel coordinates and converts them to valid index on the board
@@ -183,29 +234,19 @@ public class Chessboard implements ChessBoardUI {
 
 		if (indX < 0 || indX > 7 || indY < 0 || indY > 7 || indexX < 0) {
 			System.out.println("Clicking outside the board!");
-			return null;
-		}
+			return null; }
 		return new int[] { indX, indY };
 	}
+	
+	/**
+	 * board getter. returns the board.
+	 * 
+	 * @return board: the list of tiles that make up the board.
+	 */
+	public Tile[][] getBoard(){ return board; }
 
-	private void addBoardCoords(GC gc, int x, int y) {
-
-		Font font = new Font(canvas.getDisplay(), "Tahoma", 15, SWT.BOLD);
-		gc.setFont(font);
-		gc.setBackground(BG);
-		gc.setForeground(SIDE);
-		if (x == 0) {
-			String vCoord = verticalCoords[y];
-			gc.drawText(vCoord, x * SQUARE_WIDTH + 20, y * SQUARE_WIDTH + 25);
-
-		}
-		if (y == 7) {
-			String xCoord = horizontalCoords[x];
-			gc.drawText(xCoord, x * SQUARE_WIDTH + 60 + 20, (y + 1) * SQUARE_WIDTH + 15);
-		}
-
-	}
-
+	//-- moving / piece methods
+	
 	/**
 	 * This method returns a specific colored king piece so that it may be used for check and
 	 * checkmate calculations. It could be improved by removing the need to iterate
