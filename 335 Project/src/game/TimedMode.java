@@ -3,7 +3,7 @@
  * it can be enabled/disabled by the players.
  * 
  * 
- * Khojiakbar Yokubjonov
+ * @author Khojiakbar Yokubjonov
  */
 package game;
 
@@ -34,6 +34,10 @@ public class TimedMode {
 	int counter = 0;
 	String player;
 
+	/*
+	 * Constructs a countdown timer for the player
+	 * Accepts a shell and a composite to draw the timer
+	 */
 	public TimedMode(Shell shell, Composite comp) {
 		this.shell = shell;
 		this.composite = comp;
@@ -56,6 +60,9 @@ public class TimedMode {
 
 	}
 
+	/*
+	 * Updates the countdown timer
+	 */
 	public void update() {
 		if(isOutOfTime) {return;}
 		String min, sec;
@@ -78,26 +85,24 @@ public class TimedMode {
 		if (minutes == 0 && seconds == 0) {
 			isOutOfTime = true;
 			// STOP the timer
-		}
-		
-		//						composite.redraw();
-		//					
+		}				
 		
 		counter++;
 
 }
-	
+	/*
+	 * Sets the player's name next to the timer
+	 */
 	public void setPlayer(String player) {
 		nameLabel.setText(player);
-		nameLabel.requestLayout();
-//		composite.layout();
-		
+		nameLabel.requestLayout();		
 		}
 
 
 	/*
-	 * Sets the time limit for a player Accepts the time limit as String in the
-	 * format- MM:SS
+	 * Sets the time limit for a player.
+	 * Accepts the time limit as String in the format- MM:SS. 
+	 * e.g. 10:30
 	 */
 	public void setTimeLimit(String limit) {
 
@@ -107,11 +112,15 @@ public class TimedMode {
 		
 		String min = decimalFormat.format(minutes);
 		String sec = decimalFormat.format(seconds);
-//		if(player == null) {player = "opponent";}
 		timeLabel.setText(min + ":" + sec);
 
 	}
 
+	/*
+	 * Accepts a string time input in the format "MM:SS"
+	 * Returns an array containing the minutes and seconds
+	 * e.g for the input "10:30", it'd return {10, 30}
+	 */
 	private int[] manageUserTimeInput(String time) {
 		int[] timeLimit = new int[2]; // {minutes, seconds}
 		String[] st = time.split(":");
@@ -123,19 +132,8 @@ public class TimedMode {
 	}
 
 	/*
-	 * 
+	 * Returns true if the player is out of time, otherwise false.
 	 */
-	public void continueCountDownTimer() {
-
-	}
-
-	/*
-	 * 
-	 */
-	public void stopCountDownTimer() {
-
-	}
-
 	public boolean isTimerOver() {
 		return this.isOutOfTime;
 	}

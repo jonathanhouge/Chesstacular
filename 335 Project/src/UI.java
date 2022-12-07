@@ -317,15 +317,16 @@ public class UI {
 		while (!shell.isDisposed() && gameOver == 0) 
 				if (!display.readAndDispatch()) {
 					long end = System.currentTimeMillis();
+					// keeps track of the time for the game
 					int diff = (int) ((end-start)/1000);
-					if(diff==1) { // the timers start when both players are connected
-						if(isOpponentConnected) {
+					if(diff==1) {
+						if(isOpponentConnected) { // the timers start when both players are connected
 							if(isJustConnected) {
-								System.out.println("adding OPPONENT'S TIME ... ");
 								if(opponentsPreferedTime != null) {
 									if(!opponentsPreferedTime.contains("M")&& !opponentsPreferedTime.contains("S")) {
 										opponentsTimer = new TimedMode(shell, upperComposite);
-										opponentsTimer.setTimeLimit(opponentsPreferedTime);
+										//sets the timer for the opponent
+										opponentsTimer.setTimeLimit(opponentsPreferedTime); 
 										opponentsTimer.setPlayer(opponent);
 									}
 								}
@@ -454,7 +455,7 @@ public class UI {
 
 	
 	/**
-	 * Composites created
+	 * Defines composites for the shell
 	 */
 	private void defineComposites() {
 		// TODO Auto-generated method stub
@@ -463,14 +464,16 @@ public class UI {
 		rowLayout.marginLeft = 0;
 		rowLayout.marginRight = 0;
 		
-		
+		//composite to hold the opponent's timer
 		upperComposite = new Composite(shell, SWT.NO_FOCUS);
 		upperComposite.setLayoutData(opponentsTimer);
 		upperComposite.setLayout(rowLayout);
 		
+		//composite to hold the canvas
 		middleComposite = new Composite(shell, SWT.NO_FOCUS);
 		middleComposite.setLayoutData(canvas);
 		
+		//composite to hold the player's timer
 		lowerComposite = new Composite(shell, SWT.NO_FOCUS);
 		lowerComposite.setLayoutData(yourTimer);
 		lowerComposite.setLayout(rowLayout);
@@ -526,7 +529,9 @@ public class UI {
 		fileSaveItem.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent event) {
 				
+				//promtps the user for a file name to save the game
 				gameStatus.getFileName(); //prompts the player for a file name
+				//saves the game inside the Saved Games folder
 				gameStatus.saveGame(boardUI.getBoard(), yourTurn, whitesTurn); //saves the game status to a .txt file
 			}
 
@@ -613,7 +618,7 @@ public class UI {
 							selectedPiece = null;
 							//System.out.println(msgFromOpponent);
 						}else if(msgFromOpponent.contains("PLAYER")) {
-							//System.out.println(msgFromOpponent);
+							//takes in the time input by the opponent player
 							opponent = list[3];
 							opponentsPreferedTime = list[4];
 							opponentsPreferedTime += (":" + list[5]);

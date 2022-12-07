@@ -167,6 +167,12 @@ public class Chessboard implements ChessBoardUI {
 		getBoardIndex(x, y);
 	}
 	
+	
+	/**
+	 * accepts the pixel coordinates and converts them to valid index on the board
+	 * @param x,y  - the pixel coordinates on the canvas
+	 * @return
+	 */
 	public int[] getBoardIndex(float x, float y) {
 		x -= BOARD_COORD_OFFSET / 2;
 		float indexX = x / SQUARE_WIDTH;
@@ -560,6 +566,7 @@ public class Chessboard implements ChessBoardUI {
 	public void unhighlightCoordinates(Piece selectedPiece) { selectedCoordinates = null; }
 	
 	public Tile getTile(int x, int y) { return board[y][x]; }
+	
 	public boolean getPromotion() {
 		if (this.promotion) {
 			this.promotion = false;
