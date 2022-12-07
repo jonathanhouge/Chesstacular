@@ -28,6 +28,8 @@
 * Saving and loading multiple games: Has a directory `Saved Games` that stores previous games
 * Built-in `Robot` implementation
 * Timed game mode for `Remote` & `Robot` play
+(The timer at the bottom of the UI may not be visible if the screen resolution is too small.\
+It worked well on the `1980 X 1080` resolution. However, the bottom timer was invisible on the `1366 X 768` resololution.)
 
 
 
