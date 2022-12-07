@@ -1,35 +1,32 @@
-/**
- * @authors Ali Sartaz Khan & Jonathan Houge & Khojiakbar Yokubjonov & Julius Ramirez
- * Course: CSc 335
- * Description: Creates the UI for the client
- */
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
-import displays.GameOverDisplay;
 import displays.Player;
-import game.Chessboard;
-import game.Coordinate;
-import game.GameStatus;
+import displays.GameOverDisplay;
 import game.Robot;
-import game.Tile;
 import game.TimedMode;
-import pieces.Pawn;
-import pieces.Bishop;
+import game.Chessboard;
+import game.GameStatus;
+import pieces.Rook;
 import pieces.King;
-import pieces.Knight;
 import pieces.Piece;
 import pieces.Queen;
-import pieces.Rook;
+import pieces.Bishop;
+import pieces.Knight;
 
+import java.io.File;
+import java.net.Socket;
+import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.net.Socket;
 
+/**
+ * The general UI for the Chess game.
+ * 
+ * @authors Ali Sartaz Khan & Jonathan Houge & Khojiakbar Yokubjonov & Julius Ramirez
+ */
 public class UI {
 
 	private Canvas canvas;
@@ -44,54 +41,58 @@ public class UI {
 	Client client;
 	Chessboard boardUI;
 	GameStatus gameStatus;
+	
+	int gameOver = 0;
 	boolean initialized = false;
 	int SHELL_WIDTH_OFFSET = 20;
 	int SHELL_HEIGHT_OFFSET = 50;
-	Piece selectedPiece; //Newly added field
-	public boolean whitesTurn; //Newly added field
 	public static int BOARD_COORD_OFFSET = 100;
+	Piece selectedPiece; 
+	public boolean whitesTurn; 
 	public boolean yourTurn;
+	
+	// loading file
 	protected Menu menuBar, fileMenu;
 	protected MenuItem fileMenuHeader,fileSaveItem,fileExitItem;
 	boolean loadOldGame;
 	private String fileName;
-	private Composite upperComposite;
-	private Composite middleComposite;
-	private Composite lowerComposite;
-	private TimedMode yourTimer;
-	private TimedMode opponentsTimer;
-	public boolean isOpponentConnected;
-	String opponent;
-	String username;
-	String opponentsPreferedTime;
+	
+	// timed mode
+	private Composite upperComposite; private Composite middleComposite; private Composite lowerComposite;
+	private TimedMode yourTimer; private TimedMode opponentsTimer;
+	public boolean isOpponentConnected; String opponentsPreferedTime;
+	
+	String opponent; String username;
 	private Robot robot;
 	Player player;
 	boolean isLocalGame = false;
-	int gameOver = 0;
 	
 	/**
-	 * Constructor that assigns values
+	 * Constructor that assigns values.
+	 * 
+	 * in == null is used for local games.
+	 * 
 	 * @param client: client object
 	 * @param in: input stream
 	 * @param out: output stream
 	 * @param socket: Socket object
 	 */
 	public UI(Client client, BufferedReader in, BufferedWriter out, Socket socket) {
-		this.in = in;
-		this.out = out;
-		this.socket = socket;
-		this.client = client;
+		this.in = in; this.out = out;
+		this.socket = socket; this.client = client;
+		
 		this.player = this.client.getPlayer();
 		this.fileName = this.player.getFileName();
 		this.username = this.player.getName();
+		
 		if (in == null || client.getPlayer().getColor().equals("White")) {
-			this.whitesTurn = true; //Newly added field
-			this.yourTurn = true;
-		}
+			this.whitesTurn = true;
+			this.yourTurn = true; }
+		
 		else {
 			this.whitesTurn = false;
-			this.yourTurn = false;
-		}
+			this.yourTurn = false; }
+		
 		isOpponentConnected = false;
 	}
 	
@@ -109,17 +110,16 @@ public class UI {
 		this.fileName = this.player.getFileName();
 		this.username = this.player.getName();
 		if (this.player.getColor().equals("White")) {
-			this.whitesTurn = true; //Newly added field
+			this.whitesTurn = true;
 			this.yourTurn = true;
 		}
 		else {
 			this.whitesTurn = false;
 			this.yourTurn = false;
 		}
+		
 		isOpponentConnected = true;
 	}
-
-
 	
 	/**
 	 * Constructor when Client plays local game
@@ -134,14 +134,11 @@ public class UI {
 		this.yourTurn = true;
 		isOpponentConnected = true;
 		this.isLocalGame = true;
-		
 	}
-
-
 
 	/**
 	 * Starts running the UI by setting up all the displays
-	 * @return true or false
+	 * @return true or false [play again or not]
 	 */
 	public boolean start() {
 		setup();
@@ -151,53 +148,41 @@ public class UI {
 		validateFileName();
 		
 		shell.addListener(SWT.Close, new Listener() {
-
 			@Override
 			public void handleEvent(Event event) {
-				// TODO Auto-generated method stub
 				System.out.println("Closing the shell!");
 				String fileToSaveGame = gameStatus.promptsFileWhileExiting();
-				gameStatus.saveGame(boardUI.getBoard(), yourTurn, whitesTurn);
-			}
-			
+				gameStatus.saveGame(boardUI.getBoard(), yourTurn, whitesTurn); }
 		});
 		
 		canvas.addPaintListener(e -> {
 			if (initialized == false) { // create the tiles and initial starting positions
 				boardUI.createBoardData(e.gc);
 				   
-				if(!loadOldGame) {
+				if (!loadOldGame) {
 					boardUI.setAllPieces();
-//					boardUI.printBoard();
 					if (robot != null)
-					robot.populatePiecesList(boardUI.getBoard());
-					}else {
+					robot.populatePiecesList(boardUI.getBoard()); }
+				
+				else {
 					gameStatus.setFileName(fileName);
-					boolean[] playerTurnData = gameStatus.loadGame(boardUI.getBoard());
+					gameStatus.loadGame(boardUI.getBoard());
 					if (robot != null)
-						robot.populatePiecesList(boardUI.getBoard());
-					}
-			
-				initialized = true; 
+						robot.populatePiecesList(boardUI.getBoard()); }
+				
 				if (robot != null && !yourTurn) {
 					robot.movePiece();
-					yourTurn = true;
-				}
-				}
-			
-			if (initialized) {
-				boardUI.draw(e.gc); 
-				if(whitesTurn) {
-					System.out.println("It is currently whites turn!");
-				}else {
-					System.out.println("It is currently blacks turn!");
-				}
+					yourTurn = true; }
 				
+				initialized = true;
 			}
 			
-		}
-		
-		);	
+			if (initialized) { // board is already made
+				boardUI.draw(e.gc); 
+				if(whitesTurn) { System.out.println("It is currently whites turn!"); }
+				else { System.out.println("It is currently blacks turn!"); }
+			}
+		});	
 
 		canvas.addMouseListener(new MouseListener() {
 			/**
@@ -208,117 +193,120 @@ public class UI {
 			public void mouseDown(MouseEvent e) {
 				if(checkTimers()) // returns true if either of players run out of time
 					return;
-				if (!yourTurn) {// player has clicked but it's not their turn, thus return.
-					return;}
 				
+				if (!yourTurn) {
+					return;}
+
 				//Gather data, convert graphical coordinates into chessboard coordinates
 				int coordinates[] = boardUI.getBoardIndex(e.x,e.y);
-				if(coordinates == null) {
-					return; // This would occur if the user clicked out of bounds.
-				}
+				
+				if(coordinates == null) { return; }
+				
 				int xCoord = coordinates[0];
 				int yCoord = coordinates[1];
+				
 				//Select a piece OR move piece
-				if(selectedPiece == null) { // Selecting piece for first time
+				if (selectedPiece == null) { // Selecting piece for first time
 					selectedPiece = boardUI.selectPiece(xCoord, yCoord, whitesTurn);
-					if(selectedPiece != null) { 
+					if (selectedPiece != null) {
 						selectedPiece.setSelected();
 						boardUI.highlightCoordinates(selectedPiece);
 						canvas.redraw();
 					}
-				}else {// Determine if move being made or selecting new piece
+				}
+				
+				else { // Determine if move being made or selecting new piece
 					Piece possibleSelection;
 					possibleSelection = boardUI.selectPiece(xCoord, yCoord,whitesTurn);
-					if (possibleSelection !=null) {// player has selected new piece
-						if(boardUI.validMoveMade(xCoord,yCoord,selectedPiece,whitesTurn)) { //castling requires user to click rook 
+					
+					if (possibleSelection != null) {// player has selected new piece
+						if (boardUI.validMoveMade(xCoord,yCoord,selectedPiece,whitesTurn)) { //castling requires user to click rook 
 							King k = (King) selectedPiece;
-							k.castlingMoveMade = true; // set castlingMoveMade to true so that updateBoard works correctly.
-							makeMove(xCoord,yCoord);
-						}else { // Select a brand new piece
+							k.castlingMoveMade = true;
+							makeMove(xCoord,yCoord); }
+						else {
 							boardUI.unhighlightCoordinates();
 							selectedPiece.SetNotSelected();
 							selectedPiece = possibleSelection;
 							selectedPiece.setSelected();
 							boardUI.highlightCoordinates(selectedPiece);
-							canvas.redraw();
-						}
-					}else {// player may have moved onto empty space or onto enemy, check if it is valid.
-						if(boardUI.validMoveMade(xCoord,yCoord,selectedPiece,whitesTurn)) {
-							makeMove(xCoord,yCoord);
-						}else {
-							System.out.println("UI.java - INVALID MOVE MADE!");
-						}
+							canvas.redraw(); }
 					}
 					
+					else { // player may have moved onto empty space or onto enemy
+						if(boardUI.validMoveMade(xCoord,yCoord,selectedPiece,whitesTurn)) {
+							makeMove(xCoord,yCoord); }
+						else { System.out.println("UI - INVALID MOVE MADE!"); }
+					}
 				}
-				
-			} 
+			}
+
 			/**
-			 * Make piece move to a certain coordinate and update the board/game state accordingly.
+			 * Make piece move to a certain coordinate
 			 * 
-			 * @param xCoord X coordinate to move to, 0-7 inclusive.
-			 * @param yCoord Y coordinate to move to, 0-7 inclusive.
+			 * @param xCoord: X coordinate
+			 * @param yCoord: Y coordinate
 			 */
 			public void makeMove(int xCoord,int yCoord) {
-				// Save before so that it may be written out to the server.
 				int xCoordBefore = selectedPiece.getX();
 				int yCoordBefore = selectedPiece.getY();
-				boardUI.unhighlightCoordinates(); // Remove selected pieces highlights
+				
+				boardUI.unhighlightCoordinates();
 				gameOver = boardUI.updateBoard(xCoord,yCoord,selectedPiece);
-				if (in != null) { // remote play
+				
+				if (in != null) { // don't want to communicate to server if local game
 					try {
-						if (boardUI.getPromotion()) {
+						if (boardUI.getPromotion()) { // pawn promotion
 							String promotedPiece = boardUI.getTile(xCoord, yCoord).getPiece().getName();
 							out.write("MOVE:"+xCoordBefore+"-"+yCoordBefore+"-"+xCoord+"-"+yCoord+"-PROMOTION:"+promotedPiece); }
-						else { 
+						
+						else { // normal move
 							out.write("MOVE:"+xCoordBefore+"-"+yCoordBefore+"-"+xCoord+"-"+yCoord); }
 						
 						out.newLine();
-						out.flush();
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					} 
+						out.flush(); } 
+					catch (IOException e1) { e1.printStackTrace(); } 
 					yourTurn = !yourTurn;
 				}
-				else if (robot != null) { // robot play
-					robot.movePiece();	
-				}
-				else { // local play
-					whitesTurn = !whitesTurn; }
+				
+				else if (robot != null) {// Robot play
+					robot.movePiece(); }
+				
+				else { whitesTurn = !whitesTurn; } // Local play
+				
 				canvas.redraw();
-				// Set selected field to false so it doesn't highlight then
-				// set UI's selectedPiece field to null
 				selectedPiece.SetNotSelected();
 				selectedPiece = null;
 			}
+			
 			public void mouseUp(MouseEvent e) {} 
 			public void mouseDoubleClick(MouseEvent e) {} 
 		});
 
 		canvas.addKeyListener(new KeyListener() {
-			public void keyPressed(KeyEvent e) {
-				canvas.redraw();
-				} 
+			public void keyPressed(KeyEvent e) { canvas.redraw(); } 
 			public void keyReleased(KeyEvent e) {}
 		});
 		
-		if (in != null) {
+		if (in != null) { // no need for server runnable if we're local
 			Runnable runnable = new Runner();
 			display.asyncExec(runnable); }
 		
 		shell.open(); 
 		boolean isJustConnected = true;
 		long start = System.currentTimeMillis();
+		
 		while (!shell.isDisposed() && gameOver == 0) 
 				if (!display.readAndDispatch()) {
 					long end = System.currentTimeMillis();
+					
 					// keeps track of the time for the game
 					int diff = (int) ((end-start)/1000);
-					if(diff==1) {
-						if(isOpponentConnected) { // the timers start when both players are connected
-							if(isJustConnected) {
-								if(opponentsPreferedTime != null) {
-									if(!opponentsPreferedTime.contains("M")&& !opponentsPreferedTime.contains("S")) {
+					if (diff == 1) {
+						if (isOpponentConnected) { // the timers start when both players are connected
+							if (isJustConnected) {
+								if (opponentsPreferedTime != null) {
+									if (!opponentsPreferedTime.contains("M")&& !opponentsPreferedTime.contains("S")) {
 										opponentsTimer = new TimedMode(shell, upperComposite);
 										//sets the timer for the opponent
 										opponentsTimer.setTimeLimit(opponentsPreferedTime); 
@@ -326,41 +314,27 @@ public class UI {
 									}
 								}
 								isJustConnected = false;
-								}
-							
+							}
 							checkTimers();
-							if(yourTurn && yourTimer != null) {
-								yourTimer.update();}
+							if(yourTurn && yourTimer != null) { yourTimer.update(); }
 							else if(!yourTurn && opponentsTimer != null) {opponentsTimer.update();}
-							
 						}
-						
-						
 						start = end;
 					}
-				
-						
-						
-						
-						
-						}
-		
+				}
+	
 		display.sleep();
 		
-		boolean again = false;
-		if (gameOver != 0) {
+		boolean again = false; // assume that client won't want to play again
+		if (gameOver != 0) { // makes sure game over display doesn't pop up if client was closed
 			again = new GameOverDisplay().start(display, gameOver); }
 		
 		display.dispose();
 		
-		if (again) {
-			return true;
-		}
-		
+		if (again) { return true; }
 		return false;
 	}
 	
-
 	/**
 	 * Setup all GUI components
 	 */
@@ -402,21 +376,21 @@ public class UI {
 	 * @return true or false 
 	 */
 	private boolean checkTimers() {
-		if(yourTimer != null) {
-			if(yourTimer.isTimerOver()){
+		if (yourTimer != null) {
+			if (yourTimer.isTimerOver()) {
 				if(player.getColor().equals("White")) {gameOver = 2; return true; }
 				else {gameOver = 1; return true;}
 			}
 		}
-		if(opponentsTimer != null){
+		if (opponentsTimer != null) {
 			if(opponentsTimer.isTimerOver()) {
 				if(player.getColor().equals("White")) {gameOver = 1; return true; }
 				else {gameOver = 2; return true;}
 			}
 			
-		}return false;
+		}
+		return false;
 	}
-
 	
 	/**
 	 * Define your own timer for the game
@@ -424,36 +398,17 @@ public class UI {
 	 * @param time: Time String
 	 */
 	private void defineYourTimer(String time) {
-		// TODO Auto-generated method stub
-		if(time.contains("M") || time.contains("S") || isLocalGame) {return;}
+		if (time.contains("M") || time.contains("S") || isLocalGame) { return; }
 		yourTimer = new TimedMode(shell, lowerComposite);
 		yourTimer.setPlayer(username);
 		yourTimer.setTimeLimit(time);
-		
-		
 	}
 	
-	
-	/**
-	 * Define opponent's timer
-	 * 
-	 * @param time: Time String
-	 */
-	private void defineOpponentsTimer(String time) {
-		// TODO Auto-generated method stub
-		if(time.contains("M") || time.contains("S")) {return;}
-		opponentsTimer = new TimedMode(shell, upperComposite);
-		
-		
-		
-	}
-
 	
 	/**
 	 * Defines composites for the shell
 	 */
 	private void defineComposites() {
-		// TODO Auto-generated method stub
 		RowLayout rowLayout = new RowLayout();
 		rowLayout.type = SWT.HORIZONTAL;
 		rowLayout.marginLeft = 0;
@@ -482,7 +437,7 @@ public class UI {
 	private void validateFileName(){
 		if(fileName.equals("Enter file name")) {return;}
 		String cwd = System.getProperty("user.dir") + "\\Saved Games\\" + fileName;
-		 File dir = new File(cwd);
+		File dir = new File(cwd);
 		 if(dir.exists()) {
 			 loadOldGame = true;
 		 }else {
@@ -498,7 +453,6 @@ public class UI {
 	protected void createMenuBar() {
 		menuBar = new Menu(shell, SWT.BAR);
 		createFileMenu(); //file ops
-		
 	}
 	
 	/**
@@ -511,12 +465,10 @@ public class UI {
 		fileMenuHeader.setMenu(fileMenu);
 		createFileSaveItem();
 		createFileExitItem();
-		
-		
 	}
 	
 	/**
-	 * file save menu.
+	 * Creates the file save menu.
 	 */
 	protected void createFileSaveItem() {
 		fileSaveItem = new MenuItem(fileMenu, SWT.PUSH);
@@ -524,54 +476,46 @@ public class UI {
 		fileSaveItem.addSelectionListener(new SelectionListener() {
 			public void widgetSelected(SelectionEvent event) {
 				
-				//promtps the user for a file name to save the game
+				//prompts the user for a file name to save the game
 				gameStatus.getFileName(); //prompts the player for a file name
 				//saves the game inside the Saved Games folder
-				gameStatus.saveGame(boardUI.getBoard(), yourTurn, whitesTurn); //saves the game status to a .txt file
+				gameStatus.saveGame(boardUI.getBoard(), yourTurn, whitesTurn);
 			}
 
-			public void widgetDefaultSelected(SelectionEvent event) {
-			}
+			public void widgetDefaultSelected(SelectionEvent event) {}
 		});
 	}
 	
 	/**
-	 * file exit option. when selected, exits the program
+	 *  Creates file exit option. when selected, exits the program
 	 */
 	protected void createFileExitItem() {
 		fileExitItem = new MenuItem(fileMenu, SWT.PUSH);
 		fileExitItem.setText("Exit");
 		fileExitItem.addSelectionListener(new SelectionListener() {
-			public void widgetSelected(SelectionEvent event) {
-				shell.close();
-				display.dispose();
-			}
+		public void widgetSelected(SelectionEvent event) {
+			shell.close();
+			display.dispose();
+		}
 
-			public void widgetDefaultSelected(SelectionEvent event) {
-				shell.close();
-				display.dispose();
-			}
+		public void widgetDefaultSelected(SelectionEvent event) {
+			shell.close();
+			display.dispose();
+		}
 		});
-		
-		
 	}
-	
-	
 	
 	/**
 	 * Runner class
 	 */
-	class Runner implements Runnable
-	{
+	class Runner implements Runnable {
 		/**
 		 * Run method
 		 */
-		public void run() 
-		{
+		public void run() {
 			String msgFromOpponent;
 			try {
-				if (in.ready())
-				{
+				if (in.ready()) {
 					try {
 						msgFromOpponent = in.readLine();
 						String[] list = msgFromOpponent.split("[:-]");
@@ -620,20 +564,13 @@ public class UI {
 							isOpponentConnected = true;}
 					}
 							
-					 catch(IOException e) {
-						client.close();
-					}
+					 catch(IOException e) { client.close(); }
 					
 				}
 			}
-			catch(IOException ex) {
-				System.out.println("The server did not respond (async).");
-			}				
+			catch(IOException ex) { System.out.println("The server did not respond (async)."); }				
             display.timerExec(0, this);
 		}
-	}	
-	
-	
-	
+	}
 	
 }
