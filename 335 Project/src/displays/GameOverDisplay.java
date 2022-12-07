@@ -1,13 +1,3 @@
-/** 
- * The Display for game over.
- * Prompts the client to decide whether or not they want to play another game.
- * 
- * Since every display utilizes selection listeners, a separate class with the method 
- * 'selectListenCreation()' is used to add a selection listener.
- * 
- * @author Jonathan Houge
- */
-
 package displays;
 
 import java.util.ArrayList;
@@ -20,9 +10,31 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.layout.GridLayout;
 
+/** 
+ * The display for game over.
+ * When either white or black has been put in checkmate, the game event loop stops
+ * and this display is run. It announces which of the two colors won the game and 
+ * prompts the client to decide whether or not they want to play another game.
+ * This is called from UI's event loop. located within its start method.
+ * 
+ * Since every display utilizes selection listeners, a separate class with the method 
+ * 'selectListenCreation()' is used to add a selection listener.
+ * 
+ * @author Jonathan Houge
+ */
 public class GameOverDisplay {
 
-	// start returns the player made by the client
+	/** 
+	 * The start method creates and runs the display (shell) itself. It utilizes 
+	 * functions to create the different kinds of radio buttons and creates
+	 * textual widgets right then and there. The display stays open until
+	 * the user decides to play a new game or not. In then collects that decision
+	 * and returns the boolean result.
+	 * 
+	 * @param display: Display object, the Chessboard's Display
+	 * @param winner: int representing the winner. 1 is white, 2 is black.
+	 * @return boolean: true if the user wants to play another game, false if otherwise
+	 */
 	public boolean start(Display display, int winner) {
 		
 		//-- create and set up the display & create variables for the display's widgets 
@@ -44,12 +56,12 @@ public class GameOverDisplay {
 		
 		//-- the widgets
 		
-		// play again button - starts up the ui again, a new game occurs
+		// play again button - if selected, true is returned
 		ArrayList<String> playGame = new ArrayList<String>();
 		Button again = new Button(shell, SWT.PUSH); again.setText("Play again!");
 		selectListener.selectListenCreation(again, playGame);
 		
-		// cancel button - ends the client
+		// cancel button - if selected, false is returned
 		ArrayList<String> cancelGame = new ArrayList<String>();
 		Button cancel = new Button(shell, SWT.PUSH); cancel.setText("Cancel");
 		selectListener.selectListenCreation(cancel, cancelGame);
@@ -59,13 +71,13 @@ public class GameOverDisplay {
 			if (!display.readAndDispatch ())
 				display.sleep (); }
 		
-		boolean playAgain = false;
-		if (playGame.size() != 0) {
+		boolean playAgain = false; // we assume the client won't want to play again
+		if (playGame.size() != 0) { // but if playGame's size isn't zero, they selected play again!
 			playAgain = true;
 		}
 		
 		shell.dispose();
 		
-		return playAgain; } // returning decision (play again or not
+		return playAgain; } // returning decision (play again or not)
 
 }

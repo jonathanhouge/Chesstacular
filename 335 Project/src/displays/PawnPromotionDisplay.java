@@ -1,17 +1,3 @@
-/**
- * The Display for Pawn Promotion.
- * When a pawn reaches the final row (any tile on rows 1 & 8), this display is presented.
- * Prompts the client to pick which specialty piece the pawn is being promoted to. The
- * default is Queen, but Rook, Knight, and Bishop are options as well. It returns
- * the String of the piece the client wishes to promote their pawn to.
- * This is called from Chessboard's checkPromotion() method.
- * 
- * Since every display utilizes selection listeners, a separate class with the method 
- * 'selectListenCreation()' is used to add a selection listener.
- * 
- * @author Jonathan Houge
- */
-
 package displays;
 
 import java.util.ArrayList;
@@ -27,12 +13,25 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.layout.GridLayout;
 
+/**
+ * The display for Pawn Promotion.
+ * When a pawn reaches the final row (any tile on rows 1 & 8), this display is presented.
+ * Prompts the client to pick which specialty piece the pawn is being promoted to. The
+ * default is Queen, but Rook, Knight, and Bishop are options as well. It returns
+ * the String of the piece the client wishes to promote their pawn to.
+ * This is called from Chessboard's checkPromotion() method.
+ * 
+ * Since every display utilizes selection listeners, a separate class with the method 
+ * 'selectListenCreation()' is used to add a selection listener.
+ * 
+ * @author Jonathan Houge
+ */
 public class PawnPromotionDisplay {
 
 	// start returns the player made by the client
 
 	/** 
-	 * The start method creates and runs the display itself. It utilizes 
+	 * The start method creates and runs the display (shell) itself. It utilizes 
 	 * functions to create the different kinds of radio buttons and creates
 	 * textual widgets right then and there. The display stays open until
 	 * the user clicks the "Promote!" button. In then collects the 

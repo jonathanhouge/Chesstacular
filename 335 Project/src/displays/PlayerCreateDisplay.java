@@ -1,16 +1,3 @@
-/** 
- * The Display for Player Creation.
- * Prompts the client to enter their name, pick their color, pick their opponent, and enter
- * the optional fields of savedGame.txt and/or the time constraint they wish to place upon
- * themselves (WARNING: this only works with 'Robot' and 'Remote' opponent modes).
- * This is accomplished using SWT widgets and Arraylists. After submitting the information, 
- * a new Player object is created and the client is given the Player object.
- * Since every display utilizes selection listeners, a separate class with the method 
- * 'selectListenCreation()' is used to add a selection listener.
- * 
- * @author Jonathan Houge
- */
-
 package displays;
 
 import java.util.ArrayList;
@@ -27,6 +14,18 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 
+/** 
+ * The display for Player Creation.
+ * Prompts the client to enter their name, pick their color, pick their opponent, and enter
+ * the optional fields of savedGame.txt and/or the time constraint they wish to place upon
+ * themselves (WARNING: time constraints only work on 'Robot' and 'Remote' opponent modes).
+ * This is accomplished using SWT widgets and Arraylists. After submitting the information, 
+ * a new Player object is created and the client is given the Player object.
+ * Since every display utilizes selection listeners, a separate class with the method 
+ * 'selectListenCreation()' is used to add a selection listener.
+ * 
+ * @author Jonathan Houge
+ */
 public class PlayerCreateDisplay {
 
 	/** 

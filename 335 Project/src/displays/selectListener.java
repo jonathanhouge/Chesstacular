@@ -1,10 +1,3 @@
-/** Since every display utilizes selection listeners, this separate class with the method 
- * 'selectListenCreation()' is used to add a selection listener instead of each display
- * doing it locally. 
- * 
- * @author Jonathan Houge
- */
-
 package displays;
 
 import java.util.ArrayList;
@@ -13,11 +6,17 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 
+/** 
+ * Since every display utilizes selection listeners, this separate class with the method 
+ * 'selectListenCreation()' is used to add a selection listener instead of each display
+ * doing it locally. 
+ * 
+ * @author Jonathan Houge
+ */
 public class selectListener {
 
 	/** 
 	 * Selection listener for radio buttons and submit buttons.
-	 * 
 	 * Utilized by every display (other than the chessboard) in an effort to reduce code.
 	 * 
 	 * @param button: the button that the listener is being applied to
