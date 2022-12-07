@@ -29,7 +29,6 @@ import pieces.Rook;
  * @author Jonathan Houge & Julius Ramirez & Khojiakbar Yokubjonov
  */
 public class Chessboard implements ChessboardUI {
-	private Canvas canvas;
 	private Shell shell;
 	private Display display;
 
@@ -40,8 +39,6 @@ public class Chessboard implements ChessboardUI {
 	private String horizontalCoords[] = new String[] { "A", "B", "C", "D", "E", "F", "G", "H" };
 
 	private boolean promotion = false;
-	private boolean endGame = false;
-
 	private List<Coordinate> selectedCoordinates;
 
 	Color SELECTED = new Color(51, 204, 51);
@@ -56,12 +53,10 @@ public class Chessboard implements ChessboardUI {
 	 * needs to be done. Utilizes the display to get the color needed for outlining
 	 * and the font needed for the board coordinates.
 	 * 
-	 * @param canvas:  UI's canvas
 	 * @param shell:   UI's shell.
 	 * @param display: UI's display
 	 */
 	public Chessboard(Canvas canvas, Shell shell, Display display) {
-		this.canvas = canvas;
 		this.shell = shell;
 		this.display = display;
 		this.OUTLINE = display.getSystemColor(SWT.COLOR_BLACK);
@@ -617,7 +612,6 @@ public class Chessboard implements ChessboardUI {
 		// If this part is reached no validMoveMade returned true, thus game over!
 		System.out.println("Chessboard.java - The opponent can not make any valid moves! Game over!");
 		// This section is used to determine which player has won.
-		this.endGame = true;
 		if (movedPiece.getColor() == "White") {
 			return 1;
 		} else {
@@ -705,7 +699,7 @@ public class Chessboard implements ChessboardUI {
 	}
 
 	/**
-	 * This method is used to determine if promotion has occured on the board. It is
+	 * This method is used to determine if promotion has occurred on the board. It is
 	 * used so that an opponent is not able to pick the enemies piece. If a player
 	 * is playing with a robot however, they are able to choose what piece the robot
 	 * gets.
