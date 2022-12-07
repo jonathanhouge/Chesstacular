@@ -9,13 +9,30 @@ import org.eclipse.swt.widgets.Shell;
 import game.Coordinate;
 import game.Tile;
 
+/**
+ * A subclass of Piece, this class contains King specific implementations of the
+ * methods standardMove(),updateLocation(), hasNoCollisions(), and
+ * generateMoves().
+ * 
+ * @author Julius Ramirez
+ *
+ */
 public class King extends Piece {
 	// Image name
 	String whitePiece = "wk.png";
 	String blackPiece = "bk.png";
 
+	/**
+	 * True if the king is in check, false if not.
+	 */
 	public boolean checked = false;
+	/**
+	 * True if the king has ever been moved, false if not.
+	 */
 	public boolean moved = false;
+	/**
+	 * True if the king has castled, false if not. It would only ever be true once.
+	 */
 	public boolean castlingMoveMade = false;
 
 	/**

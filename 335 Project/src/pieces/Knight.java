@@ -9,6 +9,13 @@ import org.eclipse.swt.widgets.Shell;
 import game.Coordinate;
 import game.Tile;
 
+/**
+ * A subclass of Piece, this class contains Knight specific implementations of
+ * the methods standardMove(), hasNoCollisions(), and generateMoves().
+ * 
+ * @author Julius Ramirez
+ *
+ */
 public class Knight extends Piece {
 	// Image names
 	String whitePiece = "wkn.png";
@@ -42,17 +49,20 @@ public class Knight extends Piece {
 		}
 		return false;
 	}
+
 	@Override
 	public boolean hasNoCollisions(int x, int y, Tile[][] tiles) {
-		if (hasFriendlyPiece(x,y,tiles)) {
+		if (hasFriendlyPiece(x, y, tiles)) {
 			return false;
 		}
 		return true;
 	}
 
 	/**
-	 * {@inheritDoc} This method may be improved by creating a
-	 * helper method that does the bound checking.
+	 * {@inheritDoc}
+	 * <P>
+	 * The method implementation may be improved by creating a helper method that
+	 * does the repeated bound checking.
 	 */
 	@Override
 	public List<Coordinate> generateMoves(Tile[][] tiles) {
@@ -61,48 +71,48 @@ public class Knight extends Piece {
 		int y = getY() - 2;
 		if (y >= 0) {
 			if (getX() - 1 >= 0) {
-				generateMovesHelper(getX()-1,y,tiles,coordinates);
+				generateMovesHelper(getX() - 1, y, tiles, coordinates);
 			}
 			if (getX() + 1 <= 7) {
-				generateMovesHelper(getX()+1,y,tiles,coordinates);
+				generateMovesHelper(getX() + 1, y, tiles, coordinates);
 			}
 		}
 		// Up two, go left/right one
 		y = getY() + 2;
 		if (y <= 7) {
 			if (getX() - 1 >= 0) {
-				generateMovesHelper(getX()-1,y,tiles,coordinates);
+				generateMovesHelper(getX() - 1, y, tiles, coordinates);
 			}
 			if (getX() + 1 <= 7) {
-				generateMovesHelper(getX()+1,y,tiles,coordinates);
+				generateMovesHelper(getX() + 1, y, tiles, coordinates);
 			}
 		}
 		// Left two, go up/down one
 		int x = getX() - 2;
 		if (x >= 0) {
 			if (getY() - 1 >= 0) {
-				generateMovesHelper(x,getY()-1,tiles,coordinates);
+				generateMovesHelper(x, getY() - 1, tiles, coordinates);
 			}
 			if (getY() + 1 <= 7) {
-				generateMovesHelper(x,getY()+1,tiles,coordinates);
+				generateMovesHelper(x, getY() + 1, tiles, coordinates);
 			}
 		}
 		// Right two, go up/down one
 		x = getX() + 2;
 		if (x <= 7) {
 			if (getY() - 1 >= 0) {
-				generateMovesHelper(x,getY()-1,tiles,coordinates);
+				generateMovesHelper(x, getY() - 1, tiles, coordinates);
 			}
 			if (getY() + 1 <= 7) {
-				generateMovesHelper(x,getY()+1,tiles,coordinates);
+				generateMovesHelper(x, getY() + 1, tiles, coordinates);
 			}
 		}
 		return coordinates;
 	}
-	
+
 	/**
 	 * This helper is used to determine if the given diagonal x/y coordinate from a
-	 * specific pawn is a valid spot to be moved onto. It is valid if the space is 
+	 * specific pawn is a valid spot to be moved onto. It is valid if the space is
 	 * empty or has an enemy piece.
 	 * 
 	 * @param x           The integer x, between 0-7 inclusive, to be moved to.
@@ -112,10 +122,10 @@ public class Knight extends Piece {
 	 * @param coordinates a List of coordinate objects that the piece can move onto.
 	 */
 	private void generateMovesHelper(int x, int y, Tile[][] tiles, List<Coordinate> coordinates) {
-		if(!tiles[y][x].hasPiece()) {
-			coordinates.add(new Coordinate(x,y));
-		}else if (hasEnemyPiece(x,y,tiles)) {
-			coordinates.add(new Coordinate(x,y));
+		if (!tiles[y][x].hasPiece()) {
+			coordinates.add(new Coordinate(x, y));
+		} else if (hasEnemyPiece(x, y, tiles)) {
+			coordinates.add(new Coordinate(x, y));
 		}
 	}
 

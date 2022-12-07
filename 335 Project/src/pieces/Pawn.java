@@ -9,14 +9,27 @@ import org.eclipse.swt.widgets.Shell;
 import game.Coordinate;
 import game.Tile;
 
+/**
+ * A subclass of Piece, this class contains Pawn specific implementations of the
+ * methods validMove(), standardMove(), updateLocation(), hasNoCollisions(), and
+ * generateMoves().
+ * <P>
+ * In order for en passant to work, the method validMoveMade() within Chessboard
+ * must be called, or more specifically, the pawns validMove() method must be
+ * called. If it is not called, the piece that would be taken via en passant
+ * will remain on the board.
+ * 
+ * @author Julius Ramirez
+ *
+ */
 public class Pawn extends Piece {
-
+	// Image names
 	String whitePiece = "wp.png";
 	String blackPiece = "bp.png";
 	int points = 1;
 
 	/**
-	 * True if this is the pawns first move, false if not.
+	 * True if this is the pawn is still on it's first move ever, false if not.
 	 */
 	public boolean firstMove = true;
 	/**
@@ -77,7 +90,8 @@ public class Pawn extends Piece {
 
 	/**
 	 * {@inheritDoc} Due to the special en passant move, it also checks to see if a
-	 * legal en passant move has been made.
+	 * legal en passant move has been made. This is where didEnPassant is set to
+	 * true.
 	 */
 	@Override
 	public boolean validMove(int x, int y, Tile[][] tiles) {
@@ -95,6 +109,7 @@ public class Pawn extends Piece {
 					return true;
 				} else if (!tiles[y][x].hasPiece()) { // en passant block
 					if (validEnPassantMove(x, y, tiles)) {
+						System.out.println("DID en passant!");
 						didEnPassant = true;
 						return true;
 					}
@@ -245,7 +260,8 @@ public class Pawn extends Piece {
 	 * @param y           The integer y, between 0-7 inclusive, to be moved to.
 	 * @param tiles       a 2D array containing Tile objects which have an
 	 *                    obtainable Piece field.
-	 * @param coordinates a List of coordinate objects that the piece can move onto.
+	 * @param coordinates a List of Coordinate objects indicating where the piece
+	 *                    can move onto.
 	 */
 	private void diagonalHelper(int x, int y, Tile[][] tiles, List<Coordinate> coordinates) {
 		if (hasEnemyPiece(x, y, tiles)) {

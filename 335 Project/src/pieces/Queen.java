@@ -9,10 +9,28 @@ import org.eclipse.swt.widgets.Shell;
 import game.Coordinate;
 import game.Tile;
 
+/**
+ * A subclass of Piece, this class contains Queen specific implementations of
+ * the methods validMove(), standardMove(), setLocation() updateLocation(),
+ * hasNoCollisions(), and generateMoves(). The class relies on the Rook and
+ * Bishop class' standardMove() and hasNoCollisions() methods to work properly,
+ * due to queen movement being a combination of a rook and bishop piece.
+ * 
+ * @author Julius Ramirez
+ *
+ */
 public class Queen extends Piece {
-	// These pieces are used to generate moves and determine move validity.
+	/**
+	 * This rook will always be at the same location as the queen. Used for valid
+	 * move detection and move generation.
+	 */
 	private Rook rook;
+	/**
+	 * This bishop will always be at the same location as the queen. Used for valid
+	 * move detection and move generation.
+	 */
 	private Bishop bishop;
+
 	// Image names
 	String whitePiece = "wq.png";
 	String blackPiece = "bq.png";
@@ -40,12 +58,13 @@ public class Queen extends Piece {
 	}
 
 	/**
-	 * {@inheritDoc} Valid move determination is done using the Rook and Bishop classes
-	 *  standardMove() and hasNoCollisions() methods. 
+	 * {@inheritDoc} Valid move determination is done using the Rook and Bishop
+	 * classes standardMove() and hasNoCollisions() methods.
 	 */
 	@Override
 	public boolean validMove(int x, int y, Tile[][] tiles) {
-		// The code is written this way so that valid move determination is based on only a 
+		// The code is written this way so that valid move determination is based on
+		// only a
 		// Rook or Bishop's movement, not both.
 		if (rook.standardMove(x, y)) {
 			return rook.hasNoCollisions(x, y, tiles);
@@ -56,24 +75,26 @@ public class Queen extends Piece {
 	}
 
 	/***
-	 * Because the queen utilizes the Rook and Bishop implementation of standardMove(), this method
-	 * should never be called. Calling it will cause the program to terminate with an error code of 11.
+	 * Because the queen utilizes the Rook and Bishop implementation of
+	 * standardMove(), this method should never be called. Calling it will cause the
+	 * program to terminate with a status code of 403.
 	 */
 	@Override
 	public boolean standardMove(int x, int y) {
 		System.out.println("Queen.java - queen standardMove() called, however it should never be called.");
-		System.exit(11);
+		System.exit(403);
 		return false;
 	}
 
 	/**
-	 * Because the queen utilizes the Rook and Bishop implementation of hasNoCollisions(), this method
-	 * should never be called. Calling it will cause the program to terminate with an error code of 22
+	 * Because the queen utilizes the Rook and Bishop implementation of
+	 * hasNoCollisions(), this method should never be called. Calling it will cause
+	 * the program to terminate with a status code of 403
 	 */
 	@Override
 	public boolean hasNoCollisions(int x, int y, Tile[][] tiles) {
 		System.out.println("Queen.java - queen hasNoCollisions() called, however it should never be called.");
-		System.exit(22);
+		System.exit(403);
 		return false;
 	}
 

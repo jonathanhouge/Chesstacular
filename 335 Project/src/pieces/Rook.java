@@ -9,6 +9,14 @@ import org.eclipse.swt.widgets.Shell;
 import game.Coordinate;
 import game.Tile;
 
+/**
+ * A subclass of Piece, this class contains Rook specific implementations of the
+ * methods standardMove(),updateLocation(), hasNoCollisions(), and
+ * generateMoves().
+ * 
+ * @author Julius Ramirez
+ *
+ */
 public class Rook extends Piece {
 	// Image names
 	String whitePiece = "wr.png";
@@ -17,11 +25,11 @@ public class Rook extends Piece {
 	/**
 	 * True if the rook has ever been moved, false if not.
 	 */
-	public boolean moved;
+	public boolean moved = false;
 
 	/**
-	 * Subclass constructor of {@link Piece#Piece(boolean)}. The {@link Rook#moved} field is initialized to
-	 * false.
+	 * Subclass constructor of {@link Piece#Piece(boolean)}. The {@link Rook#moved}
+	 * field is initialized to false.
 	 * 
 	 * @param white true if the piece is white, false if not
 	 * @param shell the graphical shell. Used to set the image of the piece.
@@ -34,7 +42,6 @@ public class Rook extends Piece {
 			setImage(new Image(shell.getDisplay(), "images/" + blackPiece));
 		}
 		this.name = "ROOK";
-		this.moved = false;
 	}
 
 	@Override
@@ -61,13 +68,13 @@ public class Rook extends Piece {
 	}
 
 	/**
-	 * {@inheritDoc} Additionally, it also checks to see if the piece collides with
-	 * another piece while attempting to move to the new x/y coordinate.
+	 * {@inheritDoc} Also checks to see if the movement to the new x/y coordinate
+	 * collides with any piece.
 	 */
 	@Override
 	public boolean hasNoCollisions(int x, int y, Tile[][] tiles) {
 		// First, check to see if the desired spot will collide with players own piece
-		if (tiles[y][x].getPiece() != null && tiles[y][x].getPiece().isWhite() == this.isWhite()) {
+		if (hasFriendlyPiece(x, y, tiles)) {
 			return false;
 		}
 		// Finally, check to see nothing is in the path of the movement
@@ -107,58 +114,54 @@ public class Rook extends Piece {
 	public List<Coordinate> generateMoves(Tile[][] tiles) {
 		List<Coordinate> coordinates = new ArrayList<>();
 		// Up movement
-		int y = getY() - 1;
-		while (y >= 0) {
-			if (!tiles[y][getX()].hasPiece()) {
-				coordinates.add(new Coordinate(getX(), y));
-			} else {
-				if (hasEnemyPiece(getX(), y, tiles)) {
-					coordinates.add(new Coordinate(getX(), y));
-				}
+		for (int y = getY() - 1; y >= 0; y--) {
+			if (generateMovesHelper(getX(), y, tiles, coordinates)) {
 				break;
 			}
-			y--;
 		}
 		// Down movement
-		y = getY() + 1;
-		while (y <= 7) {
-			if (!tiles[y][getX()].hasPiece()) {
-				coordinates.add(new Coordinate(getX(), y));
-			} else {
-				if (hasEnemyPiece(getX(), y, tiles)) {
-					coordinates.add(new Coordinate(getX(), y));
-				}
+		for (int y = getY() + 1; y <= 7; y++) {
+			if (generateMovesHelper(getX(), y, tiles, coordinates)) {
 				break;
 			}
-			y++;
 		}
 		// Right movement
-		int x = getX() + 1;
-		while (x <= 7) {
-			if (!tiles[getY()][x].hasPiece()) {
-				coordinates.add(new Coordinate(x, getY()));
-			} else {
-				if (hasEnemyPiece(x, getY(), tiles)) {
-					coordinates.add(new Coordinate(x, getY()));
-				}
+		for (int x = getX() + 1; x <= 7; x++) {
+			if (generateMovesHelper(x, getY(), tiles, coordinates)) {
 				break;
 			}
-			x++;
 		}
 		// Left movement
-		x = getX() - 1;
-		while (x >= 0) {
-			if (!tiles[getY()][x].hasPiece()) {
-				coordinates.add(new Coordinate(x, getY()));
-			} else {
-				if (hasEnemyPiece(x, getY(), tiles)) {
-					coordinates.add(new Coordinate(x, getY()));
-				}
+		for (int x = getX() - 1; x >= 0; x--) {
+			if (generateMovesHelper(x, getY(), tiles, coordinates)) {
 				break;
 			}
-			x--;
 		}
 		return coordinates;
 	}
 
+	/**
+	 * This helper method is used in the generateMoves() method. It adds a
+	 * Coordinate object to the list of coordinates if it is a valid space and also
+	 * returns a boolean: false if the loop within generateMoves() can continue, or
+	 * true if the loop must be broken.
+	 * 
+	 * @param x           The integer x, between 0-7 inclusive, to be moved to.
+	 * @param y           The integer y, between 0-7 inclusive, to be moved to.
+	 * @param tiles       a 2D array containing Tile objects which have a Piece
+	 *                    field.
+	 * @param coordinates a List of coordinate objects that the piece can move onto.
+	 * @return true if the loop must be broken due to piece collision, false if not.
+	 */
+	private boolean generateMovesHelper(int x, int y, Tile[][] tiles, List<Coordinate> coordinates) {
+		if (!tiles[y][x].hasPiece()) {
+			coordinates.add(new Coordinate(x, y));
+		} else {
+			if (hasEnemyPiece(x, y, tiles)) {
+				coordinates.add(new Coordinate(x, y));
+			}
+			return true;
+		}
+		return false;
+	}
 }

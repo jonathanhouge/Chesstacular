@@ -16,24 +16,53 @@ import game.Tile;
  */
 
 public abstract class Piece {
+	/**
+	 * A boolean that indicates if the piece is white or not.
+	 */
 	private boolean white;
+	/**
+	 * The x coordinate of this piece, between 0-7 inclusive.
+	 */
 	private int x;
+	/**
+	 * The y coordinate of this piece, between 0-7 inclusive.
+	 */
 	private int y;
+	/**
+	 * An image which represents the piece
+	 */
 	private Image visual;
+	/**
+	 * The graphical spacing of squares on the chessboard graphic
+	 */
 	private static int SQUARE_WIDTH = 80;
+	/**
+	 * The alive status of this piece
+	 */
 	private boolean dead = false;
+	/**
+	 * The specific name of this piece in all caps, such as ROOK or QUEEN.
+	 */
 	public String name;
-	int BOARD_COORD_OFFSET = 100;
-	public boolean selected;
+	/**
+	 * The offset of the board from the left, AKA the space that the left coordinate
+	 * identifiers occupy.
+	 */
+	private static int BOARD_COORD_OFFSET = 100;
+	/**
+	 * A boolean indicatin if a player has selected this piece, used to determine
+	 * whether or not to highlight the tile during canvas drawing.
+	 */
+	public boolean selected = false;
 
 	/**
-	 * Creates a new piece, only saving its color. The location of the piece must 
+	 * Creates a new piece, only saving its color. The location of the piece must
 	 * thus be set after its creation. Selected is initialized to false.
+	 * 
 	 * @param white true if the piece is white, false if it is not.
 	 */
 	public Piece(boolean white) {
 		this.white = white;
-		this.selected = false;
 	}
 
 	/**
@@ -108,7 +137,7 @@ public abstract class Piece {
 	}
 
 	// -- Getters
-// -- Getters
+
 	/**
 	 * Returns the string color of the piece.
 	 * 
@@ -180,6 +209,7 @@ public abstract class Piece {
 	}
 
 	// -- Setters
+
 	/**
 	 * This method updates the location of a the piece.
 	 * 
@@ -199,7 +229,7 @@ public abstract class Piece {
 	 * longer needing to save a piece's booleans.
 	 * 
 	 * @param x the x coordinate where the user clicked
-	 * @param y the x coordinate where the user clicked
+	 * @param y the y coordinate where the user clicked
 	 */
 	public void setLocation(int x, int y) {
 		this.x = (x - BOARD_COORD_OFFSET / 2) / SQUARE_WIDTH;
@@ -208,14 +238,14 @@ public abstract class Piece {
 
 	/**
 	 * This method sets the piece as not selected so that when drawing the canvas,
-	 * it does not highlight it as selected.
+	 * it does not highlight it anymore.
 	 */
 	public void SetNotSelected() {
 		this.selected = false;
 	}
 
 	/**
-	 * Sets the dead field of the piece. Used by the AI.
+	 * Sets the dead field of the piece accordingly which is used by the AI.
 	 * 
 	 * @param status, true if piece is dead, false if not.
 	 */
@@ -239,9 +269,9 @@ public abstract class Piece {
 	}
 
 	/**
-	 * This method is used to set the SQUARE_WIDTH variable, a variable representing
-	 * how wide each tile on the board is which is necessary for when a piece must
-	 * draw itself onto the UI.
+	 * This method is used to set the SQUARE_WIDTH variable, a static variable
+	 * representing how wide each tile on the board is which is necessary for when a
+	 * piece must draw itself onto the UI.
 	 * 
 	 * @param width, an integer representing how wide a square is on the board.
 	 */
@@ -253,7 +283,7 @@ public abstract class Piece {
 	 * This method sets the image of the piece so that it is properly represented on
 	 * the chess board.
 	 * 
-	 * @param image an image representing the Piece object.
+	 * @param image an Image object which is a visual representation of the piece.
 	 */
 	public void setImage(Image image) {
 		this.visual = image;
@@ -264,6 +294,11 @@ public abstract class Piece {
 	 * This method returns a boolean depending on if the piece is moved in a way
 	 * that it is intended to move, both state specific move or as it generally is
 	 * moved.
+	 * <P>
+	 * Due to the creation of generateMoves() this method could be entirely
+	 * scrapped, however special moves such as en passant or castling have their
+	 * fields updated accordingly during this method call and thus removal requires
+	 * more structural changes.
 	 * 
 	 * @param x any integer between 0-7 inclusive.
 	 * @param y any integer between 0-7 inclusive.
@@ -274,6 +309,11 @@ public abstract class Piece {
 	/**
 	 * Returns a boolean indicating if the piece collides with a friendly piece at
 	 * the x/y coordinate. Enemy collisions are allowed.
+	 * <P>
+	 * Due to the creation of generateMoves() this method could be entirely
+	 * scrapped, however special moves such as en passant or castling have their
+	 * fields updated accordingly during this method call and thus removal requires
+	 * more structural changes.
 	 * 
 	 * @param x     any integer between 0-7 inclusive
 	 * @param y     any integer between 0-7 inclusive

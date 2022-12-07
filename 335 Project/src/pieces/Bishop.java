@@ -9,12 +9,25 @@ import org.eclipse.swt.widgets.Shell;
 import game.Coordinate;
 import game.Tile;
 
+/**
+ * A subclass of Piece, this class contains Bishop specific implementations of
+ * the methods standardMove(), hasNoCollisions(), and generateMoves().
+ * 
+ * @author Julius Ramirez
+ *
+ */
 public class Bishop extends Piece {
 
 	String whitePiece = "wb.png";
 	String blackPiece = "bb.png";
 	int points = 3;
 
+	/**
+	 * Subclass constructor of {@link Piece#Piece(boolean)}.
+	 * 
+	 * @param white true if piece is white, false if black
+	 * @param shell the graphical shell. Used to set the image of the piece.
+	 */
 	public Bishop(boolean white, Shell shell) {
 		super(white);
 		if (white) {
@@ -35,6 +48,9 @@ public class Bishop extends Piece {
 	/**
 	 * {@inheritDoc} Additionally, it also checks to see if the piece collides with
 	 * another piece while attempting to move to the new x/y coordinate.
+	 * <P>
+	 * This method implementation can be improved by creating a helper method that
+	 * does the repeated hasPiece() checks within each loop.
 	 */
 	@Override
 	public boolean hasNoCollisions(int x, int y, Tile[][] tiles) {
