@@ -70,8 +70,10 @@ public class Pawn extends Piece {
 	}
 
 	/**
-	 * {@inheritDoc} Additionally, it will set the firstMove field to false and set
-	 * the enPassantable field accordingly depending on if an en passant move may be
+	 * {@inheritDoc}
+	 * <P>
+	 * Additionally, it will set the firstMove field to false and set the
+	 * enPassantable field accordingly depending on if an en passant move may be
 	 * done on the pawn.
 	 */
 	@Override
@@ -89,9 +91,10 @@ public class Pawn extends Piece {
 	}
 
 	/**
-	 * {@inheritDoc} Due to the special en passant move, it also checks to see if a
-	 * legal en passant move has been made. This is where didEnPassant is set to
-	 * true.
+	 * {@inheritDoc}
+	 * <P>
+	 * Due to the special en passant move, it also checks to see if a legal en
+	 * passant move has been made. This is where didEnPassant is set to true.
 	 */
 	@Override
 	public boolean validMove(int x, int y, Tile[][] tiles) {
@@ -121,7 +124,7 @@ public class Pawn extends Piece {
 	}
 
 	/**
-	 * {@inheritDoc} Additionally, it checks to see if a piece is in the way of the
+	 * {@inheritDoc}<P> Additionally, it checks to see if a piece is in the way of the
 	 * movement to the x/y coordinate and if the pawn has moved 2 spaces only on its
 	 * first move.
 	 * 

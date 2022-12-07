@@ -19,12 +19,12 @@ import pieces.Piece;
 import pieces.Queen;
 import pieces.Rook;
 
-/** 
+/**
  * Chessboard implementation. Holds onto a list of Tiles that represent the
- * tiles in the 8x8 board. These tiles hold onto the pieces that occupy them. 
- * Draws itself by iterating through a this list and calling their draw methods.
- * Has a multitude of methods for different kinds of moves, standard and 
- * special cases.
+ * tiles in the 8x8 board. These tiles hold onto the pieces that occupy them.
+ * Draws itself by iterating through this list and calling their draw methods.
+ * Has a multitude of methods for different kinds of moves, standard and special
+ * cases, and determining end game conditions.
  * 
  * @author Jonathan Houge & Julius Ramirez & Khojiakbar Yokubjonov
  */
@@ -32,33 +32,32 @@ public class Chessboard implements ChessboardUI {
 	Canvas canvas;
 	Shell shell;
 	Display display;
-	
+
 	Tile[][] board;
 	int SQUARE_WIDTH = 80;
 	int BOARD_COORD_OFFSET = 100;
 	String verticalCoords[] = new String[] { "8", "7", "6", "5", "4", "3", "2", "1" };
 	String horizontalCoords[] = new String[] { "A", "B", "C", "D", "E", "F", "G", "H" };
-	
+
 	boolean promotion = false;
 	public boolean endGame = false;
 
-	List<Coordinate> selectedCoordinates;
-	
+	private List<Coordinate> selectedCoordinates;
+
 	Color SELECTED = new Color(51, 204, 51);
 	Color BG = new Color(255, 255, 255);
 	Color SIDE = new Color(204, 136, 0);
 	Color HIGHLIGHTED = new Color(110, 211, 255);
 	Color OUTLINE;
 	Font boardFont;
-	
-	/** 
-	 * Chessboard constructor. Takes in the needed SWT assets for
-	 * everything that needs to be done. Utilizes the display to
-	 * get the color needed for outlining and the font needed
-	 * for the board coordinates.
+
+	/**
+	 * Chessboard constructor. Takes in the needed SWT assets for everything that
+	 * needs to be done. Utilizes the display to get the color needed for outlining
+	 * and the font needed for the board coordinates.
 	 * 
-	 * @param canvas: UI's canvas
-	 * @param shell: UI's shell.
+	 * @param canvas:  UI's canvas
+	 * @param shell:   UI's shell.
 	 * @param display: UI's display
 	 */
 	public Chessboard(Canvas canvas, Shell shell, Display display) {
@@ -66,8 +65,9 @@ public class Chessboard implements ChessboardUI {
 		this.shell = shell;
 		this.display = display;
 		this.OUTLINE = display.getSystemColor(SWT.COLOR_BLACK);
-		this.boardFont = new Font(canvas.getDisplay(), "Tahoma", 15, SWT.BOLD); }
-	
+		this.boardFont = new Font(canvas.getDisplay(), "Tahoma", 15, SWT.BOLD);
+	}
+
 	/**
 	 * Creation method, only ran once for initialization. Makes an empty board,
 	 * creating the tiles themselves by utilizing the Tile class.
@@ -85,24 +85,27 @@ public class Chessboard implements ChessboardUI {
 
 				// create the tiles with the proper color
 				if (boardColor) {
-					board[y][x] = new Tile(w, OUTLINE, x * SQUARE_WIDTH + 50, y * SQUARE_WIDTH, SQUARE_WIDTH); } 
-				else {
-					board[y][x] = new Tile(b, OUTLINE, x * SQUARE_WIDTH + 50, y * SQUARE_WIDTH, SQUARE_WIDTH); }
-				
+					board[y][x] = new Tile(w, OUTLINE, x * SQUARE_WIDTH + 50, y * SQUARE_WIDTH, SQUARE_WIDTH);
+				} else {
+					board[y][x] = new Tile(b, OUTLINE, x * SQUARE_WIDTH + 50, y * SQUARE_WIDTH, SQUARE_WIDTH);
+				}
+
 				// alternating tile colors
-				boardColor = !boardColor; }
-			boardColor = !boardColor; }
+				boardColor = !boardColor;
+			}
+			boardColor = !boardColor;
+		}
 	}
-	
+
 	/**
-	 * Adds all the chess pieces to the board.
-	 * Used for the new game only.
+	 * Adds all the chess pieces to the board. Used for the new game only.
 	 */
 	public void setAllPieces() {
 		for (int y = 0; y < 8; y++) {
 			for (int x = 0; x < 8; x++) {
 				board[y][x].setPiece(makePiece(x, y)); // set the piece using a helper function
-			} }
+			}
+		}
 	}
 
 	/**
@@ -119,109 +122,143 @@ public class Chessboard implements ChessboardUI {
 		boolean pieceColor = false;
 
 		if (y == 0) { // black specialty pieces
-			if (x == 0 || x == 7) { return (new Rook(pieceColor, shell)); }
-			else if (x == 0 || x == 7) { return (new Rook(pieceColor, shell)); } 
-			else if (x == 1 || x == 6) { return (new Knight(pieceColor, shell)); } 
-			else if (x == 2 || x == 5) { return (new Bishop(pieceColor, shell)); } 
-			else if (x == 4) { return (new King(pieceColor, shell)); } 
-			else if (x == 3) { return (new Queen(pieceColor, shell)); } } 
-		else if (y == 1) { return (new Pawn(pieceColor, shell)); } // black pawns
+			if (x == 0 || x == 7) {
+				return (new Rook(pieceColor, shell));
+			} else if (x == 0 || x == 7) {
+				return (new Rook(pieceColor, shell));
+			} else if (x == 1 || x == 6) {
+				return (new Knight(pieceColor, shell));
+			} else if (x == 2 || x == 5) {
+				return (new Bishop(pieceColor, shell));
+			} else if (x == 4) {
+				return (new King(pieceColor, shell));
+			} else if (x == 3) {
+				return (new Queen(pieceColor, shell));
+			}
+		} else if (y == 1) {
+			return (new Pawn(pieceColor, shell));
+		} // black pawns
 
 		// true == white
 		pieceColor = !pieceColor;
 
-		if (y == 6) { return (new Pawn(pieceColor, shell)); } // white pawns
+		if (y == 6) {
+			return (new Pawn(pieceColor, shell));
+		} // white pawns
 		else if (y == 7) { // white specialty pieces
-			if (x == 0 || x == 7) { return (new Rook(pieceColor, shell)); }
-			else if (x == 0 || x == 7) { return (new Rook(pieceColor, shell)); } 
-			else if (x == 1 || x == 6) { return (new Knight(pieceColor, shell)); }
-			else if (x == 2 || x == 5) { return (new Bishop(pieceColor, shell)); }
-			else if (x == 4) { return (new King(pieceColor, shell)); } 
-			else if (x == 3) { return (new Queen(pieceColor, shell)); } }
+			if (x == 0 || x == 7) {
+				return (new Rook(pieceColor, shell));
+			} else if (x == 0 || x == 7) {
+				return (new Rook(pieceColor, shell));
+			} else if (x == 1 || x == 6) {
+				return (new Knight(pieceColor, shell));
+			} else if (x == 2 || x == 5) {
+				return (new Bishop(pieceColor, shell));
+			} else if (x == 4) {
+				return (new King(pieceColor, shell));
+			} else if (x == 3) {
+				return (new Queen(pieceColor, shell));
+			}
+		}
 
 		return null; // tile is given no piece
 	}
 
 	@Override
 	/**
-	 * The for loop to draw the board. The helper function 'Drawing' holds
-	 * onto all of the conditionals needed in the process. 
+	 * The for loop to draw the board. The helper function 'Drawing' holds onto all
+	 * of the conditionals needed in the process.
 	 * 
-	 * @param x: row in board
-	 * @param y: column in board
+	 * @param x:  row in board
+	 * @param y:  column in board
 	 * @param gc: event gc, let's us draw on the canvas
 	 */
 	public void draw(GC gc) {
 		for (int x = 0; x < 8; x++) {
 			for (int y = 0; y < 8; y++) {
-				drawing(x, y, gc); } }
+				drawing(x, y, gc);
+			}
+		}
 	}
-	
+
 	/**
-	 * The helper function 'Drawing'. Need to make sure that tiles
-	 * are drawn the right color: if a piece is currently selected
-	 * the tile is green, a tile is cyan if it's a valid place for 
-	 * the currently selected piece to move, and if neither of these
-	 * are true, the original color stands. Also adds the board
-	 * coordinates on the side (A-H, 1-8). 
+	 * The helper function 'Drawing'. Need to make sure that tiles are drawn the
+	 * right color: if a piece is currently selected the tile is green, a tile is
+	 * cyan if it's a valid place for the currently selected piece to move, and if
+	 * neither of these are true, the original color stands. Also adds the board
+	 * coordinates on the side (A-H, 1-8).
 	 * 
-	 * @param x: row in board
-	 * @param y: column in board
+	 * @param x:  row in board
+	 * @param y:  column in board
 	 * @param gc: event gc, let's us draw on the canvas
 	 */
 	private void drawing(int x, int y, GC gc) {
 		Tile t = board[x][y]; // tile in question
 		Piece p = t.getPiece(); // piece in question
-		
+
 		if (p != null) { // if there's a piece, could be selected or taken by selected
-			if(p.isSelected()) { t.draw(gc, SELECTED); }
-			
-			else if(selectedCoordinates!= null && selectedCoordinates.contains(new Coordinate(y,x))){
-				t.draw(gc, HIGHLIGHTED); }
-			
-			else{ t.draw(gc); } 
+			if (p.isSelected()) {
+				t.draw(gc, SELECTED);
+			}
+
+			else if (selectedCoordinates != null && selectedCoordinates.contains(new Coordinate(y, x))) {
+				t.draw(gc, HIGHLIGHTED);
+			}
+
+			else {
+				t.draw(gc);
+			}
 		}
-		
+
 		else { // no piece but could be a valid place for currently selected to move to
-			if(selectedCoordinates!= null && selectedCoordinates.contains(new Coordinate(y,x))){
-				t.draw(gc, HIGHLIGHTED); }
-			else { t.draw(gc); }
+			if (selectedCoordinates != null && selectedCoordinates.contains(new Coordinate(y, x))) {
+				t.draw(gc, HIGHLIGHTED);
+			} else {
+				t.draw(gc);
+			}
 		}
-		
+
 		// adding the board coordinates
-		if (x == 0) { addBoardCoords(gc, x, y); }
-		if (y == 7) { addBoardCoords(gc, x, y); }
+		if (x == 0) {
+			addBoardCoords(gc, x, y);
+		}
+		if (y == 7) {
+			addBoardCoords(gc, x, y);
+		}
 	}
-	
+
 	/**
-	 * The helper function of 'Drawing'. Makes sure the board coordinates
-	 * of A-H and 1-8 are drawn in the appropriate locations.
+	 * The helper function of 'Drawing'. Makes sure the board coordinates of A-H and
+	 * 1-8 are drawn in the appropriate locations.
 	 * 
-	 * @param x: row in board
-	 * @param y: column in board
+	 * @param x:  row in board
+	 * @param y:  column in board
 	 * @param gc: event gc, let's us draw on the canvas
 	 */
 	private void addBoardCoords(GC gc, int x, int y) {
 		gc.setFont(boardFont);
 		gc.setBackground(BG);
 		gc.setForeground(SIDE);
-		
+
 		// 1-8
 		if (x == 0) {
 			String yCoord = verticalCoords[y];
-			gc.drawText(yCoord, x * SQUARE_WIDTH + 20, y * SQUARE_WIDTH + 25); }
-		
+			gc.drawText(yCoord, x * SQUARE_WIDTH + 20, y * SQUARE_WIDTH + 25);
+		}
+
 		// A-H
 		if (y == 7) {
 			String xCoord = horizontalCoords[x];
-			gc.drawText(xCoord, x * SQUARE_WIDTH + 60 + 20, (y + 1) * SQUARE_WIDTH + 15); }
+			gc.drawText(xCoord, x * SQUARE_WIDTH + 60 + 20, (y + 1) * SQUARE_WIDTH + 15);
+		}
 	}
-	
-	//-- getters
-	
+
+	// -- getters
+
 	/**
 	 * accepts the pixel coordinates and converts them to valid index on the board
-	 * @param x,y  - the pixel coordinates on the canvas
+	 * 
+	 * @param x,y - the pixel coordinates on the canvas
 	 * @return
 	 */
 	public int[] getBoardIndex(float x, float y) {
@@ -234,23 +271,26 @@ public class Chessboard implements ChessboardUI {
 
 		if (indX < 0 || indX > 7 || indY < 0 || indY > 7 || indexX < 0) {
 			System.out.println("Clicking outside the board!");
-			return null; }
+			return null;
+		}
 		return new int[] { indX, indY };
 	}
-	
+
 	/**
 	 * board getter. returns the board.
 	 * 
 	 * @return board: the list of tiles that make up the board.
 	 */
-	public Tile[][] getBoard(){ return board; }
+	public Tile[][] getBoard() {
+		return board;
+	}
 
-	//-- moving / piece methods
-	
+	// -- moving / piece methods
+
 	/**
-	 * This method returns a specific colored king piece so that it may be used for check and
-	 * checkmate calculations. It could be improved by removing the need to iterate
-	 * through the entire board every time.
+	 * This method returns a specific colored king piece so that it may be used for
+	 * check and checkmate calculations. It could be improved by removing the need
+	 * to iterate through the entire board every time.
 	 * 
 	 * @param getWhite, true if obtaining white king, false if obtaining black king.
 	 * @return the desired King piece.
@@ -277,53 +317,69 @@ public class Chessboard implements ChessboardUI {
 	/**
 	 * This method returns a boolean which indicates if the move to the desired x/y
 	 * coordinate is a legal move that the piece can made.
+	 * <P>
+	 * It can be improved by simply checking if the x/y coordinate is within the {@link #selectedCoordinates} field,
+	 * although this would require changes in the Pawn classes' validMove() method as that method call sets state/move
+	 * specific booleans that would thus no longer be updated.
+	 * @see  pieces.Pawn#validMove(int, int, Tile[][])
+	 * @param x          any integer between 0-7 inclusive
+	 * @param y          any integer between 0-7 inclusive
 	 * 
-	 * @param x     any integer between 0-7 inclusive
-	 * @param y     any integer between 0-7 inclusive
-
-	 * @param piece the Piece object that is to be moved
+	 * @param piece      the Piece object that is to be moved
 	 * @param whitesTurn true if white is making the move, false if not
 	 * @return true if the move is legal, false if not.
-	 * @author Julius Ramirez
 	 */
-	public boolean validMoveMade(int x, int y, Piece piece,boolean whitesTurn) {
+	public boolean validMoveMade(int x, int y, Piece piece, boolean whitesTurn) {
 		return piece.validMove(x, y, board) && validCheckMove(x, y, piece, whitesTurn);
 
 	}
 
-	public boolean newValidMoveMade(int x, int y, Piece piece) {
-		return selectedCoordinates.contains(new Coordinate(x,y));
-		
-	}
+
 	/**
 	 * This method updates the piece's coordinates to the new x/y coordinate and
-	 * ensures that the old tilies piece field is set to null.
+	 * ensures that the old tiles piece field is set to null. Additionally, updateLocation()
+	 * is called so that state specific fields are updated accordingly. If it moves onto a 
+	 * tile that already has a piece, it set's that piece's dead field to true so that the robot
+	 * won't select that piece to be moved.
 	 * 
+	 * @see pieces.Pawn#updateLocation(int, int)
+	 * @see pieces.King#updateLocation(int, int)
+	 * @see pieces.Rook#updateLocation(int, int)
 	 * @param x     any integer between 0-7 inclusive.
 	 * @param y     any integer between 0-7 inclusive.
-	 * @param piece the Piece object that is to be moved
-	 * @author Julius Ramirez
+	 * @param piece the Piece object that is to be moved to x/y.
 	 */
 	public void movePiece(int x, int y, Piece piece) {
 		board[piece.getY()][piece.getX()].setPiece(null);
-		System.out.println("MOVING" + piece + " to " + x  + ',' + y);
-		piece.updateLocation(x, y); // necessary so that pawn enPassant/castling is updated
+		System.out.println("MOVING" + piece + " to " + x + ',' + y);
+		piece.updateLocation(x, y);
 		if (board[y][x].getPiece() != null)
 			board[y][x].getPiece().killPiece(); // killing previous piece for robot class
 		board[y][x].setPiece(piece);
-	
+
 	}
 
 	/**
 	 * This method is responsible for returning a piece (or null) that the player
 	 * wants to move.
+	 * <P>
+	 * This method implementation can be greatly improved by making changes in the
+	 * Piece subclasses via a revised setLocation() method which simply changes the
+	 * x/y field of the piece due to updateLocation() changes state specific
+	 * variables that thus must be saved and restored whenever this method gets
+	 * called.
 	 * 
-	 * @param x any integer between 0-7 inclusive
-	 * @param y any integer between 0-7 inclusive
-	 * @param whitesTurn true if white is making the move, false if not
+	 * @see pieces.Pawn#updateLocation(int, int)
+	 * @see pieces.King#updateLocation(int, int)
+	 * @see pieces.Rook#updateLocation(int, int)
+	 * @param x         any integer between 0-7 inclusive
+	 * @param y         any integer between 0-7 inclusive
+	 * @param piece     the Piece object that is to be moved to x/y
 	 * @param getWhite, true if obtaining white king, false if obtaining black king.
-	 * @return true if the movement does not put/have the king in check, false if it does.
-	 * @return
+	 * @return true if the movement does not put/have the king in check, false if it
+	 *         does.
+	 * @return true if the move does not break any non-valid check moves, false if
+	 *         it does.
 	 */
 	public boolean validCheckMove(int x, int y, Piece piece, boolean getWhite) {
 		Pawn p = null;
@@ -334,23 +390,23 @@ public class Chessboard implements ChessboardUI {
 		Rook r = null;
 		King k = null;
 		// Saving variables that would be overwritten due to move being made
-		if(piece instanceof Pawn) {
+		if (piece instanceof Pawn) {
 			p = (Pawn) piece;
 			extra1 = p.firstMove;
 			extra2 = p.enPassantable;
-			extra3 = p.didEnPassant;
-		}else if(piece instanceof Rook) {
+			extra3 = p.didEnPassant; // Likely not necessary but saving in case
+		} else if (piece instanceof Rook) {
 			r = (Rook) piece;
 			extra1 = r.moved;
-		}else if(piece instanceof King) { 
+		} else if (piece instanceof King) {
 			k = (King) piece;
 			extra1 = k.moved;
 			extra2 = k.castlingMoveMade;
 		}
 		int oldX = piece.getX();
 		int oldY = piece.getY();
-		Piece oldPiece = board[y][x].getPiece(); 
-		if(oldPiece != null) {
+		Piece oldPiece = board[y][x].getPiece();
+		if (oldPiece != null) {
 			isDead = oldPiece.isDead();
 		}
 		// Simulate a move
@@ -360,46 +416,51 @@ public class Chessboard implements ChessboardUI {
 		boolean checked = newKing.checked;
 		// Restoring board to previous state
 		this.movePiece(oldX, oldY, piece);
-		if(piece instanceof Pawn) {
+		if (piece instanceof Pawn) {
 			p.firstMove = extra1;
-			p.enPassantable=extra2;
-			p.didEnPassant = extra3; // May not be necessary but saving in case
-			board[oldY][oldX].setPiece(p); 
-		}else if(piece instanceof Rook) {
+			p.enPassantable = extra2;
+			p.didEnPassant = extra3; // Likely not necessary but saving in case
+			board[oldY][oldX].setPiece(p);
+		} else if (piece instanceof Rook) {
 			r.moved = extra1;
 			board[oldY][oldX].setPiece(r);
-		}else if(piece instanceof King) {
+		} else if (piece instanceof King) {
 			k.moved = extra1;
 			k.castlingMoveMade = extra2;
 			board[oldY][oldX].setPiece(k);
 		}
-		if(oldPiece != null) {
+		if (oldPiece != null) {
 			oldPiece.setDeadStatus(isDead);
 		}
-		board[y][x].setPiece(oldPiece); 
+		board[y][x].setPiece(oldPiece);
 		determineKingCheckStatus(getWhite);
+		// Negate checked because if it's true, king is in check and thus not valid.
 		return !checked;
 	}
 
 	/**
 	 * The purpose of this method is to determine if a king is now in check or not.
-	 * The player's color is passed so that only the desired player's king is analyzed.
+	 * It is called within updateBoard(). The player's color is passed so that only
+	 * the desired player's king is analyzed. [made public for robot]
 	 * 
 	 * @param getWhite, true if player is white, false if not
+	 * @return true if the king is in check, false if not.
 	 */
-	public boolean determineKingCheckStatus(boolean getWhite) { // made public for robot
+	public boolean determineKingCheckStatus(boolean getWhite) {
 		King king = getKing(getWhite);
 		for (int row = 0; row < 8; row++) {
 			for (int col = 0; col < 8; col++) {
-				if (board[row][col].getPiece() != null
-						&& !(board[row][col].getPiece() instanceof King) && board[row][col].getPiece().validMove(king.getX(), king.getY(), board)) {
-					king.setCheck();
-					//System.out.println("Oh no! The " + king + " is in check because of the " +board[row][col].getPiece());
-					board[king.getY()][king.getX()].setPiece(king);
-					return true;
+				if (board[row][col].getPiece() != null && !(board[row][col].getPiece() instanceof King)) {
+					if (board[row][col].getPiece().validMove(king.getX(), king.getY(), board)) {
+						// update the check field and update array with newly updated king.
+						king.setCheck();
+						board[king.getY()][king.getX()].setPiece(king);
+						return true;
+					}
 				}
 			}
 		}
+		// update the check field and update array with newly updated king.
 		king.checkEvaded();
 		board[king.getY()][king.getX()].setPiece(king);
 		return false;
@@ -414,212 +475,251 @@ public class Chessboard implements ChessboardUI {
 	 * @param isWhite, true if player is white, false if not
 	 * @return a piece object if the piece can be selected by the player, null if
 	 *         empty/opponents piece.
-	 * @author Julius Ramirez
 	 */
-	public Piece selectPiece(int x, int y, boolean playerIsWhite) {;
-		// this if also ensures the player selects one of their own pieces to move
-		if (this.board[y][x].getPiece() != null
-				&& this.board[y][x].getPiece().isWhite() == playerIsWhite) {
+	public Piece selectPiece(int x, int y, boolean playerIsWhite) {
+		if (this.board[y][x].getPiece() != null && this.board[y][x].getPiece().isWhite() == playerIsWhite) {
 			return this.board[y][x].getPiece();
 		}
 		return null;
-	}
-
-	
-	/**
-	 * This is a debug version of selectPiece(). It acts the same however the user
-	 * can also move the opponents pieces.
-	 * 
-	 * @param x           any integer between 0-7 inclusive.
-	 * @param y           any integer between 0-7 inclusive.
-	 * @return a piece object if the piece can be selected by the player, null if
-	 *         empty/opponents piece.
-	 * @author Julius Ramirez
-	 */
-	public Piece selectPiece(int x, int y) {
-		if (this.board[y][x].getPiece() != null) {
-			return this.board[y][x].getPiece();
-
-		}
-		return null;
-
 	}
 
 	/**
 	 * This simply updates the Tile[][] array so that the piece field is null.
+	 * 
 	 * @param xCoord any integer between 0-7 inclusive.
 	 * @param yCoord any integer between 0-7 inclusive.
 	 */
 	public void removePiece(int xCoord, int yCoord) {
-		this.board[yCoord][xCoord].setPiece(null); }
-	
+		this.board[yCoord][xCoord].setPiece(null);
+	}
+
 	/**
 	 * This method is responsible for updating the board accordingly after a valid
-	 * move is made. 
+	 * move has been made. It returns a boolean which indicates if the game is over
+	 * or not, and if so, who won.
 	 * 
-	 * @param xCoord any integer between 0-7 inclusive.
-	 * @param yCoord any integer between 0-7 inclusive.
-	 * @param selectedPiece the piece that is to be moved to xCoord, yCoord
+	 * @param xCoord        any integer between 0-7 inclusive.
+	 * @param yCoord        any integer between 0-7 inclusive.
+	 * @param selectedPiece the piece that is to be moved to xCoord, yCoord.
+	 * @return an integer, 0 if checkmate not met, 1 if white won, and 2 if black
+	 *         won.
 	 */
 	public int updateBoard(int xCoord, int yCoord, Piece selectedPiece) {
 		int gameOver = 0;
-		//System.out.println("Chessboard.java - Moving..." + selectedPiece);
-		this.movePiece(xCoord,yCoord,selectedPiece);
-		//System.out.println("Chessboard.java - Piece updated! " + selectedPiece);
+		// System.out.println("Chessboard.java - Moving..." + selectedPiece);
+		this.movePiece(xCoord, yCoord, selectedPiece);
+		// System.out.println("Chessboard.java - Piece updated! " + selectedPiece);
 		this.checkCastleMoveMade(selectedPiece);
 		this.checkEnPassantMoveMade(selectedPiece);
 		this.checkPromotion(selectedPiece);
-		if(this.determineKingCheckStatus(!selectedPiece.isWhite())) {
+		if (this.determineKingCheckStatus(!selectedPiece.isWhite())) {
 			System.out.println("King in check!");
 			gameOver = this.determineCheckMate(selectedPiece);
-		};
+		}
+		;
 		return gameOver;
 	}
+
 	/**
-	 * This method checks if an en passant move has been made so that the board may
+	 * This method checks if the en passant move has been made so that the board may
 	 * be updated accordingly.
 	 * 
-	 * @param selectedPiece the piece that was moved to a new spot.
+	 * @param selectedPiece the piece that has been moved.
 	 */
 	private void checkEnPassantMoveMade(Piece selectedPiece) {
-		if(selectedPiece instanceof Pawn) {
-			Pawn pawn = (Pawn)selectedPiece;
+		if (selectedPiece instanceof Pawn) {
+			Pawn pawn = (Pawn) selectedPiece;
 			if (pawn.didEnPassant) {
-				//System.out.println("Chessboard - Entered block!");
-				int x = pawn.getX();
 				int y = pawn.getY();
-				if(pawn.isWhite()) {
+				if (pawn.isWhite()) {
 					y++;
-				}else {
+				} else {
 					y--;
 				}
-				this.removePiece(selectedPiece.getX(),y);
+				this.removePiece(selectedPiece.getX(), y);
+				// Sets didEnPassant to false so that board doesn't get updated incorrectly.
 				pawn.removeEnPassantMove();
 			}
 		}
 	}
+
+	/**
+	 * This method determines if the Piece object moved has castled and updates the
+	 * board accordingly if it did.
+	 * 
+	 * @param piece the piece that has been moved.
+	 */
 	private void checkCastleMoveMade(Piece piece) {
-		if(piece instanceof King) {
+		if (piece instanceof King) {
 			King k = (King) piece;
-			if(k.castlingMoveMade) {
-				this.removePiece(k.getX(),k.getY());
+			if (k.castlingMoveMade) {
+				this.removePiece(k.getX(), k.getY());
 				King newKing = new King(piece.isWhite(), shell);
-				newKing.moved = true;
+				newKing.moved = true; // Set to true so castling can't occur again
 				Rook newRook = new Rook(piece.isWhite(), shell);
-				newRook.moved = true;
-				if(k.getX() == 7 && k.getY() == 7) {
+				newRook.moved = true; // Set to true so castling can't occur again
+				if (k.getX() == 7 && k.getY() == 7) {
 					board[7][5].setPiece(newRook);
 					board[7][6].setPiece(newKing);
-				}else if(k.getX() == 0 && k.getY() ==7) {
+				} else if (k.getX() == 0 && k.getY() == 7) {
 					board[7][3].setPiece(newRook);
 					board[7][2].setPiece(newKing);
-				}else if(k.getX() == 0 && k.getY() == 0) {
+				} else if (k.getX() == 0 && k.getY() == 0) {
 					board[0][3].setPiece(newRook);
 					board[0][2].setPiece(newKing);
-				}else if (k.getX() == 7 && k.getY() == 0) {
+				} else if (k.getX() == 7 && k.getY() == 0) {
 					board[0][5].setPiece(newRook);
 					board[0][6].setPiece(newKing);
-				}else {
-					System.out.println("CHESSBOARD.JAVA - CHECKCASTLEMOVEMADE - this block should never be reached: " + k);
+				} else {
+					System.out.println(
+							"Chessboard.java - checkCastleMoveMade - this block should never be reached printing king status and exiting: "
+									+ k);
+					System.exit(403);
 				}
+				// Set castlingMoveMade to false so no bugs occur when piece is moved later.
 				k.castlingMoveMade = false;
 			}
 		}
 	}
-	
-	
 
 	/**
-	 * This method determines if the game is over.
-	 * [made public for robot]
+	 * This method determines if the game is over. Additionally, it returns an int
+	 * which indicates which player (if any) has won. [made public for robot]
 	 * 
-	 * @param movedPiece, the piece that was moved this turn. Used to determine next player's color,
-	 * could be changed
+	 * @param movedPiece, the piece that was moved this turn. Used to determine next
+	 *                    player's color.
+	 * @return an integer, 0 if checkmate not met, 1 if white won, and 2 if black
+	 *         won.
 	 */
 	public int determineCheckMate(Piece movedPiece) {
-		for(int row = 0; row <= 7; row++) {
-			for(int col = 0;col <= 7; col++) {
-				if(board[row][col].getPiece()!= null) { 
-					// if piece is at this coord AND the piece belongs to the opponent,
-					// check if the opponent can make any valid moves.
-					if (board[row][col].getPiece().isWhite() != movedPiece.isWhite()) {
-						Piece friendlyPiece = board[row][col].getPiece();
-						List<Coordinate> friendlyMoves = friendlyPiece.generateMoves(board);
-						for(Coordinate coord: friendlyMoves) {
-							System.out.println(friendlyPiece + ": " + coord);
-							if(validMoveMade(coord.getX(),coord.getY(),friendlyPiece, friendlyPiece.isWhite())) {
-								System.out.println("Chessboard.java - validMove possible, checkmate not met");
-								return 0;
-							}
+		for (int row = 0; row <= 7; row++) {
+			for (int col = 0; col <= 7; col++) {
+				if (movedPiece.hasEnemyPiece(col, row, board)) {
+					Piece otherPlayerPiece = board[row][col].getPiece();
+					List<Coordinate> coordinates = otherPlayerPiece.generateMoves(board);
+					for (Coordinate coord : coordinates) {
+						if (validMoveMade(coord.getX(), coord.getY(), otherPlayerPiece, otherPlayerPiece.isWhite())) {
+							System.out.println("Chessboard.java - validMove possible, checkmate not met");
+							return 0;
 						}
 					}
 				}
 			}
 		}
-		//If this part is reached no validMoveMade returned true, thus game over!
+		// If this part is reached no validMoveMade returned true, thus game over!
 		System.out.println("Chessboard.java - The opponent can not make any valid moves! Game over!");
-		
+		// This section is used to determine which player has won.
 		this.endGame = true;
-		if (movedPiece.getColor() == "White") { return 1; }
-		else { return 2; }
+		if (movedPiece.getColor() == "White") {
+			return 1;
+		} else {
+			return 2;
+		}
 	}
 
 	/**
-	 * This method promotes the pawn TODO to a queen if it is on the opposite side of the board.
-	 * @param selectedPiece the piece that has been moved.
+	 * This method promotes the pawn if it is on the opposite side of the board. It
+	 * opens a display that allows the user to choose between a Queen, Knight,
+	 * Bishop, or Rook, and updates the board accordingly with their selection.
+	 * 
+	 * @param selectedPiece the Piece object that has been moved.
 	 */
 	private void checkPromotion(Piece selectedPiece) {
-		// TODO add promotion selection
-		if(selectedPiece instanceof Pawn) {
+		if (selectedPiece instanceof Pawn) {
 			Pawn pawn = (Pawn) selectedPiece;
 			if (pawn.promotion()) {
 				String decision = new PawnPromotionDisplay().start(display);
 				Object piece = new Queen(selectedPiece.isWhite(), shell);
 				if (decision.equals("Rook")) {
-					piece = new Rook(selectedPiece.isWhite(), shell); }
-				else if (decision.equals("Knight")) {
-					piece = new Knight(selectedPiece.isWhite(), shell); }
-				else if (decision.equals("Bishop")) {
-					piece = new Bishop(selectedPiece.isWhite(), shell); }
-				
-				((Piece) piece).updateLocation(pawn.getX(), pawn.getX());
+					piece = new Rook(selectedPiece.isWhite(), shell);
+				} else if (decision.equals("Knight")) {
+					piece = new Knight(selectedPiece.isWhite(), shell);
+				} else if (decision.equals("Bishop")) {
+					piece = new Bishop(selectedPiece.isWhite(), shell);
+				}
+				((Piece) piece).updateLocation(pawn.getX(), pawn.getX()); // TODO fix?
 				board[selectedPiece.getY()][selectedPiece.getX()].setPiece((Piece) piece);
-				
 				this.promotion = true;
 			}
 		}
 	}
-	
+
+	/**
+	 * This method highlights the possible moves that a piece may be moved onto and
+	 * saves them to the {@link #selectedCoordinates} field.
+	 * 
+	 * @param selectedPiece the Piece object that may be moved by the player.
+	 */
 	public void highlightCoordinates(Piece selectedPiece) {
 		selectedCoordinates = selectedPiece.generateMoves(board);
-		filterCheckMoves(selectedPiece,selectedCoordinates);
+		filterCheckMoves(selectedPiece, selectedCoordinates);
 	}
-	private void filterCheckMoves(Piece piece,List<Coordinate> coordinates) {
-		for(int i = 0;i<selectedCoordinates.size();i++) {
+
+	/**
+	 * This method filters non-valid check related moves from a list of coordinates
+	 * that a piece could potentially move to. It does so by calling
+	 * {@link Chessboard#validCheckMove(int, int, Piece, boolean)} and is called in
+	 * the {@link Chessboard#highlightCoordinates(Piece)} method.
+	 * <P>
+	 * Currently it only filters the {@link Chessboard#selectedCoordinates} List,
+	 * however it could easily be repurposed to filter all generateMove() methods.
+	 * 
+	 * @param piece       the Piece object that is to be moved.
+	 * @param coordinates a List of Coordinate objects that represent possible moves
+	 *                    piece can move to.
+	 */
+	private void filterCheckMoves(Piece piece, List<Coordinate> coordinates) {
+		for (int i = 0; i < selectedCoordinates.size(); i++) {
 			Coordinate c = selectedCoordinates.get(i);
-			if(!validCheckMove(c.x,c.y,piece,piece.isWhite())) {
+			if (!validCheckMove(c.x, c.y, piece, piece.isWhite())) {
 				selectedCoordinates.remove(i);
 				i--;
 			}
 		}
-		//TODO filter out castling if king ends up in check
 	}
-	public void unhighlightCoordinates(Piece selectedPiece) { selectedCoordinates = null; }
-	
-	public Tile getTile(int x, int y) { return board[y][x]; }
-	
+
+	/**
+	 * Un-highlights possible moves by setting selectedCoordinates to null.
+	 */
+	public void unhighlightCoordinates() {
+		selectedCoordinates = null;
+	}
+
+	/**
+	 * Returns tile at row y, column x.
+	 * 
+	 * @param x any integer between 0 and 7 inclusive.
+	 * @param y any integer between 0 and 7 inclusive.
+	 * @return a Tile object at the desired location.
+	 */
+	public Tile getTile(int x, int y) {
+		return board[y][x];
+	}
+
+	/**
+	 * This method is used to determine if promotion has occured on the board. It is
+	 * used so that an opponent is not able to pick the enemies piece. If a player
+	 * is playing with a robot however, they are able to choose what piece the robot
+	 * gets.
+	 * 
+	 * @return true if promotion has occurred, false if not.
+	 */
 	public boolean getPromotion() {
 		if (this.promotion) {
-			this.promotion = false;
-			return true; }
+			this.promotion = false; // set to false so that promotion doesn't constantly occur.
+			return true;
+		}
 		return false;
 	}
 
+	/**
+	 * This is a debug method used to print the current state of the board in text
+	 * form, although it can be improved via better formatting.
+	 */
 	public void printBoard() {
 		for (int row = 0; row < 8; row++) {
-			
-			for (int col = 0; col < 8; col ++) {
-				System.out.print(this.board[row][col]+ " ");
+			for (int col = 0; col < 8; col++) {
+				System.out.print(this.board[row][col] + " ");
 			}
 			System.out.println();
 		}

@@ -233,12 +233,12 @@ public class UI {
 					Piece possibleSelection;
 					possibleSelection = boardUI.selectPiece(xCoord, yCoord,whitesTurn);
 					if (possibleSelection !=null) {// player has selected new piece
-						if(boardUI.newValidMoveMade(xCoord,yCoord,selectedPiece)) {//castling requires user to click rook 
+						if(boardUI.validMoveMade(xCoord,yCoord,selectedPiece,whitesTurn)) { //castling requires user to click rook 
 							King k = (King) selectedPiece;
 							k.castlingMoveMade = true;
 							makeMove(xCoord,yCoord);
 						}else {
-							boardUI.unhighlightCoordinates(selectedPiece);
+							boardUI.unhighlightCoordinates();
 							selectedPiece.SetNotSelected();
 							selectedPiece = possibleSelection;
 							selectedPiece.setSelected();
@@ -266,7 +266,7 @@ public class UI {
 			public void makeMove(int xCoord,int yCoord) {
 				int xCoordBefore = selectedPiece.getX();
 				int yCoordBefore = selectedPiece.getY();
-				boardUI.unhighlightCoordinates(selectedPiece);
+				boardUI.unhighlightCoordinates();
 				gameOver = boardUI.updateBoard(xCoord,yCoord,selectedPiece);
 				if (in != null) {
 					try {
