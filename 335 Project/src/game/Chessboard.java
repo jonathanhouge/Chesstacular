@@ -346,7 +346,7 @@ public class Chessboard implements ChessBoardUI {
 			for (int col = 0; col < 8; col++) {
 				if (board[row][col].getPiece() != null
 						&& !(board[row][col].getPiece() instanceof King) && board[row][col].getPiece().validMove(king.getX(), king.getY(), board)) {
-					king.inCheck();
+					king.setCheck();
 					//System.out.println("Oh no! The " + king + " is in check because of the " +board[row][col].getPiece());
 					board[king.getY()][king.getX()].setPiece(king);
 					return true;

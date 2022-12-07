@@ -109,7 +109,6 @@ public class Bishop extends Piece {
 				break;
 			}
 		}
-
 		// Down-Left
 		for (int x = getX() - 1, y = getY() + 1; x >= 0 && x <= 7 && y >= 0 && y <= 7; x--, y++) {
 			if (!tiles[y][x].hasPiece()) {
