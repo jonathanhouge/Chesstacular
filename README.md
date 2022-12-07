@@ -2,7 +2,7 @@
 **By**: `Ali Sartaz Khan`, `Jonathan Houge`, `Julius Ramirez`, and `Khojiakbar Yokubjonov` \
 **Assigned TA:** `Shrey Goel`\
 **Trello Board:** [**Here**](https://trello.com/w/335project) \
-**Video Link:** [**Here**]()
+**Video Link:** [**Here**](https://docs.google.com/document/d/1BleqDencdEGcc6mr4f17ArrHq-I3HfnXfLVCAcWAnik/edit?usp=sharing)
 ## How to run
 * Run `./335 Project/src/Client.java`
 * If `Remote play` enabled: Run `./335 Project/src/Server.java` first
@@ -10,7 +10,7 @@
   - `Local`: One client
   - `Remote`: Two Clients and One Server (Can play on same computer/network)
   - `Robot`: One Client vs AI Robot
- * Watch the video to see a [**Full Demo**]() on how to run all the features
+ * Watch the video to see a [**Full Demo**](https://docs.google.com/document/d/1BleqDencdEGcc6mr4f17ArrHq-I3HfnXfLVCAcWAnik/edit?usp=sharing) on how to run all the features
 ## Features
 * `8x8` board with all pieces arranged with initial state
 * **White** makes the first move
