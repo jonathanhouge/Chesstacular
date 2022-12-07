@@ -76,82 +76,51 @@ public class Bishop extends Piece {
 	@Override
 	public List<Coordinate> generateMoves(Tile[][] tiles) {
 		List<Coordinate> coordinates = new ArrayList<>();
-		// UP-RIGHT
-		int y = getY() - 1;
-		int x = getX() + 1;
-		while (true) {
-			if(x < 0 || y < 0 || x > 7 || y >7) {
-				break;
-			}
+		// Up-Right
+		for (int x = getX() + 1, y = getY() - 1; x >= 0 && x <= 7 && y >= 0 && y <= 7; x++, y--) {
 			if (!tiles[y][x].hasPiece()) {
 				coordinates.add(new Coordinate(x, y));
 			} else {
-				if(tiles[y][x].getPiece().isWhite() != this.isWhite()) {
-					coordinates.add(new Coordinate(x,y));
+				if (hasEnemyPiece(x, y, tiles)) {
+					coordinates.add(new Coordinate(x, y));
 				}
 				break;
 			}
-			y--;
-			x++;
 		}
-		// DOWN-RIGHT
-		y = getY() + 1;
-		x = getX() + 1;
-		while (true) {
-			if(x < 0 || y < 0 || x > 7 || y >7) {
-				break;
-			}
+		// Down-Right
+		for (int x = getX() + 1, y = getY() + 1; x >= 0 && x <= 7 && y >= 0 && y <= 7; x++, y++) {
 			if (!tiles[y][x].hasPiece()) {
 				coordinates.add(new Coordinate(x, y));
 			} else {
-				if(tiles[y][x].getPiece().isWhite() != this.isWhite()) {
-					coordinates.add(new Coordinate(x,y));
+				if (hasEnemyPiece(x, y, tiles)) {
+					coordinates.add(new Coordinate(x, y));
 				}
 				break;
 			}
-			y++;
-			x++;
 		}
-		// UP-LEFT
-		y = getY() - 1;
-		x = getX() - 1;
-		while (true) {
-			if(x < 0 || y < 0 || x > 7 || y >7) {
-				break;
-			}
+		// Up-Left
+		for (int x = getX() - 1, y = getY() - 1; x >= 0 && x <= 7 && y >= 0 && y <= 7; x--, y--) {
 			if (!tiles[y][x].hasPiece()) {
 				coordinates.add(new Coordinate(x, y));
 			} else {
-				if(tiles[y][x].getPiece().isWhite() != this.isWhite()) {
-					coordinates.add(new Coordinate(x,y));
+				if (hasEnemyPiece(x, y, tiles)) {
+					coordinates.add(new Coordinate(x, y));
 				}
 				break;
 			}
-			x--;
-			y--;
 		}
-		// DOWN-LEFT
-		y = getY() + 1;
-		x = getX() - 1;
-//		for(int x = getX()-1,y = getY()+1;x>=0 && x <= 7 && y >= 0 && y <= 7;x--,y++) {
-//			
-//		}
-		while (true) {
-			if(x < 0 || y < 0 || x > 7 || y >7) {
-				break;
-			}
+
+		// Down-Left
+		for (int x = getX() - 1, y = getY() + 1; x >= 0 && x <= 7 && y >= 0 && y <= 7; x--, y++) {
 			if (!tiles[y][x].hasPiece()) {
 				coordinates.add(new Coordinate(x, y));
 			} else {
-				if(tiles[y][x].getPiece().isWhite() != this.isWhite()) {
-					coordinates.add(new Coordinate(x,y));
+				if (hasEnemyPiece(x, y, tiles)) {
+					coordinates.add(new Coordinate(x, y));
 				}
 				break;
 			}
-			x--;
-			y++;
 		}
 		return coordinates;
 	}
-	//private void generateMovesHelper() {}
 }

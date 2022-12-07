@@ -27,8 +27,8 @@ public abstract class Piece {
 	public boolean selected;
 
 	/**
-	 * Creates a new piece, only saving its color. The location of the piece must be
-	 * set after its creation. Selected is initialized to false.
+	 * Creates a new piece, only saving its color. The location of the piece must 
+	 * thus be set after its creation. Selected is initialized to false.
 	 * @param white true if the piece is white, false if it is not.
 	 */
 	public Piece(boolean white) {

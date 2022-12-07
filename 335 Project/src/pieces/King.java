@@ -38,21 +38,19 @@ public class King extends Piece {
 		if (yDistance <= 1 && xDistance <= 1) {
 			return true;
 		}else if (!moved && yDistance == 0 && (xDistance == 3 || xDistance == 4)) {
-			System.out.println("KING - setting castlingMoveMade to true!!!");
 			return true;
 		}
 		return false;
 	}
 	@Override
     public void updateLocation(int x, int y) {
-    	//System.out.println("King update location called! CastlingMoveMade is equal to: " + this.castlingMoveMade);
     	super.updateLocation(x,y);
     	this.moved = true;
     }
 	@Override
 	public boolean hasNoCollisions(int x, int y, Tile[][] tiles) {
 		if (tiles[y][x].getPiece() != null && tiles[y][x].getPiece().isWhite() == this.isWhite()) {
-			if((x==7 && y ==7 ) || (x==0 && y==7)||(x==7 && y==0) || (x==0 && y==0)) {//TODO add remaining coords
+			if((x==7 && y ==7 ) || (x==0 && y==7)||(x==7 && y==0) || (x==0 && y==0)) {
 				return true;
 			}
 			return false;
