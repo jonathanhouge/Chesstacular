@@ -485,7 +485,7 @@ public class UI {
 	}
 	
 	/**
-	 * file save menu.
+	 * Creates the file save menu.
 	 */
 	protected void createFileSaveItem() {
 		fileSaveItem = new MenuItem(fileMenu, SWT.PUSH);
@@ -504,7 +504,7 @@ public class UI {
 	}
 	
 	/**
-	 * file exit option. when selected, exits the program
+	 *  Creates file exit option. when selected, exits the program
 	 */
 	protected void createFileExitItem() {
 		fileExitItem = new MenuItem(fileMenu, SWT.PUSH);
