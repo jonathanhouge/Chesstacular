@@ -1,5 +1,5 @@
 # Chesstacular
-**By**: `Ali Sartaz Khan`, `Jonathan Houge`, `Julius Ramirez`, and `Khojiakbar Yokubjonov` \
+**By**: `Ali Sartaz Khan`, `Jonathan Houge`, `Julius Ramirez`, and `Khojiakbar Yokubjonov`
 ## How to run
 * Run `./335 Project/src/Client.java`
 * If `Remote play` enabled: Run `./335 Project/src/Server.java` first
